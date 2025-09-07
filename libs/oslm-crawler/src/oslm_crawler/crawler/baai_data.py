@@ -1,8 +1,7 @@
-import trace
 import requests
+import traceback
 from datetime import datetime
 from dataclasses import dataclass, field
-from loguru import logger
 
 
 @dataclass
@@ -45,8 +44,7 @@ class BAAIDataPage:
                 ))
             return res
         except Exception:
-            logger.exception("Error when scrape BAAI Data platform.")
-            import traceback
+            # logger.exception("Error when scrape BAAI Data platform.")
             return traceback.format_exc()
     
     def _init_headers(self): 

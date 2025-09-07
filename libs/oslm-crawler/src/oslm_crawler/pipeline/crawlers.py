@@ -1,8 +1,10 @@
 import os
+import traceback
 from time import sleep
 from typing import Literal
 from dataclasses import asdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from loguru import logger
 from .base import PipelineStep, PipelineResult, PipelineData
 from ..crawler.huggingface import HFRepoPage, HFRepoInfo
 from ..crawler.huggingface import HFDatasetPage, HFDatasetInfo
@@ -24,7 +26,7 @@ class HFRepoPageCrawler(PipelineStep):
         self, 
         category: Literal['datasets', 'models'] | None = None,
         threads: int = 1,
-        max_retries: int = 10,
+        max_retries: int =20,
     ):
         self.category = category
         self.threads = threads
@@ -95,10 +97,15 @@ class HFRepoPageCrawler(PipelineStep):
                         if task_retries[lc] < self.max_retries:
                             retry_tasks.append(lc)
                         else:
+                            logger.opt(exception=info.error_msg).error(f"HFRepoPage Error with repo_link: {lc[0]} and category: {lc[1]}")
+                            e = info.error_msg
+                            error_msg = "".join(
+                                traceback.format_exception(type(e), e, e.__traceback__)
+                            )
                             yield PipelineData(None, None, {
-                                "error_msg": info.error_msg,
                                 "repo_link": lc[0],
-                                "category": lc[1]
+                                "category": lc[1],
+                                "error_msg": error_msg,
                             })
                             
                     completed_tasks.add(future)
@@ -180,10 +187,15 @@ class HFDetailPageCrawler(PipelineStep):
                         if task_retries[lc] < self.max_retries:
                             retry_tasks.append(lc)
                         else:
+                            logger.opt(exception=info.error_msg).error(f"HFDetailPage Error with detail_link: {lc[0]} and category: {lc[1]}")
+                            e = info.error_msg
+                            error_msg = "".join(
+                                traceback.format_exception(type(e), e, e.__traceback__)
+                            )
                             yield PipelineData(None, None, {
-                                "error_msg": info.error_msg,
                                 "detail_link": lc[0],
-                                "category": lc[1]  
+                                "category": lc[1],
+                                "error_msg": error_msg,
                             })
                     
                     completed_tasks.add(future)
@@ -286,10 +298,15 @@ class MSRepoPageCrawler(PipelineStep):
                         if task_retries[lc] < self.max_retries:
                             retry_tasks.append(lc)
                         else:
+                            logger.opt(exception=info.error_msg).error(f"MSRepoPage Error with repo_link: {lc[0]} and category: {lc[1]}")
+                            e = info.error_msg
+                            error_msg = "".join(
+                                traceback.format_exception(type(e), e, e.__traceback__)
+                            )
                             yield PipelineData(None, None, {
-                                "error_msg": info.error_msg,
                                 "repo_link": lc[0],
-                                "category": lc[1]
+                                "category": lc[1],
+                                "error_msg": error_msg,
                             })
                     
                     completed_tasks.add(future)
@@ -371,10 +388,15 @@ class MSDetailPageCrawler(PipelineStep):
                         if task_retries[lc] < self.max_retries:
                             retry_tasks.append(lc)
                         else:
+                            logger.opt(exception=info.error_msg).error(f"MSDetailPage Error with detail_link: {lc[0]} and category: {lc[1]}")
+                            e = info.error_msg
+                            error_msg = "".join(
+                                traceback.format_exception(type(e), e, e.__traceback__)
+                            )
                             yield PipelineData(None, None, {
-                                "error_msg": info.error_msg,
                                 "detail_link": lc[0],
-                                "category": lc[1]
+                                "category": lc[1],
+                                "error_msg": error_msg,
                             })
                     
                     completed_tasks.add(future)
@@ -446,13 +468,18 @@ class OpenDataLabCrawler(PipelineStep):
                 for future in as_completed(futures):
                     link = futures[future]
                     infos = future.result()
-                    if isinstance(infos, str):
+                    if not isinstance(infos, list):
                         if task_retries[link] < self.max_retries:
                             retry_tasks.append(link)
                         else:
+                            logger.opt(exception=infos).error(f"OpenDataLab error with link={link}")
+                            e = infos
+                            error_msg = "".join(
+                                traceback.format_exception(type(e), e, e.__traceback__)
+                            )
                             yield PipelineData(None, None, {
-                                "error_msg": infos,
-                                "link": link
+                                "link": link,
+                                "error_msg": error_msg,
                             })
                     else:
                         for info in infos:

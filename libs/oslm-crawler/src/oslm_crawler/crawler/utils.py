@@ -20,86 +20,116 @@ def init_driver() -> WebDriver:
 
 
 class WebDriverPool:
-    
+
     def __init__(self, size: int = 1, options: ChromeOptions | None = None):
         if options is None:
             options = ChromeOptions()
             options.add_argument('--headless')
             options.add_argument('--no-sandbox')
             options.add_argument('--disable-dev-shm-usage')
+            options.add_argument('--disable-gpu') 
+
         self.options = options
-        self.size = size
         self._pool = queue.Queue(maxsize=size)
         self._lock = threading.Lock()
+        self._current_size = 0
+        self.target_size = size
+        self._shutdown = False
         self._initialize_pool()
-        
+
     def _initialize_pool(self):
-        for _ in range(self.size):
-            driver = self._create_driver()
-            self._pool.put(driver)
-            
-            
-    def _create_driver(self) -> WebDriver:
+        with self._lock:
+            while self._current_size < self.target_size:
+                try:
+                    driver = self._create_driver()
+                    self._pool.put(driver)
+                    self._current_size += 1
+                except Exception:
+                    logger.exception("Failed to create driver during initialization.")
+                    break
+
+    def _create_driver(self) -> webdriver.Chrome:
         driver = webdriver.Chrome(
             service=Service(ChromeDriverManager().install()), options=self.options)
         return driver
 
-    def _is_driver_healthy(self, driver: WebDriver) -> bool:
+    def _is_driver_healthy(self, driver: webdriver.Chrome) -> bool:
         try:
-            driver.current_url
+            _ = driver.window_handles
             return True
         except Exception:
-            logger.exception("Web driver healthy check failed.")
+            logger.warning("Web driver health check failed.", exc_info=True)
             return False
-        
+
+    def _recreate_driver_if_needed(self, old_driver: webdriver.Chrome | None):
+        if old_driver:
+            try:
+                old_driver.quit()
+            except Exception:
+                logger.warning("Failed to quit unhealthy driver.", exc_info=True)
+            self._current_size -= 1
+
+        if not self._shutdown and self._current_size < self.target_size:
+            try:
+                new_driver = self._create_driver()
+                self._pool.put(new_driver)
+                self._current_size += 1
+                logger.info("Replaced an unhealthy driver. Pool size is now correct.")
+            except Exception:
+                logger.exception("Failed to create new driver during replacement.")
+
     @contextmanager
-    def get_driver(self) -> Generator[WebDriver, None, None]:
-        driver = None
+    def get_driver(self) -> Generator[webdriver.Chrome, None, None]:
+        if self._shutdown:
+            raise RuntimeError("WebDriverPool has been shut down.")
+
+        driver = self._pool.get()
+        is_healthy = self._is_driver_healthy(driver)
+
+        while not is_healthy:
+            logger.warning("Got an unhealthy driver from the pool. Attempting to replace.")
+            with self._lock:
+                self._recreate_driver_if_needed(driver)
+
+            if self._shutdown:
+                 raise RuntimeError("WebDriverPool has been shut down while waiting for a healthy driver.")
+            driver = self._pool.get()
+            is_healthy = self._is_driver_healthy(driver)
+
         try:
-            driver: WebDriver = self._pool.get()
-            if not self._is_driver_healthy(driver):
+            yield driver
+        finally:
+            if not self._shutdown:
+                self._pool.put(driver)
+            else:
                 try:
                     driver.quit()
                 except Exception:
-                    logger.exception("Web driver quit failed when quit unhealthy driver.")
                     pass
-                driver = self._create_driver()
-            
-            yield driver
-        except Exception:
-            logger.exception("Web driver get failed.")
-            raise
-        finally:
-            if driver is not None:
-                self._pool.put(driver)
-                
+
     def cleanup(self):
         with self._lock:
-            tmp_drivers = []
-            try:
-                while not self._pool.empty():
-                    driver = self._pool.get_nowait()
-                    tmp_drivers.append(driver)
-            except queue.Empty:
-                logger.exception("Empty driver queue exception.")
-                pass
+            if self._shutdown:
+                return
+            self._shutdown = True
             
-            for driver in tmp_drivers:
+            while not self._pool.empty():
                 try:
+                    driver = self._pool.get_nowait()
                     driver.quit()
+                except queue.Empty:
+                    break 
                 except Exception:
-                    logger.exception("Web driver quit failed when cleanup pool.")
-                    pass
-        
+                    logger.warning("Error quitting driver during cleanup.", exc_info=True)
+            
+            self._current_size = 0
+
     def __enter__(self):
         return self
-    
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.cleanup()
         return False
-    
-    def __del__(self):
-        self.cleanup()
 
 
 def str2int(s: str) -> int:

@@ -1,8 +1,8 @@
-from operator import truediv
 import jsonlines
-import tempfile
+import traceback
 from .base import PipelineStep, PipelineResult, PipelineData
 from pathlib import Path
+from loguru import logger
 
 
 class JsonlineWriter(PipelineStep):
@@ -17,7 +17,7 @@ class JsonlineWriter(PipelineStep):
         drop_keys: list[str] | None = None,
     ):
         self.desired_keys = desired_keys
-        if desired_keys:
+        if drop_keys:
             self.drop_keys = drop_keys
         else:
             self.drop_keys = []
@@ -47,10 +47,10 @@ class JsonlineWriter(PipelineStep):
             self.f.flush()
             yield PipelineData(self.data, None, None)
         except Exception:
-            import traceback
+            logger.exception(f"Error write jsonline data:\n {self.input}")
             yield PipelineData(None, None, {
+                'input': self.input,
                 'error_msg': traceback.format_exc(),
-                'input': self.input
             })
         
     def close(self) -> bool:

@@ -5,7 +5,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.remote.webdriver import WebDriver
-from loguru import logger
 from datetime import datetime
 from typing import Literal, Optional
 from dataclasses import dataclass, field
@@ -88,12 +87,10 @@ class MSRepoPage:
             assert len(detail_urls) == len(set(detail_urls))
             error_msg = None
         except Exception as e:
-            import traceback
-            error_msg = traceback.format_exc()
+            error_msg = e
             detail_urls = None
             total_links = None
-            logger.exception(
-                f"Error crawling MSRepo of {self.link}, details:\n{error_msg}")
+            # logger.exception(f"MSRepoPage(link={self.link})::scrape")
             
         return MSRepoInfo(
             repo=repo,
@@ -114,8 +111,8 @@ class MSRepoPage:
                 EC.presence_of_element_located(tab_xpath)
             )
             tab.click()
-        except Exception as e:
-            raise RuntimeError(f"Error when click model tab of {self.link}") from e
+        except Exception:
+            raise
         
     def _get_total_pages(self) -> int:
         total_page = 1
@@ -126,7 +123,7 @@ class MSRepoPage:
             total_page = navigation.find_element(By.XPATH, './li[last()-2]').get_attribute('title')
         except Exception:
             pass
-        return int(total_page)
+        return str2int(total_page)
     
     def _get_total_count(self, category: Literal["models", "datasets"]) -> int:
         if category == "models":
@@ -138,11 +135,11 @@ class MSRepoPage:
                 EC.presence_of_element_located(tab_xpath)
             )
             count_text = tab.find_element(By.XPATH, './span[2]').text
-            return int(count_text)
+            return str2int(count_text)
         except NoSuchElementException:
             return 0
-        except Exception as e:
-            raise RuntimeError(f"Failed to get total {category} count of {self.link}") from e
+        except Exception:
+            raise
         
     def _get_links_on_current_page(self, add_likes: bool=False) -> tuple[list[str], Optional[str]]:
         try: 
@@ -159,8 +156,8 @@ class MSRepoPage:
                         try:
                             likes = div.find_element(By.XPATH, './a/div/div[3]/div/div[3]/div[3]')
                             curr_link = curr_link.rstrip('/') + f'/{likes.text}'
-                        except NoSuchElementException:
-                            raise RuntimeError(f"likes not found for {curr_link} of {self.link}")
+                        except NoSuchElementException as e:
+                            raise RuntimeError(f"likes not found for {curr_link} of {self.link}") from e
                 except NoSuchElementException:
                     continue
                 if first_link is None:
@@ -170,8 +167,8 @@ class MSRepoPage:
                         first_link = '/'.join(first_link.split('/')[:-1])
                 res.append(curr_link)
             return res, first_link
-        except Exception as e:
-            raise RuntimeError(f"Error when get links on one page of {self.link}") from e
+        except Exception:
+            raise
     
     def _next_page(self, page: int, total_page: int, old_link: str) -> None:
         if page >= total_page:
@@ -186,8 +183,8 @@ class MSRepoPage:
                 lambda d: d.find_element(*self._page_first_element)
                 .get_attribute('href') != old_link
             )
-        except Exception as e:
-            raise RuntimeError("next page error") from e
+        except Exception:
+            raise
         
     def get_links(self, category: Literal["models", "datasets"]) -> list[str]:
         res = []
@@ -235,11 +232,10 @@ class MSModelPage:
                 date_crawl, self.link, self.screenshot_path, metadata=metadata
             )
         except Exception as e:
-            import traceback
-            error_msg = traceback.format_exc()
-            logger.exception(f"Exception at MSModelPage::crawl with link={self.link}, exception message: {error_msg}")
+            error_msg = e
+            # logger.exception(f"MSModelPage(link={self.link}, screenshot_path={self.screenshot_path})::scrape")
             info = MSModelInfo(
-                date_crawl, self.link, self.screenshot_path, error_msg, metadata
+                date_crawl, self.link, self.screenshot_path, error_msg
             )
         return info
         
@@ -250,8 +246,8 @@ class MSModelPage:
                 WebDriverWait(self.driver, 5).until(
                     EC.presence_of_element_located(part)
                 )
-        except Exception as e:
-            raise RuntimeError('Main part of the web page failed to load') from e
+        except Exception:
+            raise
         
         metadata = {}
         try:
@@ -276,8 +272,8 @@ class MSModelPage:
             downloads = WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located(self._downloads)
             ).text
-        except Exception as e:
-            raise RuntimeError(f"Error when getting model downloads of {self.link}") from e
+        except Exception:
+            raise
         
         m = re.search(r'([\d,]+)下载', downloads)
         if m:
@@ -293,8 +289,8 @@ class MSModelPage:
                 EC.presence_of_element_located(self._navigation_tabs)
             )
             tabs = navigation_tabs.find_elements(By.XPATH, './div')
-        except Exception as e:
-            raise RuntimeError(f"Error when getting model community of {self.link}") from e
+        except Exception:
+            raise
             
         for tab in tabs:
             m = re.search(r'交流反馈([\d,]+)', tab.text)
@@ -307,9 +303,9 @@ class MSModelPage:
             likes = WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located(self._likes)
             ).text
-        except Exception as e:
-            raise RuntimeError(f"Error when getting model likes of {self.link}") from e
-        
+        except Exception:
+            raise
+
         m = re.search(r'([\d,]+)', likes)
         if m:
             return m.group(1)
@@ -344,9 +340,8 @@ class MSDatasetPage:
                 date_crawl, self.link, self.screenshot_path, metadata=metadata
             )
         except Exception as e:
-            import traceback
-            error_msg = traceback.format_exc()
-            logger.exception(f"Exception at MSDatasetPage::crawl with link={self.link}, exception message: {error_msg}")
+            error_msg = e
+            # logger.exception(f"MSDatasetPage(link={self.link}, screenshot_path={self.screenshot_path})::scrape")
             info = MSDatasetInfo(
                 date_crawl, self.link, self.screenshot_path, error_msg
             )
@@ -359,8 +354,8 @@ class MSDatasetPage:
                 WebDriverWait(self.driver, 5).until(
                     EC.presence_of_element_located(part)
                 )
-        except Exception as e:
-            raise RuntimeError('Main part of the web page failed to load') from e
+        except Exception:
+            raise
         
         metadata = {}
         try:
@@ -386,8 +381,8 @@ class MSDatasetPage:
             downloads = WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located(self._downloads)
             ).text
-        except Exception as e:
-            raise RuntimeError(f"Error when getting model downloads of {self.link}") from e
+        except Exception:
+            raise
         
         m = re.search(r'([\d,]+)下载', downloads)
         if m:
@@ -403,8 +398,8 @@ class MSDatasetPage:
                 EC.presence_of_element_located(self._navigation_tabs)
             )
             tabs = navigation_tabs.find_elements(By.XPATH, './div')
-        except Exception as e:
-            raise RuntimeError(f"Error when getting model community of {self.link}") from e
+        except Exception:
+            raise
         
         for tab in tabs:
             m = re.search(r'交流反馈([\d,]+)', tab.text)

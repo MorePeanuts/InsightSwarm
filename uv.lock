@@ -233,7 +233,8 @@ name = "insightswarm"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "agents" },
+    { name = "langchain" },
+    { name = "langchain-openai" },
     { name = "pytest" },
     { name = "socksio" },
 ]
@@ -250,7 +251,8 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "agents", editable = "libs/agents" },
+    { name = "langchain", specifier = ">=0.3.27" },
+    { name = "langchain-openai", specifier = ">=0.3.31" },
     { name = "oslm-crawler", marker = "extra == 'oslm'", editable = "libs/oslm-crawler" },
     { name = "pytest", specifier = ">=8.4.1" },
     { name = "socksio", specifier = ">=1.0.0" },

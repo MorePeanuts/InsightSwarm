@@ -1,4 +1,3 @@
-from fileinput import filename
 import re
 from pathlib import Path
 from selenium.webdriver.common.by import By
@@ -6,7 +5,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.remote.webdriver import WebDriver
-from loguru import logger
 from datetime import datetime
 from typing import Literal, Optional
 from dataclasses import dataclass, field
@@ -20,7 +18,7 @@ class HFRepoInfo:
     category: Literal['datasets', 'models']
     detail_urls: Optional[list[str]] = None
     total_links: Optional[int] = None
-    error_msg: Optional[str] = None
+    error_msg: Optional[Exception] = None
 
 
 @dataclass
@@ -34,7 +32,7 @@ class HFModelInfo:
     date_crawl: str = field()
     link: str = field()
     img_path: Optional[str] = field(default=None)
-    error_msg: Optional[str] = field(default=None)
+    error_msg: Optional[Exception] = field(default=None)
     metadata: Optional[dict] = field(default=None)
 
     def __post_init__(self):
@@ -58,7 +56,7 @@ class HFDatasetInfo:
     date_crawl: str = field()
     link: str = field()
     img_path: Optional[str] = field(default=None)
-    error_msg: Optional[str] = field(default=None)
+    error_msg: Optional[Exception] = field(default=None)
     metadata: Optional[dict] = field(default=None)
 
     def __post_init__(self):
@@ -107,12 +105,10 @@ class HFRepoPage(object):
             assert len(detail_urls) == len(set(detail_urls))
             error_msg = None
         except Exception as e:
-            import traceback
-            error_msg = traceback.format_exc()
+            error_msg = e
             detail_urls = None
             total_links = None
-            logger.exception(
-                f"Error crawling HFRepo of {self.link}, details:\n{error_msg}")
+            # logger.exception(f"HFRepoPage(link={self.link})::scrape")
 
         return HFRepoInfo(
             repo=repo,
@@ -135,8 +131,8 @@ class HFRepoPage(object):
             return True
         except TimeoutException:
             return False
-        except Exception as e:
-            raise RuntimeError(f"Error when expand all models. link={self.link}") from e
+        except Exception:
+            raise
 
     def _get_total_count(self, category: Literal["models", "datasets"]) -> int:
         if category == "models":
@@ -149,11 +145,9 @@ class HFRepoPage(object):
                 .until(EC.presence_of_element_located(count_xpath))
                 .text
             )
-            return int(count_text)
-        except Exception as e:
-            raise RuntimeError(
-                f"Failed to get total {category} count of {self.link}"
-            ) from e
+            return str2int(count_text)
+        except Exception:
+            raise
 
     def _get_total_pages(self) -> int:
         total_page = 1
@@ -162,7 +156,7 @@ class HFRepoPage(object):
                 EC.presence_of_element_located(self._page_navigation_bar)
             )
             total_page = bar.find_element(By.XPATH, "./li[last()-1]").text
-            total_page = int(total_page)
+            total_page = str2int(total_page)
             return total_page
         except Exception:
             return 1
@@ -175,10 +169,8 @@ class HFRepoPage(object):
                 articles = WebDriverWait(self.driver, 5).until(
                     EC.presence_of_all_elements_located(self._expand_articles)
                 )
-            except Exception as e:
-                raise Exception(
-                    f"Error in getting {category} elements. (expand)"
-                ) from e
+            except Exception:
+                raise
         else:
             if category == "models":
                 articles_xpath = self._model_woexpand_articles
@@ -190,10 +182,8 @@ class HFRepoPage(object):
                 )
             except TimeoutException:
                 return [], None
-            except Exception as e:
-                raise Exception(
-                    f"Error in getting model elements. expand={self.expand}"
-                ) from e
+            except Exception:
+                raise 
 
         res = []
         first_link = None
@@ -203,10 +193,8 @@ class HFRepoPage(object):
                 if first_link is None:
                     first_link = curr_link
                 res.append(curr_link)
-        except Exception as e:
-            raise Exception(
-                f"Error in getting {category} links from {category} elements."
-            ) from e
+        except Exception:
+            raise
 
         return res, first_link
 
@@ -222,8 +210,8 @@ class HFRepoPage(object):
                 lambda d: d.find_element(*self._page_first_element)
                 .get_attribute("href") != old_link
             )
-        except Exception as e:
-            raise Exception("next page error") from e
+        except Exception:
+            raise
 
     def get_links(self, category: Literal["models", "datasets"]) -> list[str]:
         res = []
@@ -281,12 +269,9 @@ class HFModelPage(object):
             info = HFModelInfo(
                 date_crawl, self.link, self.screenshot_path, metadata=metadata
             )
-        except Exception:
-            import traceback
-            error_msg = traceback.format_exc()
-            logger.exception(
-                f"Exception at HFModelPage::crawl with link={self.link}, exception message: {error_msg}"
-            )
+        except Exception as e:
+            error_msg = e
+            # logger.exception(f"HFModelPage(link={self.link}, screenshot_path={self.screenshot_path})::scrape")
             info = HFModelInfo(
                 date_crawl, self.link, self.screenshot_path, error_msg
             )
@@ -298,8 +283,8 @@ class HFModelPage(object):
             WebDriverWait(self.driver, 5).until(
                 EC.presence_of_element_located(self._main_part)
             )
-        except Exception as e:
-            raise RuntimeError("Main part of the webpage failed to load") from e
+        except Exception:
+            raise
 
         metadata = {}
         try:
@@ -338,8 +323,8 @@ class HFModelPage(object):
                     )
                     .text
                 )
-            except Exception as e:
-                raise Exception("Error in getting downloads_last_month") from e
+            except Exception:
+                raise
 
         return downloads_last_month
 
@@ -350,8 +335,8 @@ class HFModelPage(object):
                 .until(EC.presence_of_element_located(self._likes))
                 .text
             )
-        except Exception as e:
-            raise Exception("Error in getting likes") from e
+        except Exception:
+            raise
 
         return likes
 
@@ -371,8 +356,8 @@ class HFModelPage(object):
                     break
             return total
 
-        except Exception as e:
-            raise Exception("Error when getting model tree leaves num") from e
+        except Exception:
+            raise
 
     def _get_community(self):
         try:
@@ -387,8 +372,8 @@ class HFModelPage(object):
             if m:
                 return m.group(0)
             return "0"
-        except Exception as e:
-            raise Exception("Error when getting community number.") from e
+        except Exception:
+            raise
 
 
 class HFDatasetPage:
@@ -416,11 +401,8 @@ class HFDatasetPage:
                 date_crawl, self.link, self.screenshot_path, metadata=metadata
             )
         except Exception as e:
-            import traceback
-            error_msg = traceback.format_exc()
-            logger.exception(
-                f"Exception at HFDatasetPage::crawl with link={self.link}, exception message: {error_msg}"
-            )
+            error_msg = e
+            # logger.exception(f"HFDatasetPage(link={self.link}, screenshot_path={self.screenshot_path})")
             info = HFDatasetInfo(date_crawl, self.link, self.screenshot_path, error_msg)
         return info
 
@@ -430,8 +412,8 @@ class HFDatasetPage:
             WebDriverWait(self.driver, 5).until(
                 EC.presence_of_element_located(self._main_part)
             )
-        except Exception as e:
-            raise RuntimeError("Main part of the webpage failed to load") from e
+        except Exception:
+            raise
 
         metadata = {}
         try:
@@ -459,8 +441,8 @@ class HFDatasetPage:
                 .until(EC.presence_of_element_located(self._downloads_last_month))
                 .text
             )
-        except Exception as e:
-            raise RuntimeError("Error in getting downloads_last_month") from e
+        except Exception:
+            raise
 
         return downloads_last_month
 
@@ -471,8 +453,8 @@ class HFDatasetPage:
                 .until(EC.presence_of_element_located(self._likes))
                 .text
             )
-        except Exception as e:
-            raise RuntimeError("Error in getting likes") from e
+        except Exception:
+            raise
 
         return likes
 
@@ -494,8 +476,8 @@ class HFDatasetPage:
                 return len(divs)
         except NoSuchElementException:
             return 0
-        except Exception as e:
-            raise RuntimeError("Error when getting dataset usage") from e
+        except Exception:
+            raise
 
     def _get_community(self) -> str:
         try:
@@ -509,6 +491,5 @@ class HFDatasetPage:
                 return m.group()
             else:
                 return "0"
-        except Exception as e:
-            raise Exception("Error when getting community number.") from e
-
+        except Exception:
+            raise

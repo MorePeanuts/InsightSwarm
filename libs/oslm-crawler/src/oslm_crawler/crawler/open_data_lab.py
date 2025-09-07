@@ -2,11 +2,10 @@ import re
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.remote.webdriver import WebDriver
 from loguru import logger
 from datetime import datetime
-from typing import Literal, Optional, Union
+from typing import Optional, Union
 from dataclasses import dataclass, field
 from .utils import str2int
 
@@ -44,15 +43,14 @@ class OpenDataLabPage:
         self.driver = driver
         self.link = link
         
-    def scrape(self) -> Union[list[OpenDataLabInfo], str]:
+    def scrape(self) -> Union[list[OpenDataLabInfo], Exception]:
         date_crawl = str(datetime.today().date())
         try:
             infos = self.get_infos()
         except Exception as e:
             # TODO Improve the exception handling here
-            logger.exception(f"Exception {e} occurs when crawl OpenDataLab of {self.link}.")
-            import traceback
-            error_msg = traceback.format_exc()
+            # logger.exception(f"OpenDataLabPage(link={self.link})::scrape")
+            error_msg = e
             return error_msg
         res = []
         
@@ -75,7 +73,7 @@ class OpenDataLabPage:
             total_page = navigation.find_element(By.XPATH, './li[last()-2]').get_attribute('title')
         except Exception:
             pass
-        return int(total_page)
+        return str2int(total_page)
     
     def _get_total_count(self) -> int:
         total_count = 0
@@ -86,9 +84,9 @@ class OpenDataLabPage:
             m = re.search(r'([\d,]+)\s*数据集' ,total_count_text)
             if m:
                 total_count = m.group(1)
-            return int(total_count)
-        except Exception as e:
-            raise RuntimeError(f'Error when get total count of {self.link}') from e
+            return str2int(total_count)
+        except Exception:
+            raise
     
     def _get_info_on_current_page(self) -> tuple[list[tuple], Optional[str]]:
         try:
@@ -106,8 +104,8 @@ class OpenDataLabPage:
                     first_link = link
                 res.append((link, downloads, likes))
             return res, first_link
-        except Exception as e:
-            raise RuntimeError(f"Error when get dataset info of {self.link}") from e
+        except Exception:
+            raise
         
     def _next_page(self, page: int, total_page: int, old_link: str) -> None:
         if page >= total_page:
@@ -122,8 +120,8 @@ class OpenDataLabPage:
                 lambda d: d.find_element(*self._page_first_element)
                 .get_attribute('href') != old_link
             )
-        except Exception as e:
-            raise RuntimeError("next page error") from e
+        except Exception:
+            raise
         
     def get_infos(self) -> list[tuple]:
         res = []
@@ -133,8 +131,8 @@ class OpenDataLabPage:
                 WebDriverWait(self.driver, 5).until(
                     EC.presence_of_element_located(part)
                 )
-        except Exception as e:
-            raise RuntimeError('Main part of the web page failed to load') from e
+        except Exception:
+            raise
         
         try:
             total_count = self._get_total_count()

@@ -1,8 +1,5 @@
 from dataclasses import dataclass, field
-from optparse import Option
 from typing import Optional, Literal
-
-from attr.converters import optional
 
 
 @dataclass
@@ -24,7 +21,19 @@ class ModelRecord:
 
 @dataclass
 class DatasetRecord:
-    pass
+    org: str
+    repo: str
+    dataset_name: str
+    modality: Literal['Language', 'Speech', 'Vision', 'Multimodal', 'Embodied']
+    lifecircle: Literal['Pre-training', 'Fine-tuning', 'Preference', 'Evaluation']
+    downloads_last_month: int
+    likes: int
+    community: int
+    dataset_usage: int
+    date_crawl: str
+    date_last_crawl: Optional[str]
+    date_enter_db: str
+    links: list[str]
 
 
 @dataclass
@@ -83,5 +92,49 @@ class MSModelRecord:
 
 @dataclass
 class MSDatasetRecord:
-    pass
+    org: str
+    repo: str
+    dataset_name: str
+    modality: Literal['Language', 'Speech', 'Vision', 'Multimodal', 'Embodied']
+    lifecircle: Literal['Pre-training', 'Fine-tuning', 'Preference', 'Evaluation']
+    downloads_last_month: int
+    total_downloads: int
+    likes: int
+    community: int
+    date_crawl: str
+    date_last_crawl: Optional[str]
+    date_enter_db: str
+    link: str
+    img_path: Optional[str]
 
+    
+@dataclass
+class OpenDataLabRecord:
+    org: str
+    repo: str
+    dataset_name: str
+    modality: Literal['Language', 'Speech', 'Vision', 'Multimodal', 'Embodied']
+    lifecircle: Literal['Pre-training', 'Fine-tuning', 'Preference', 'Evaluation']
+    downloads_last_month: int
+    total_downloads: int
+    likes: int
+    date_crawl: str
+    date_last_crawl: Optional[str]
+    date_enter_db: str
+    link: str
+    
+    
+@dataclass
+class BAAIDataRecord:
+    org: str
+    repo: str
+    dataset_name: str
+    modality: Literal['Language', 'Speech', 'Vision', 'Multimodal', 'Embodied']
+    lifecircle: Literal['Pre-training', 'Fine-tuning', 'Preference', 'Evaluation']
+    downloads_last_month: int
+    total_downloads: int
+    likes: int
+    date_crawl: str
+    date_last_crawl: Optional[str]
+    date_enter_db: str
+    link: str    
