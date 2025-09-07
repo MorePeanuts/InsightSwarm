@@ -1,0 +1,76 @@
+from operator import truediv
+import jsonlines
+import tempfile
+from .base import PipelineStep, PipelineResult, PipelineData
+from pathlib import Path
+
+
+class JsonlineWriter(PipelineStep):
+    
+    ptype = "✍️ WRITER"
+    
+    
+    def __init__(
+        self,
+        path: Path,
+        desired_keys: list[str] | None = None,
+        drop_keys: list[str] | None = None,
+    ):
+        self.desired_keys = desired_keys
+        if desired_keys:
+            self.drop_keys = drop_keys
+        else:
+            self.drop_keys = []
+        self.path = path
+        assert self.path.suffix == '.jsonl', 'The path must end with a filename that has a `.jsonl` suffix.'
+        self.path.parent.mkdir(exist_ok=True)
+        self.path.touch()
+        self.f = open(self.path, 'w')
+        self.writer = jsonlines.Writer(self.f)
+    
+    def parse_input(self, input_data: PipelineData | None = None):
+        if self.desired_keys is None:
+            self.desired_keys = list(input_data.data.keys())
+        self.desired_keys = [x for x in self.desired_keys if x not in self.drop_keys]
+        self.data = input_data.data.copy()
+        desired_data = {}
+        for k in self.desired_keys:
+            if k not in self.data:
+                raise KeyError(f"key '{k}' not found in input_data.data "
+                               f"{list(input_data.data.keys())} of {self.__class__}")
+            desired_data[k] = self.data[k]
+        self.input = desired_data
+        
+    def run(self) -> PipelineResult:
+        try:
+            self.writer.write(self.input)
+            self.f.flush()
+            yield PipelineData(self.data, None, None)
+        except Exception:
+            import traceback
+            yield PipelineData(None, None, {
+                'error_msg': traceback.format_exc(),
+                'input': self.input
+            })
+        
+    def close(self) -> bool:
+        self.writer.close()
+        self.f.close()
+    
+
+# TODO database writer    
+class DBWriter(PipelineStep):
+    
+    ptype = "✍️ WRITER"
+    
+    def __init__(
+        self,
+        conn,
+    ):
+        raise NotImplementedError
+    
+    def parse_input(self, input_data: PipelineData | None = None):
+        raise NotImplementedError
+    
+    def run(self) -> PipelineResult:
+        yield PipelineData(None, str(NotImplementedError()), None)

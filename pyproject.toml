@@ -1,0 +1,38 @@
+[project]
+name = "insightswarm"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Leo", email = "95532869+MorePeanuts@users.noreply.github.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "agents",
+    "pytest>=8.4.1",
+    "socksio>=1.0.0",
+]
+
+[project.scripts]
+insightswarm = "insightswarm.cli:main"
+
+[project.optional-dependencies]
+oslm = [
+    "oslm-crawler",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv.workspace]
+members = ["libs/agents", "libs/oslm-crawler"]
+
+[tool.uv.sources]
+agents = { workspace = true }
+oslm-crawler = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "oslm-crawler",
+]
