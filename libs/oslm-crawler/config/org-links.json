@@ -1,6 +1,6 @@
 {
     "BAAI": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/BAAI",
             "https://huggingface.co/FlagRelease",
             "https://huggingface.co/CofeAI",
@@ -14,7 +14,7 @@
         ]
     },
     "ShanghaiAILab": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/OpenGVLab",
             "https://huggingface.co/internlm",
             "https://huggingface.co/Alpha-VLLM",
@@ -40,7 +40,7 @@
         ]
     },
     "Baidu": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/baidu",
             "https://huggingface.co/PaddlePaddle",
             "https://huggingface.co/ernie-research"
@@ -50,7 +50,7 @@
         ]
     },
     "Baichuan": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/baichuan-inc"
         ],
         "ModelScope": [
@@ -58,7 +58,7 @@
         ]
     },
     "Zhipu": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/THUDM",
             "https://huggingface.co/zai-org",
             "https://huggingface.co/THUDM-HF-SPACE"
@@ -68,7 +68,7 @@
         ]
     },
     "Ali": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/Qwen",
             "https://huggingface.co/Alibaba-NLP",
             "https://huggingface.co/alibabasglab",
@@ -81,35 +81,35 @@
         ]
     },
     "Huawei": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/huawei-noah",
             "https://huggingface.co/HWERI"
         ]
     },
     "LMSYS": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/lmsys"
         ]
     },
     "Falcon": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/tiiuae"
         ]
     },
     "EleutherAI": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/EleutherAI"
         ]
     },
     "Meta": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/meta-llama",
             "https://huggingface.co/facebook",
             "https://huggingface.co/FacebookAI"
         ]
     },
     "Google": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/google",
             "https://huggingface.co/google-bert",
             "https://huggingface.co/google-t5",
@@ -118,23 +118,23 @@
         ]
     },
     "UKP Lab": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/sentence-transformers",
             "https://huggingface.co/UKPLab"
         ]
     },
     "Microsoft": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/microsoft"
         ]
     },
     "OpenAI": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/openai"
         ]
     },
-    "Hugging Face": {
-        "Hugging Face": [
+    "HuggingFace": {
+        "HuggingFace": [
             "https://huggingface.co/distilbert",
             "https://huggingface.co/open-r1",
             "https://huggingface.co/HuggingFaceTB",
@@ -143,12 +143,12 @@
         ]
     },
     "Princeton NLP": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/princeton-nlp"
         ]
     },
     "Deepseek": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/deepseek-ai"
         ],
         "ModelScope": [
@@ -156,7 +156,7 @@
         ]
     },
     "OpenBMB": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/openbmb"
         ],
         "ModelScope": [
@@ -164,7 +164,7 @@
         ]
     },
     "01-AI": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/01-ai"
         ],
         "ModelScope": [
@@ -172,22 +172,22 @@
         ]
     },
     "Nvidia": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/nvidia"
         ]
     },
     "Ai2": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/allenai"
         ]
     },
     "Apple": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/apple"
         ]
     },
     "Tencent": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/tencent",
             "https://huggingface.co/TencentARC",
             "https://huggingface.co/Tencent-Hunyuan"
@@ -200,7 +200,7 @@
         ]
     },
     "ByteDance": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/ByteDance",
             "https://huggingface.co/bytedance-research",
             "https://huggingface.co/ByteDance-Seed"
@@ -213,17 +213,17 @@
         ]
     },
     "MistralAI": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/mistralai"
         ]
     },
     "StanfordNLP": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/stanfordnlp"
         ]
     },
     "Moonshot": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/moonshotai"
         ],
         "ModelScope": [
@@ -231,17 +231,17 @@
         ]
     },
     "MLFoundations": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/mlfoundations"
         ]
     },
     "Salesforce": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/Salesforce"
         ]
     },
     "Meituan": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/meituan-longcat",
             "https://huggingface.co/meituan"
         ],
@@ -251,7 +251,7 @@
         ]
     },
     "Xiaomi": {
-        "Hugging Face": [
+        "HuggingFace": [
             "https://huggingface.co/XiaomiMiMo"
         ],
         "ModelScope": [

@@ -4,16 +4,17 @@ and whether it belongs to a large model through the repository link.
 """
 import yaml
 import os
+from pathlib import Path
 from langchain.chat_models import init_chat_model
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from pydantic import BaseModel, Field
 from typing import Literal, Optional
 
-SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
-ROOT_PATH = os.path.dirname(os.path.dirname(SCRIPT_PATH))
-
-with open(os.path.join(ROOT_PATH, 'config/env.yaml'), 'r', encoding='utf-8') as f:
+SCRIPT_PATH = Path(__file__)
+ROOT_PATH = SCRIPT_PATH.parents[5]
+CONFIG_PATH = ROOT_PATH / 'config/env.yaml'
+with CONFIG_PATH.open('r', encoding='utf-8') as f:
     config = yaml.safe_load(f)
     if "OPENAI_API_KEY" not in os.environ:
         os.environ["OPENAI_API_KEY"] = config["OPENAI"][0]["OPENAI_API_KEY"]
@@ -34,7 +35,7 @@ llm_web_search = init_chat_model("grok-3-all", model_provider="openai")
 llm_json_parse = init_chat_model("gpt-5", model_provider="openai")
 
 web_search_prompt = """\
-You are an expert in modern machine learning and model classification. Your task is to search all the following model repository links (Hugging Face or Modelscope), and judge based on the webpage information:
+You are an expert in modern machine learning and model classification. Your task is to search all the following model repository links (HuggingFace or Modelscope), and judge based on the webpage information:
 
 Whether the model belongs to the "era of large models" — this means models based on Transformer or newer architectures, vector/embedding models, or other advanced architectures (not traditional ML or pre-Transformer models). T5, BERT and BERT-like architectures (e.g., RoBERTa, ALBERT, DistilBERT, etc.) do NOT count as large models, even though they are Transformer-based.
 
@@ -60,7 +61,7 @@ Model links:
 """
 
 json_parse_prompt = """\
-You are an expert skilled at extracting effective information. Your task is to extract information based on a summary text from web searches, following the format of the `ModelInfoList` class. This summary text describes information from a list of Hugging Face or Modelscope model repositories, including whether these models are large models or not, what the model's modality is, and the web link. 
+You are an expert skilled at extracting effective information. Your task is to extract information based on a summary text from web searches, following the format of the `ModelInfoList` class. This summary text describes information from a list of HuggingFace or Modelscope model repositories, including whether these models are large models or not, what the model's modality is, and the web link. 
 
 Note that if the model is not a large model, you should set `modality=None`; If the text states that it cannot determine the modality of the model or whether it belongs to large models, then you should set the corresponding field to `None`.
 

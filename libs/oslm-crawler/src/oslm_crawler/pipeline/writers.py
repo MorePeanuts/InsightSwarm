@@ -8,15 +8,15 @@ from loguru import logger
 class JsonlineWriter(PipelineStep):
     
     ptype = "✍️ WRITER"
-    
+    required_keys = []
     
     def __init__(
         self,
         path: Path,
-        desired_keys: list[str] | None = None,
+        required_keys: list[str] | None = None,
         drop_keys: list[str] | None = None,
     ):
-        self.desired_keys = desired_keys
+        self.required_keys = required_keys
         if drop_keys:
             self.drop_keys = drop_keys
         else:
@@ -29,12 +29,12 @@ class JsonlineWriter(PipelineStep):
         self.writer = jsonlines.Writer(self.f)
     
     def parse_input(self, input_data: PipelineData | None = None):
-        if self.desired_keys is None:
-            self.desired_keys = list(input_data.data.keys())
-        self.desired_keys = [x for x in self.desired_keys if x not in self.drop_keys]
+        if self.required_keys is None:
+            self.required_keys = list(input_data.data.keys())
+        self.required_keys = [x for x in self.required_keys if x not in self.drop_keys]
         self.data = input_data.data.copy()
         desired_data = {}
-        for k in self.desired_keys:
+        for k in self.required_keys:
             if k not in self.data:
                 raise KeyError(f"key '{k}' not found in input_data.data "
                                f"{list(input_data.data.keys())} of {self.__class__}")

@@ -38,7 +38,7 @@ llm_web_search = init_chat_model("grok-3-all", model_provider="openai", temperat
 llm_json_parse = init_chat_model("gpt-5", model_provider="openai")
 
 web_search_prompt = """\
-You are an expert in machine learning datasets and their applications. Your task is to search all the following dataset repository links (Hugging Face or Modelscope), and judge based on the webpage information by following these steps:
+You are an expert in machine learning datasets and their applications. Your task is to search all the following dataset repository links (HuggingFace or Modelscope), and judge based on the webpage information by following these steps:
 
 1.  First, determine if the link points to a valid dataset. A dataset is considered **valid** if its repository contains accessible data files and appears genuinely intended for model training or evaluation. It is **not valid** if the repository is empty, a placeholder, used only for testing, or otherwise lacks usable data.
 
@@ -67,7 +67,7 @@ Dataset links:
 """
 
 json_parse_prompt = """\
-You are an expert skilled at extracting effective information. Your task is to extract information based on a summary text from web searches, following the format of the `DatasetInfoList` class. This summary text describes information from a list of Hugging Face or Modelscope dataset repositories, including whether the dataset is valid, its modality, its use in the model lifecircle, and the web link.
+You are an expert skilled at extracting effective information. Your task is to extract information based on a summary text from web searches, following the format of the `DatasetInfoList` class. This summary text describes information from a list of HuggingFace or Modelscope dataset repositories, including whether the dataset is valid, its modality, its use in the model lifecircle, and the web link.
 
 Follow these critical rules during extraction:
 1. First, determine the value for the `is_valid` field (true or false).

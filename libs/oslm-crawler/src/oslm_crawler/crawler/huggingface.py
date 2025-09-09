@@ -299,7 +299,7 @@ class HFModelPage(object):
                 model_name = self.link.rstrip('/').split('/')[-1]
                 file_name = repo_name + '_' + model_name + '_' + str(datetime.today().date()) + '.png'
                 self.driver.save_screenshot(self.screenshot_path / file_name)
-                self.screenshot_path = str(self.screenshot_path)
+                self.screenshot_path = str(self.screenshot_path / file_name)
         except Exception:
             raise
 
@@ -428,7 +428,7 @@ class HFDatasetPage:
                 dataset_name = self.link.rstrip('/').split('/')[-1]
                 file_name = repo_name + '_' + dataset_name + '_' + str(datetime.today().date()) + '.png'
                 self.driver.save_screenshot(self.screenshot_path / file_name)
-                self.screenshot_path = str(self.screenshot_path)
+                self.screenshot_path = str(self.screenshot_path / file_name)
         except Exception:
             raise
 

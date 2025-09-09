@@ -20,7 +20,7 @@ from ..crawler.utils import WebDriverPool
 class HFRepoPageCrawler(PipelineStep):
     
     ptype = "🐞 CRAWLER"
-    desired_keys = ['Hugging Face', 'target_sources']
+    required_keys = ['HuggingFace', 'target_sources']
     
     def __init__(
         self, 
@@ -36,7 +36,7 @@ class HFRepoPageCrawler(PipelineStep):
         self.data = input_data.data.copy()
         self.input = {"link-category": []}
         desired_data = {}
-        for k in self.desired_keys:
+        for k in self.required_keys:
             if k not in self.data:
                 raise KeyError(f"key '{k}' not found in input_data.data "
                                f"{list(input_data.data.keys())} of {self.__class__}")
@@ -46,17 +46,17 @@ class HFRepoPageCrawler(PipelineStep):
 
         if self.category is None:
             self.input['link-category'].extend([
-                (link, "models") for link in desired_data['Hugging Face']
+                (link, "models") for link in desired_data['HuggingFace']
             ] + [
-                (link, "datasets") for link in desired_data['Hugging Face']
+                (link, "datasets") for link in desired_data['HuggingFace']
             ])
         elif self.category == 'datasets':
             self.input['link-category'].extend([
-                (link, 'datasets') for link in desired_data['Hugging Face']
+                (link, 'datasets') for link in desired_data['HuggingFace']
             ])
         else:
             self.input['link-category'].extend([
-                (link, 'models') for link in desired_data['Hugging Face']
+                (link, 'models') for link in desired_data['HuggingFace']
             ])
         
     def run(self) -> PipelineResult:
@@ -128,7 +128,7 @@ class HFRepoPageCrawler(PipelineStep):
 class HFDetailPageCrawler(PipelineStep):
     
     ptype = "🐞 CRAWLER"
-    desired_keys = ['category', 'detail_urls']
+    required_keys = ['category', 'detail_urls']
     
     def __init__(
         self,
@@ -146,7 +146,7 @@ class HFDetailPageCrawler(PipelineStep):
         self.data = input_data.data.copy()
         desired_data = {}
         self.input = {"link-category": []}
-        for k in self.desired_keys:
+        for k in self.required_keys:
             if k not in self.data:
                 raise KeyError(f"key '{k}' not found in input_data.data "
                                f"{list(input_data.data.keys())} of {self.__class__}")
@@ -221,7 +221,7 @@ class HFDetailPageCrawler(PipelineStep):
 class MSRepoPageCrawler(PipelineStep):
     
     ptype = "🐞 CRAWLER"
-    desired_keys = ['ModelScope', 'target_sources']
+    required_keys = ['ModelScope', 'target_sources']
     
     def __init__(
         self, 
@@ -237,7 +237,7 @@ class MSRepoPageCrawler(PipelineStep):
         self.data = input_data.data.copy()
         self.input = {"link-category": []}
         desired_data = {}
-        for k in self.desired_keys:
+        for k in self.required_keys:
             if k not in self.data:
                 raise KeyError(f"key '{k}' not found in input_data.data "
                                f"{list(input_data.data.keys())} of {self.__class__}")
@@ -329,7 +329,7 @@ class MSRepoPageCrawler(PipelineStep):
 class MSDetailPageCrawler(PipelineStep):
     
     ptype = "🐞 CRAWLER"
-    desired_keys = ['category', 'detail_urls']
+    required_keys = ['category', 'detail_urls']
     
     def __init__(
         self, 
@@ -347,7 +347,7 @@ class MSDetailPageCrawler(PipelineStep):
         self.data = input_data.data.copy()
         desired_data = {}
         self.input = {"link-category": []}
-        for k in self.desired_keys:
+        for k in self.required_keys:
             if k not in self.data:
                 raise KeyError(f"key '{k}' not fount in input_data.data "
                                f"{list(input_data.data.keys())} of {self.__class__}")
@@ -422,7 +422,7 @@ class MSDetailPageCrawler(PipelineStep):
 class OpenDataLabCrawler(PipelineStep):
     
     ptype = "🐞 CRAWLER"
-    desired_keys = ["OpenDataLab", "target_sources"]
+    required_keys = ["OpenDataLab", "target_sources"]
     
     def __init__(
         self,
@@ -437,7 +437,7 @@ class OpenDataLabCrawler(PipelineStep):
         self.data.pop("repo_org_mapper", None)
         self.input = {"links": []}
         desired_data = {}
-        for k in self.desired_keys:
+        for k in self.required_keys:
             if k not in self.data:
                 raise KeyError(f"key '{k}' not found in input_data.data "
                                f"{list(input_data.data.keys())} of {self.__class__}")
@@ -508,7 +508,7 @@ class OpenDataLabCrawler(PipelineStep):
 class BAAIDatasetsCrawler(PipelineStep):
     
     ptype = "🐞 CRAWLER"
-    desired_keys = ['BAAI Data', 'target_sources']
+    required_keys = ['BAAI Data', 'target_sources']
     
     def __init__(self, max_retries: int = 10):
         self.max_retries = max_retries
@@ -517,7 +517,7 @@ class BAAIDatasetsCrawler(PipelineStep):
         self.data = input_data.data.copy()
         self.data.pop("repo_org_mapper", None)
         desired_data = {}
-        for k in self.desired_keys:
+        for k in self.required_keys:
             if k not in self.data:
                 raise KeyError(f"key '{k}' not found in input_data.data "
                                f"{list(input_data.data.keys())} of {self.__class__}")

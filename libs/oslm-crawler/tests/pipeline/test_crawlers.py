@@ -19,8 +19,8 @@ class TestRepoPageCrawler:
         ]
         crawler = HFRepoPageCrawler(threads=4)
         crawler.parse_input(PipelineData({
-            "Hugging Face": links, 
-            "target_sources": ["Hugging Face"],
+            "HuggingFace": links, 
+            "target_sources": ["HuggingFace"],
             "repo_org_mapper": {}
         }, {"total_links": len(links)}, None))
         for pdata in crawler.run():

@@ -1,5 +1,5 @@
 """
-Check screenshots of repository pages on Hugging Face or Modelscope to determine whether 
+Check screenshots of repository pages on HuggingFace or Modelscope to determine whether 
 the extraction of information such as model or dataset downloads is correct.
 """
 import os
@@ -33,14 +33,14 @@ class ImageInfoMS(BaseModel):
     error: str | None = Field(default=None, description="Error message if extraction failed")
     
 class ImageInfo(BaseModel):
-    output: Union[ImageInfoHF, ImageInfoMS] = Field(description="The image information from Hugging Face or ModelScope")
+    output: Union[ImageInfoHF, ImageInfoMS] = Field(description="The image information from HuggingFace or ModelScope")
     
 @dataclass
 class CheckRequest:
     img: str = field(init=False, metadata={"description": "The base64 encoded image data."})
     img_path: str
     link: str
-    source: Literal["Hugging Face", "ModelScope"]
+    source: Literal["HuggingFace", "ModelScope"]
     
     def __post_init__(self):
         with open(self.img_path, "rb") as img_file:
@@ -58,7 +58,7 @@ class CheckRequest:
 @dataclass
 class CheckResponse:
     link: str
-    source: Literal["Hugging Face", "ModelScope"]
+    source: Literal["HuggingFace", "ModelScope"]
     downloads_last_month: Optional[int] = None
     downloads: Optional[int] = None
     error: Optional[str] = None
@@ -67,8 +67,8 @@ llm = init_chat_model("gpt-5", model_provider="openai")
 prompt_template = ChatPromptTemplate.from_messages([
     {'role': 'system', 'content': ("You are an expert in computer vision and can accurately extract information from images. "
         "You will be provided with a screenshot containing information about a machine learning "
-        "model from either Hugging Face or ModelScope. Your task is to analyze the screenshot "
-        "and extract the number of downloads in the last month for Hugging Face models or the "
+        "model from either HuggingFace or ModelScope. Your task is to analyze the screenshot "
+        "and extract the number of downloads in the last month for HuggingFace models or the "
         "total number of downloads for ModelScope models. If you cannot obtain valid information "
         "from the image (for example, if the screenshot is a blank webpage), then you should set "
         "`downloads` or `downloads_last_month` to None, and explain the reason in the `error` field. "
@@ -94,7 +94,7 @@ def check_image_info(requests: list[CheckRequest]) -> CheckResponse:
         source = requests[idx].source
         if res['parsing_error'] is not None:
             result = CheckResponse(link, source, None, None, error=res['parsing_error'])
-        elif source == "Hugging Face":
+        elif source == "HuggingFace":
             result = CheckResponse(link, source, res['parsed'].output.downloads_last_month, None, res['parsed'].output.error)
         elif source == "ModelScope":
             result = CheckResponse(link, source, None, res['parsed'].output.downloads, res['parsed'].output.error)
@@ -112,7 +112,7 @@ if __name__ == "__main__":
         CheckRequest(
             img_path=str(root_path / "test-hf.png"),
             link="https://huggingface.co/01-ai/Yi-1.5-9B-Chat",
-            source="Hugging Face"
+            source="HuggingFace"
         ),
         CheckRequest(
             img_path=str(root_path / "test-ms.png"),

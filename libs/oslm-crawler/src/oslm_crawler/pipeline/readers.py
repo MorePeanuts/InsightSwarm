@@ -1,14 +1,15 @@
 import json
+import traceback
+import jsonlines
 from .base import PipelineStep, PipelineResult, PipelineData
 from pathlib import Path
 from collections import defaultdict
-from typing import TypedDict
 
 
 class OrgLinksReader(PipelineStep):
     
     ptype = "📖 READER"
-    desired_keys = []
+    required_keys = []
     
     def __init__(
         self, 
@@ -57,7 +58,7 @@ class OrgLinksReader(PipelineStep):
             repo_org_mapper = {}
             for org, v in target_config.items():
                 for src, links in v.items():
-                    if src in ['Hugging Face', 'ModelScope']:
+                    if src in ['HuggingFace', 'ModelScope']:
                         for link in links:
                             repo = link.rstrip('/').split('/')[-1]
                             if repo in repo_org_mapper:
@@ -83,7 +84,6 @@ class OrgLinksReader(PipelineStep):
             
             res = PipelineData(data, message, None)
         except Exception as e:
-            import traceback
             error_msg = traceback.format_exc()
             res = PipelineData(None, None, {"type": type(e), "details": error_msg})
         
@@ -93,8 +93,42 @@ class OrgLinksReader(PipelineStep):
 class JsonlineReader(PipelineStep):
     
     ptype = "📖 READER"
+    required_keys = []
     
     def __init__(
         self,
+        path: Path,
+        required_keys: list[str] | None = None,
+        drop_keys: list[str] | None = None
     ):
-        pass
+        self.required_keys = required_keys
+        if drop_keys:
+            self.drop_keys = drop_keys
+        else:
+            self.drop_keys = []
+        self.path = path
+        assert self.path.suffix == '.jsonl', 'The path must end with a filename that has a `.jsonl` suffix.'
+        assert self.path.exists(), f'{self.path} not exists.'
+        self.input = self.path
+        
+    def parse_input(self, input_data: PipelineData | None = None):
+        if input_data is None:
+            self.data = {}
+            return 
+        self.data = input_data.data.copy()
+        
+    def run(self) -> PipelineResult:
+        content = []
+        try:
+            with jsonlines.open(self.input, 'r') as reader:
+                for line in reader:
+                    content.append(line)
+            yield PipelineData({
+                "content": content,
+                "total_lines": len(content)
+            }, {"total_lines": len(content)}, None)
+        except Exception as e:
+            error_msg = traceback.format_exc()
+            yield PipelineData(None, None, {
+                "type": type(e), "details": error_msg
+            })    

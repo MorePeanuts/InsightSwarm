@@ -17,7 +17,7 @@ PipelineResult: TypeAlias = Generator[PipelineData, None, None] | None
 class PipelineStep(ABC):
     
     ptype: str = ""
-    desired_keys = []
+    required_keys = []
     
     def __init__(self):
         super().__init__()

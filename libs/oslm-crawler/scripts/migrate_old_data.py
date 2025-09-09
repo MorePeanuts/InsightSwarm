@@ -41,7 +41,7 @@ def migrate_hf_model():
     for base_path in sorted(src_path.glob('output-2025-*')):
         raw_data_path = base_path / 'raw_data/model-details-huggingface.json'
         date_crawl = re.match(r'output-([\d]+-[\d]+-[\d]+)', base_path.name).group(1)
-        tgt_path = target_path / date_crawl / 'Hugging Face/raw-models-info.jsonl'
+        tgt_path = target_path / date_crawl / 'HuggingFace/raw-models-info.jsonl'
         tgt_path.parent.mkdir(parents=True, exist_ok=True)
         src_data = []
         tgt_data = []
@@ -49,7 +49,7 @@ def migrate_hf_model():
             src_data = json.load(f)
         for item in src_data:
             new_ss_file_name = f'{item["organization"]}_{item["model_name"]}_{date_crawl}.png'
-            target_ss_file = target_ss_path / date_crawl / 'Hugging Face' / new_ss_file_name
+            target_ss_file = target_ss_path / date_crawl / 'HuggingFace' / new_ss_file_name
             if target_ss_file.exists():
                 target_ss_file = str(target_ss_file)
             else:
@@ -89,12 +89,10 @@ def migrate_ms_model():
         with raw_data_path.open('r') as f:
             src_data = json.load(f)
         for item in src_data:
-            old_ss = base_path / f'screenshots_modelscope/{item['organization']}-{item['model_name']}.png'
-            if old_ss.exists():
-                new_ss = target_ss_path / date_crawl / 'ModelScope' / f'{item["organization"]}_{item["model_name"]}_{date_crawl}.png'
-                new_ss.parent.mkdir(parents=True, exist_ok=True)
-                shutil.move(old_ss, new_ss)
-                target_ss_file = str(new_ss)
+            new_ss_file_name = f'{item["organization"]}_{item["model_name"]}_{date_crawl}.png'
+            target_ss_file = target_ss_path / date_crawl / 'ModelScope' / new_ss_file_name
+            if target_ss_file.exists():
+                target_ss_file = str(target_ss_file)
             else:
                 target_ss_file = None
             tgt_data.append(trans_ms_model(item, target_ss_file, date_crawl))
@@ -122,19 +120,17 @@ def migrate_hf_model_2024():
     for base_path in sorted(src_path.glob('output-2024-*')):
         raw_data_path = base_path / 'processed_data/model-details-huggingface.json'
         date_crawl = re.match(r'output-([\d]+-[\d]+-[\d]+)', base_path.name).group(1)
-        tgt_path = target_path / date_crawl / 'Hugging Face/raw-models-info.jsonl'
+        tgt_path = target_path / date_crawl / 'HuggingFace/raw-models-info.jsonl'
         tgt_path.parent.mkdir(parents=True, exist_ok=True)
         src_data = []
         tgt_data = []
         with raw_data_path.open('r') as f:
             src_data = json.load(f)
         for item in src_data:
-            old_ss = base_path / f'screenshots_huggingface/{item['model_name']}_{date_crawl}.png'
-            if old_ss.exists():
-                new_ss = target_ss_path / date_crawl / 'Hugging Face' / f'{item["organization"]}_{item["model_name"]}_{date_crawl}.png'
-                new_ss.parent.mkdir(parents=True, exist_ok=True)
-                shutil.move(old_ss, new_ss)
-                target_ss_file = str(new_ss)
+            new_ss_file_name = f'{item["organization"]}_{item["model_name"]}_{date_crawl}.png'
+            target_ss_file = target_ss_path / date_crawl / 'HuggingFace' / new_ss_file_name
+            if target_ss_file.exists():
+                target_ss_file = str(target_ss_file)
             else:
                 target_ss_file = None
             tgt_data.append(trans_hf_model_2024(item, target_ss_file, date_crawl))
@@ -168,12 +164,10 @@ def migrate_ms_model_2024():
         with raw_data_path.open('r') as f:
             src_data = json.load(f)
         for item in src_data:
-            old_ss = base_path / f'screenshots_modelscope/{item['model_name']}_{date_crawl}.png'
-            if old_ss.exists():
-                new_ss = target_ss_path / date_crawl / 'ModelScope' / f'{item["organization"]}_{item["model_name"]}_{date_crawl}.png'
-                new_ss.parent.mkdir(parents=True, exist_ok=True)
-                shutil.move(old_ss, new_ss)
-                target_ss_file = str(new_ss)
+            new_ss_file_name = f'{item["organization"]}_{item["model_name"]}_{date_crawl}.png'
+            target_ss_file = target_ss_path / date_crawl / 'ModelScope' / new_ss_file_name
+            if target_ss_file.exists():
+                target_ss_file = str(target_ss_file)
             else:
                 target_ss_file = None
             tgt_data.append(trans_ms_model_2024(item, target_ss_file, date_crawl))
@@ -219,7 +213,7 @@ def trans_hf_dataset(src_item: dict, date_crawl: str):
     link = src_item['链接']
     tgt_item['repo'] = link.rstrip('/').split('/')[-2]
     tgt_item['dataset_name'] = link.rstrip('/').split('/')[-1]
-    tgt_item['downloads_last_month'] = src_item['上月下载量']
+    tgt_item['downloads_last_month'] = str2int(src_item['上月下载量'])
     tgt_item['likes'] = -1
     tgt_item['community'] = -1
     tgt_item['dataset_usage'] = -1
@@ -256,7 +250,7 @@ def trans_ms_dataset(src_item: dict, date_crawl: str):
     link = src_item['链接']
     tgt_item['repo'] = link.rstrip('/').split('/')[-2]
     tgt_item['dataset_name'] = link.rstrip('/').split('/')[-1]
-    tgt_item['total_downloads'] = src_item['下载量']
+    tgt_item['total_downloads'] = str2int(src_item['下载量'])
     tgt_item['likes'] = -1
     tgt_item['community'] = -1
     tgt_item['date_crawl'] = date_crawl
@@ -292,7 +286,7 @@ def trans_open_data_lab_dataset(src_item: dict, date_crawl):
     tgt_item['org'] = 'ShanghaiAILab'
     tgt_item['repo'] = link.rstrip('/').split('/')[-2]
     tgt_item['dataset_name'] = link.rstrip('/').split('/')[-1]
-    tgt_item['total_downloads'] = src_item['下载量']
+    tgt_item['total_downloads'] = str2int(src_item['下载量'])
     tgt_item['likes'] = -1
     tgt_item['date_crawl'] = date_crawl
     tgt_item['link'] = link
@@ -326,7 +320,7 @@ def trans_baai_data_dataset(src_item: dict, date_crawl):
     tgt_item['org'] = 'BAAI'
     tgt_item['repo'] = 'BAAI'
     tgt_item['dataset_name'] = link.rstrip('/').split('/')[-1]
-    tgt_item['total_downloads'] = src_item['下载量']
+    tgt_item['total_downloads'] = str2int(src_item['下载量'])
     tgt_item['likes'] = -1
     tgt_item['date_crawl'] = date_crawl
     tgt_item['link'] = link
@@ -385,12 +379,13 @@ def remove_duplicates(dict_list):
 def migrate_dataset():
     src_path = Path('/Users/liaofeng/Desktop/oslm-analysis/data')
     dataset_info = {}
-    hf_datasets = []
-    ms_datasets = []
-    odl_datasets = []
-    baai_datasets = []
-    tmp_datasets = []
     for f_path in sorted(src_path.glob('dataset-details-*')):
+        hf_datasets = []
+        ms_datasets = []
+        odl_datasets = []
+        baai_datasets = []
+        tmp_datasets = []
+        print(f_path)
         date_crawl = re.match(r'dataset-details-([\d]+-[\d]+-[\d]+).csv', f_path.name).group(1)
         with f_path.open('r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
@@ -419,10 +414,10 @@ def migrate_dataset():
                     cfg = None
                 if cfg is not None:
                     dataset_info.update(cfg)
-        hf_path = target_path / date_crawl / 'Hugging Face/raw_datasets_info.jsonl'
-        ms_path = target_path / date_crawl / 'ModelScope/raw_datasets_info.jsonl'
-        odl_path = target_path / date_crawl / 'OpenDataLab/raw_datasets_info.jsonl'
-        baai_path = target_path / date_crawl / 'BAAIData/raw_datasets_info.jsonl'
+        hf_path = target_path / date_crawl / 'HuggingFace/raw-datasets-info.jsonl'
+        ms_path = target_path / date_crawl / 'ModelScope/raw-datasets-info.jsonl'
+        odl_path = target_path / date_crawl / 'OpenDataLab/raw-datasets-info.jsonl'
+        baai_path = target_path / date_crawl / 'BAAIData/raw-datasets-info.jsonl'
         tmp_path = target_path / 'tmp_fix_datasets.jsonl'
         hf_path.parent.mkdir(exist_ok=True, parents=True)
         ms_path.parent.mkdir(exist_ok=True, parents=True)

@@ -43,7 +43,7 @@ def tmp_executor(target_org=None):
     # hf_repo = HFRepoPageCrawler(threads=1)
     # hf_repo.parse_input(org_links)
     # count = len(hf_repo.input['link-category'])
-    # pbar = tqdm(total=count, desc="Crawling repo infos (Hugging Face)...")
+    # pbar = tqdm(total=count, desc="Crawling repo infos (HuggingFace)...")
     # data_list = []
     # for data in hf_repo.run():
     #     if data.data is None:
@@ -60,10 +60,10 @@ def tmp_executor(target_org=None):
     # for data in data_list:
     #     if data.data is not None:
     #         count += len(data.data['detail_urls'])
-    # pbar = tqdm(total=count, desc="Crawling detail infos (Hugging Face)...")
-    # hf_detail = HFDetailPageCrawler(threads=1, screenshot_path=screenshot_path/'Hugging Face')
-    # model_writer = JsonlineWriter(data_path / 'Hugging Face/raw_models_info.jsonl', drop_keys=['repo_org_mapper'])
-    # dataset_writer = JsonlineWriter(data_path / 'Hugging Face/raw_datasets_info.jsonl', drop_keys=['repo_org_mapper'])
+    # pbar = tqdm(total=count, desc="Crawling detail infos (HuggingFace)...")
+    # hf_detail = HFDetailPageCrawler(threads=1, screenshot_path=screenshot_path/'HuggingFace')
+    # model_writer = JsonlineWriter(data_path / 'HuggingFace/raw-models-info.jsonl', drop_keys=['repo_org_mapper'])
+    # dataset_writer = JsonlineWriter(data_path / 'HuggingFace/raw-datasets-info.jsonl', drop_keys=['repo_org_mapper'])
     # for inp in data_list:
     #     hf_detail.parse_input(inp)
     #     for data in hf_detail.run():
@@ -85,7 +85,7 @@ def tmp_executor(target_org=None):
             
     # model_writer.close()
     # dataset_writer.close()
-    # logger.info('Hugging Face done!')
+    # logger.info('HuggingFace done!')
     # pbar.close()
     
     ms_repo = MSRepoPageCrawler(threads=1)
@@ -108,8 +108,8 @@ def tmp_executor(target_org=None):
             count += len(data.data['detail_urls'])
     pbar = tqdm(total=count, desc="Crawling detail infos (ModelScope)...")
     ms_detail = MSDetailPageCrawler(threads=1, screenshot_path=screenshot_path/'ModelScope')
-    model_writer = JsonlineWriter(data_path / 'ModelScope/raw_models_info.jsonl', drop_keys=['repo_org_mapper'])
-    dataset_writer = JsonlineWriter(data_path / 'MOdelScope/raw_datasets_info.jsonl', drop_keys=['repo_org_mapper'])
+    model_writer = JsonlineWriter(data_path / 'ModelScope/raw-models-info.jsonl', drop_keys=['repo_org_mapper'])
+    dataset_writer = JsonlineWriter(data_path / 'MOdelScope/raw-datasets-info.jsonl', drop_keys=['repo_org_mapper'])
     for inp in data_list:
         ms_detail.parse_input(inp)
         for data in ms_detail.run():
@@ -135,7 +135,7 @@ def tmp_executor(target_org=None):
     pbar.close()
     
     opendatalab = OpenDataLabCrawler()
-    dataset_writer = JsonlineWriter(data_path/'OpenDataLab/raw_datasets_info.jsonl')
+    dataset_writer = JsonlineWriter(data_path/'OpenDataLab/raw-datasets-info.jsonl')
     opendatalab.parse_input(org_links)
     data_list = []
     for data in opendatalab.run():
@@ -153,7 +153,7 @@ def tmp_executor(target_org=None):
     logger.info("OpenDataLab done.")
 
     baai = BAAIDatasetsCrawler()
-    dataset_writer = JsonlineWriter(data_path/'BAAIData/raw_datasets_info.jsonl') 
+    dataset_writer = JsonlineWriter(data_path/'BAAIData/raw-datasets-info.jsonl') 
     baai.parse_input(org_links)
     data_list = []
     for data in baai.run():

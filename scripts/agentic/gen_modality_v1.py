@@ -35,7 +35,7 @@ llm_json_parse = init_chat_model("gpt-5", model_provider="openai")
 
 web_search_prompt = """\
 You are an expert in modern machine learning and model classification. Your task is to search all \
-the following model repository links (Hugging Face or Modelscope), and judge based on the webpage \
+the following model repository links (HuggingFace or Modelscope), and judge based on the webpage \
 information:
 
 Whether the model belongs to the "era of large models" — this means models based on Transformer or \
@@ -69,7 +69,7 @@ Model links:
 json_parse_prompt = """\
 You are an expert skilled at extracting effective information. Your task is to extract information based \
 on a summary text from web searches, following the format of the `ModelInfoList` class. This summary text \
-describes information from a list of Hugging Face or Modelscope model repositories, including whether these \
+describes information from a list of HuggingFace or Modelscope model repositories, including whether these \
 models are large models or not, what the model's modality is, and the web link. 
 
 Note that if the model is not a large model, you should set `modality=None`; If the text states that it \
