@@ -34,14 +34,9 @@ llm_web_search = init_chat_model("grok-3-all", model_provider="openai")
 llm_json_parse = init_chat_model("gpt-5", model_provider="openai")
 
 web_search_prompt = """\
-You are an expert in modern machine learning and model classification. Your task is to search all \
-the following model repository links (Hugging Face or Modelscope), and judge based on the webpage \
-information:
+You are an expert in modern machine learning and model classification. Your task is to search all the following model repository links (Hugging Face or Modelscope), and judge based on the webpage information:
 
-Whether the model belongs to the "era of large models" — this means models based on Transformer or \
-newer architectures, vector/embedding models, or other advanced architectures (not traditional ML or \
-pre-Transformer models). T5, BERT and BERT-like architectures (e.g., RoBERTa, ALBERT, DistilBERT, etc.) \
-do NOT count as large models, even though they are Transformer-based.
+Whether the model belongs to the "era of large models" — this means models based on Transformer or newer architectures, vector/embedding models, or other advanced architectures (not traditional ML or pre-Transformer models). T5, BERT and BERT-like architectures (e.g., RoBERTa, ALBERT, DistilBERT, etc.) do NOT count as large models, even though they are Transformer-based.
 
 If it does belong, identify the modality of the model. Possible modalities are:
 
@@ -52,13 +47,11 @@ Multimodal: Models combining two or more modalities (e.g., CLIP, text-to-image, 
 Protein: Models for protein folding, biological sequences, or related scientific tasks.
 Vector: Any embedding or reranker model, regardless of input type (text, image, etc.).
 3D: Models that process or generate 3D data, point clouds, or spatial geometry.
-Embodied: Models designed for robotics, or embodied AI. This includes large language models explicitly \
-framed as robot brains or control systems.
+Embodied: Models designed for robotics, or embodied AI. This includes large language models explicitly framed as robot brains or control systems.
 
 Instructions:
 If you do not have the ability to access the network, state that you cannot access the network.
-If you cannot determine the modality of the model or whether it belongs to large models, then you should \
-clearly point it out rather than guessing a result.
+If you cannot determine the modality of the model or whether it belongs to large models, then you should clearly point it out rather than guessing a result.
 If the model is not from the large-model era, clearly state so. If it is, output its modality from the above list.
 Keep the correspondence between each link and the conclusions you give.
 
@@ -67,14 +60,9 @@ Model links:
 """
 
 json_parse_prompt = """\
-You are an expert skilled at extracting effective information. Your task is to extract information based \
-on a summary text from web searches, following the format of the `ModelInfoList` class. This summary text \
-describes information from a list of Hugging Face or Modelscope model repositories, including whether these \
-models are large models or not, what the model's modality is, and the web link. 
+You are an expert skilled at extracting effective information. Your task is to extract information based on a summary text from web searches, following the format of the `ModelInfoList` class. This summary text describes information from a list of Hugging Face or Modelscope model repositories, including whether these models are large models or not, what the model's modality is, and the web link. 
 
-Note that if the model is not a large model, you should set `modality=None`; If the text states that it \
-cannot determine the modality of the model or whether it belongs to large models, then you should set the \
-corresponding field to `None`.
+Note that if the model is not a large model, you should set `modality=None`; If the text states that it cannot determine the modality of the model or whether it belongs to large models, then you should set the corresponding field to `None`.
 
 The modality should be one of the following: Language, Speech, Vision, Multimodal, Vector, Protein, 3D, Embodied. 
 

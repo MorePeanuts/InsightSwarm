@@ -12,11 +12,9 @@ class ModelRecord:
     likes: int
     community: int
     descendants: int
-    param_size: int
     date_crawl: str
     date_last_crawl: Optional[str]
     date_enter_db: str
-    links: list[str]
     
 
 @dataclass
@@ -33,7 +31,6 @@ class DatasetRecord:
     date_crawl: str
     date_last_crawl: Optional[str]
     date_enter_db: str
-    links: list[str]
 
 
 @dataclass
@@ -46,7 +43,6 @@ class HFModelRecord:
     likes: int
     community: int
     descendants: int
-    param_size: int
     date_crawl: str
     date_last_crawl: Optional[str]
     date_enter_db: str
@@ -82,7 +78,6 @@ class MSModelRecord:
     total_downloads: int
     likes: int
     community: int
-    param_size: int
     date_crawl: str
     date_last_crawl: Optional[str]
     date_enter_db: str

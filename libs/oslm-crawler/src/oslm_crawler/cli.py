@@ -28,7 +28,7 @@ def tmp_executor(target_org=None):
     error_f = cur_path.parents[2] / 'data/2025-09-07/errors.jsonl'
     error_f.parent.mkdir(exist_ok=True, parents=True)
     error_f.touch()
-    error_f = open(error_f, 'w', encoding='utf-8')
+    error_f = open(error_f, 'a', encoding='utf-8')
     error_writer = jsonlines.Writer(error_f)
     
     reader = OrgLinksReader(orgs=target_org)
@@ -40,53 +40,53 @@ def tmp_executor(target_org=None):
     from pprint import pprint
     pprint(org_links.data)
 
-    hf_repo = HFRepoPageCrawler(threads=1)
-    hf_repo.parse_input(org_links)
-    count = len(hf_repo.input['link-category'])
-    pbar = tqdm(total=count, desc="Crawling repo infos (Hugging Face)...")
-    data_list = []
-    for data in hf_repo.run():
-        if data.data is None:
-            # logger.error(f"Error in HFRepoPageCrawler with error message {data.error['error_msg']}")
-            error_writer.write(data.error)
-            error_f.flush()
-            pbar.update(1)
-            continue
-        data_list.append(data)
-        pbar.update(1)
+    # hf_repo = HFRepoPageCrawler(threads=1)
+    # hf_repo.parse_input(org_links)
+    # count = len(hf_repo.input['link-category'])
+    # pbar = tqdm(total=count, desc="Crawling repo infos (Hugging Face)...")
+    # data_list = []
+    # for data in hf_repo.run():
+    #     if data.data is None:
+    #         # logger.error(f"Error in HFRepoPageCrawler with error message {data.error['error_msg']}")
+    #         error_writer.write(data.error)
+    #         error_f.flush()
+    #         pbar.update(1)
+    #         continue
+    #     data_list.append(data)
+    #     pbar.update(1)
         
-    pbar.close()
-    count = 0
-    for data in data_list:
-        if data.data is not None:
-            count += len(data.data['detail_urls'])
-    pbar = tqdm(total=count, desc="Crawling detail infos (Hugging Face)...")
-    hf_detail = HFDetailPageCrawler(threads=1, screenshot_path=screenshot_path/'Hugging Face')
-    model_writer = JsonlineWriter(data_path / 'Hugging Face/raw_models_info.jsonl', drop_keys=['repo_org_mapper'])
-    dataset_writer = JsonlineWriter(data_path / 'Hugging Face/raw_datasets_info.jsonl', drop_keys=['repo_org_mapper'])
-    for inp in data_list:
-        hf_detail.parse_input(inp)
-        for data in hf_detail.run():
-            if data.data is None:
-                error_writer.write(data.error)
-                error_f.flush()
-                pbar.update(1)
-                continue
-            if 'model_name' in data.data:
-                model_writer.parse_input(data)
-                res = next(model_writer.run())
-            elif 'dataset_name' in data.data:
-                dataset_writer.parse_input(data)
-                res = next(dataset_writer.run())
-            if res.error is not None:
-                error_writer.write(res.error)
-                error_f.flush()
-            pbar.update(1)
+    # pbar.close()
+    # count = 0
+    # for data in data_list:
+    #     if data.data is not None:
+    #         count += len(data.data['detail_urls'])
+    # pbar = tqdm(total=count, desc="Crawling detail infos (Hugging Face)...")
+    # hf_detail = HFDetailPageCrawler(threads=1, screenshot_path=screenshot_path/'Hugging Face')
+    # model_writer = JsonlineWriter(data_path / 'Hugging Face/raw_models_info.jsonl', drop_keys=['repo_org_mapper'])
+    # dataset_writer = JsonlineWriter(data_path / 'Hugging Face/raw_datasets_info.jsonl', drop_keys=['repo_org_mapper'])
+    # for inp in data_list:
+    #     hf_detail.parse_input(inp)
+    #     for data in hf_detail.run():
+    #         if data.data is None:
+    #             error_writer.write(data.error)
+    #             error_f.flush()
+    #             pbar.update(1)
+    #             continue
+    #         if 'model_name' in data.data:
+    #             model_writer.parse_input(data)
+    #             res = next(model_writer.run())
+    #         elif 'dataset_name' in data.data:
+    #             dataset_writer.parse_input(data)
+    #             res = next(dataset_writer.run())
+    #         if res.error is not None:
+    #             error_writer.write(res.error)
+    #             error_f.flush()
+    #         pbar.update(1)
             
-    model_writer.close()
-    dataset_writer.close()
-    logger.info('Hugging Face done!')
-    pbar.close()
+    # model_writer.close()
+    # dataset_writer.close()
+    # logger.info('Hugging Face done!')
+    # pbar.close()
     
     ms_repo = MSRepoPageCrawler(threads=1)
     ms_repo.parse_input(org_links)
@@ -98,7 +98,7 @@ def tmp_executor(target_org=None):
             print(data.error['error_msg'])
             pbar.update(1)
             continue
-        data_list.appen(data)
+        data_list.append(data)
         pbar.update(1)
     pbar.close()
     

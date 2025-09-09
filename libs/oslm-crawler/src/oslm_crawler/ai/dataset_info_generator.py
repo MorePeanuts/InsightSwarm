@@ -27,6 +27,7 @@ class DatasetInfo(BaseModel):
     modality: Optional[Literal["Language", "Speech", "Vision", "Multimodal", "Vector", "Protein", 
                                "3D", "Embodied"]] = Field(default=None, description="The modality of the dataset")
     lifecircle: Optional[Literal["Pre-training", "Fine-tuning", "Preference", "Evaluation"]] = Field(default=None, description="Which stage of model training/evaluation is the dataset used for")
+    is_valid: Optional[bool] = Field(default=None, description="Is it a valid dataset that can be used for large model evaluation/training")
     
     
 class DatasetInfoList(BaseModel):
@@ -37,18 +38,18 @@ llm_web_search = init_chat_model("grok-3-all", model_provider="openai", temperat
 llm_json_parse = init_chat_model("gpt-5", model_provider="openai")
 
 web_search_prompt = """\
-You are an expert in machine learning datasets and their applications. Your task is to search all \
-the following dataset repository links (Hugging Face or Modelscope), and judge based on the webpage \
-information:
+You are an expert in machine learning datasets and their applications. Your task is to search all the following dataset repository links (Hugging Face or Modelscope), and judge based on the webpage information by following these steps:
 
-1.  Identify the modality of the dataset. Possible modalities are:
+1.  First, determine if the link points to a valid dataset. A dataset is considered **valid** if its repository contains accessible data files and appears genuinely intended for model training or evaluation. It is **not valid** if the repository is empty, a placeholder, used only for testing, or otherwise lacks usable data.
+
+2.  If and only if the dataset is valid, identify its modality. Possible modalities are:
     -   Language: Datasets consisting of text (e.g., books, articles, code, instruction-response pairs).
     -   Speech: Datasets containing audio of spoken language.
     -   Vision: Datasets of images or videos.
     -   Multimodal: Datasets combining two or more modalities (e.g., images with text captions, video with audio).
     -   Embodied: Datasets for robotics or embodied AI, often involving sequences of actions, observations, and rewards.
 
-2.  Identify which stage in the large model lifecycle the dataset is primarily used for. Possible stages are:
+3.  If and only if the dataset is valid, identify which stage in the large model lifecycle it is primarily used for. Possible stages are:
     -   Pre-training: Very large, general-purpose datasets, often with raw or weakly labeled data, used to train foundation models from scratch (e.g., C4, The Pile).
     -   Fine-tuning: Smaller, high-quality, task-specific datasets, often structured as instructions and responses, used to adapt a pre-trained model to a specific capability (e.g., Alpaca, Dolly).
     -   Preference: Datasets used for alignment techniques like RLHF or DPO, typically containing prompts and multiple responses with human or AI-judged rankings/preferences (e.g., Anthropic HH-RLHF).
@@ -56,8 +57,9 @@ information:
 
 Instructions:
 If you do not have the ability to access the network, state that you cannot access the network.
-If you cannot determine the modality or the lifecircle stage for a dataset, you should clearly point it out rather than guessing a result.
-For each link, provide its modality and its lifecycle stage from the lists above.
+For each link, you must first state whether it is a valid dataset.
+If a dataset is judged as not valid, you should clearly state so and do not need to provide its modality or lifecircle.
+If you cannot determine any piece of information (validity, modality, or lifecircle), you should clearly point it out rather than guessing a result.
 Keep the correspondence between each link and the conclusions you give.
 
 Dataset links:
@@ -65,13 +67,12 @@ Dataset links:
 """
 
 json_parse_prompt = """\
-You are an expert skilled at extracting effective information. Your task is to extract information based \
-on a summary text from web searches, following the format of the `DatasetInfoList` class. This summary text \
-describes information from a list of Hugging Face or Modelscope dataset repositories, including the dataset's \
-modality, its use in the model lifecircle, and the web link.
+You are an expert skilled at extracting effective information. Your task is to extract information based on a summary text from web searches, following the format of the `DatasetInfoList` class. This summary text describes information from a list of Hugging Face or Modelscope dataset repositories, including whether the dataset is valid, its modality, its use in the model lifecircle, and the web link.
 
-Note that if the text states that it cannot determine the modality or the lifecircle of the dataset, then you \
-should set the corresponding field to `None`.
+Follow these critical rules during extraction:
+1. First, determine the value for the `is_valid` field (true or false).
+2. Crucially, if `is_valid` is `False`, then both `modality` and `lifecircle` must be set to `None`, regardless of any other information present in the text.
+3. If the text states that it cannot determine any of the fields (`is_valid`, `modality`, or `lifecircle`), then you should set that specific field to `None`.
 
 The `modality` must be one of the following: Language, Speech, Vision, Multimodal, Embodied.
 The `lifecircle` must be one of the following: Pre-training, Fine-tuning, Preference, Evaluation.
