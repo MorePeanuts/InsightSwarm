@@ -1,0 +1,30 @@
+HuggingFacePipeline:
+  task_name: 'hf-task'
+  load_dir: null
+  save_dir: null
+  log_path: null
+
+  init_org_links:
+    path: null
+    orgs: null
+
+  crawl_repo_page:
+    category: null
+    threads: 1
+    max_retries: 20
+
+  crawl_detail_page:
+    threads: 1
+    max_retries: 20
+    screenshot_path: null
+
+  post_process:
+    dataset_info_path: null
+    model_info_path: null
+    ai_gen: true
+    ai_check: false
+    buffer_size: 8
+    max_retries: 3
+
+ModelScopePipeline:
+  task_name: 'ms-task'

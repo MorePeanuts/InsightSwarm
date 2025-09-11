@@ -4,10 +4,9 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Literal, Optional
 from collections import defaultdict
+from typing_extensions import deprecated
 import jsonlines
 from loguru import logger
-from oslm_crawler import crawler
-from selenium.webdriver.support.expected_conditions import none_of
 from .base import PipelineStep, PipelineResult, PipelineData
 from ..ai.model_info_generator import ModelInfo, gen_model_info
 from ..ai.dataset_info_generator import DatasetInfo, gen_dataset_info
@@ -24,7 +23,7 @@ class HFInfoProcessor(PipelineStep):
         dataset_info_path: str | None = None,
         model_info_path: str | None = None,
         ai_gen: bool = True,
-        ai_check: bool = False,
+        ai_check: bool = False, # TODO ai check function
         buffer_size: int = 8,
         max_retries: int = 3,
     ):
@@ -108,6 +107,7 @@ class HFInfoProcessor(PipelineStep):
                     "descendants": inp['descendants'],
                     "date_crawl": inp['date_crawl'],
                     "link": inp['link'],
+                    "source": "HuggingFace",
                     "img_path": inp['img_path']
                 }, {
                     "org": org,
@@ -148,6 +148,7 @@ class HFInfoProcessor(PipelineStep):
                     "dataset_usage": inp['dataset_usage'],
                     "date_crawl": inp['date_crawl'],
                     "link": inp['link'],
+                    "source": "HuggingFace",
                     "img_path": inp['img_path']
                 }, {
                     "org": org,
@@ -189,6 +190,7 @@ class HFInfoProcessor(PipelineStep):
             else:
                 raise ValueError('category must be models or datasets.')
             if data:
+                data.data.update(self.data)
                 yield data
                     
         except Exception as e:
@@ -211,6 +213,7 @@ class HFInfoProcessor(PipelineStep):
                 try:
                     data = self._process_model(inp)
                     if data:
+                        data.data.update(self.data)
                         yield data
                 except Exception as e:
                     logger.opt(exception=e).error(f"HFInfoProcessor Error with input: {inp}")
@@ -232,6 +235,7 @@ class HFInfoProcessor(PipelineStep):
                 try:
                     data = self._process_dataset(inp)
                     if data:
+                        data.data.update(self.data)
                         yield data
                 except Exception as e:
                     logger.opt(exception=e).error(f"HFInfoProcessor Error with input: {inp}")
@@ -254,6 +258,7 @@ class HFInfoProcessor(PipelineStep):
                 try:
                     data = self._process_model(inp)
                     if data:
+                        data.data.update(self.data)
                         yield data
                 except Exception as e:
                     logger.opt(exception=e).error(f"HFInfoProcessor Error with input: {inp}")
@@ -275,6 +280,7 @@ class HFInfoProcessor(PipelineStep):
                 try:
                     data = self._process_dataset(inp)
                     if data:
+                        data.data.update(self.data)
                         yield data
                 except Exception as e:
                     logger.opt(exception=e).error(f"HFInfoProcessor Error with input: {inp}")
@@ -302,7 +308,7 @@ class MSInfoProcessor(PipelineStep):
         dataset_info_path: str | None = None,
         model_info_path: str | None = None,
         ai_gen: bool = True,
-        ai_check: bool = False,
+        ai_check: bool = False, # TODO ai check function
         buffer_size: int = 8,
         max_retries: int = 3,
     ):
@@ -357,6 +363,9 @@ class MSInfoProcessor(PipelineStep):
                 closest_date = date
         
         last_month_downloads = {}
+        if min_diff < 15:
+            return last_month_downloads
+        
         p = self.history_data_path[closest_date] / 'ModelScope/raw-models-info.jsonl'
         with jsonlines.open(p, 'r') as f:
             for item in f:
@@ -428,6 +437,7 @@ class MSInfoProcessor(PipelineStep):
                     "community": inp['community'],
                     "date_crawl": date_crawl,
                     "link": inp['link'],
+                    "source": "ModelScope",
                     "img_path": inp['img_path']
                 }, {
                     "org": org,
@@ -474,6 +484,7 @@ class MSInfoProcessor(PipelineStep):
                     "community": inp['community'],
                     "date_crawl": date_crawl,
                     "link": inp['link'],
+                    "source": "ModelScope",
                     "img_path": inp['img_path']
                 }, {
                     "org": org,
@@ -515,6 +526,7 @@ class MSInfoProcessor(PipelineStep):
             else:
                 raise ValueError('category must be models or datasets.')
             if data:
+                data.data.update(self.data)
                 yield data
         
         except Exception as e:
@@ -537,6 +549,7 @@ class MSInfoProcessor(PipelineStep):
                 try:
                     data = self._process_model(inp)
                     if data:
+                        data.data.update(self.data)
                         yield data
                 except Exception as e:
                     logger.opt(exception=e).error(f"MSInfoProcessor Error with input: {inp}")
@@ -558,6 +571,7 @@ class MSInfoProcessor(PipelineStep):
                 try:
                     data = self._process_dataset(inp)
                     if data:
+                        data.data.update(self.data)
                         yield data
                 except Exception as e:
                     logger.opt(exception=e).error(f"MSInfoProcessor Error with input: {inp}")
@@ -580,6 +594,7 @@ class MSInfoProcessor(PipelineStep):
                 try:
                     data = self._process_model(inp)
                     if data:
+                        data.data.update(self.data)
                         yield data
                 except Exception as e:
                     logger.opt(exception=e).error(f"MSInfoProcessor Error with input: {inp}")
@@ -601,6 +616,7 @@ class MSInfoProcessor(PipelineStep):
                 try:
                     data = self._process_dataset(inp)
                     if data:
+                        data.data.update(self.data)
                         yield data
                 except Exception as e:
                     logger.opt(exception=e).error(f"MSInfoProcessor Error with input: {inp}")
@@ -629,12 +645,10 @@ class OpenDataLabInfoProcessor(PipelineStep):
         history_data_path: str | None = None,
         dataset_info_path: str | None = None,
         ai_gen: bool = True,
-        ai_check: bool = False,
         buffer_size: int = 8,
         max_retries: int = 3,
     ):
         self.ai_gen = ai_gen
-        self.ai_check = ai_check
         self.buffer_size = buffer_size
         self.max_retries = max_retries
 
@@ -676,6 +690,9 @@ class OpenDataLabInfoProcessor(PipelineStep):
                 closest_date = date
         
         last_month_downloads = {}
+        if min_diff < 15:
+            return last_month_downloads
+        
         p = self.history_data_path[closest_date] / 'OpenDataLab/raw-datasets-info.jsonl'
         with jsonlines.open(p, 'r') as f:
             for item in f:
@@ -731,6 +748,7 @@ class OpenDataLabInfoProcessor(PipelineStep):
                     "likes": inp['likes'], 
                     "date_crawl": date_crawl,
                     "link": inp['link'],
+                    "source": "OpenDataLab",
                 }, {
                     "org": org,
                     "dataset_name": dataset_name,
@@ -761,6 +779,7 @@ class OpenDataLabInfoProcessor(PipelineStep):
         try:
             data = self._process_dataset(self.input)
             if data:
+                data.data.update(self.data)
                 yield data
         
         except Exception as e:
@@ -783,6 +802,7 @@ class OpenDataLabInfoProcessor(PipelineStep):
                 try:
                     data = self._process_dataset(inp)
                     if data:
+                        data.data.update(self.data)
                         yield data
                 except Exception as e:
                     logger.opt(exception=e).error(f"OpenDataLabInfoProcessor Error with input: {inp}")
@@ -805,6 +825,7 @@ class OpenDataLabInfoProcessor(PipelineStep):
                 try:
                     data = self._process_dataset(inp)
                     if data:
+                        data.data.update(self.data)
                         yield data
                 except Exception as e:
                     logger.opt(exception=e).error(f"OpenDataLabInfoProcessor Error with input: {inp}")
@@ -832,12 +853,10 @@ class BAAIDataInfoProcessor(PipelineStep):
         history_data_path: str | None = None,
         dataset_info_path: str | None = None,
         ai_gen: bool = True,
-        ai_check: bool = False,
         buffer_size: int = 8,
         max_retries: int = 3,
     ):
         self.ai_gen = ai_gen
-        self.ai_check = ai_check
         self.buffer_size = buffer_size
         self.max_retries = max_retries
 
@@ -879,6 +898,9 @@ class BAAIDataInfoProcessor(PipelineStep):
                 closest_date = date
         
         last_month_downloads = {}
+        if min_diff < 15:
+            return last_month_downloads
+        
         p = self.history_data_path[closest_date] / 'BAAIData/raw-datasets-info.jsonl'
         with jsonlines.open(p, 'r') as f:
             for item in f:
@@ -934,6 +956,7 @@ class BAAIDataInfoProcessor(PipelineStep):
                     "likes": inp['likes'], 
                     "date_crawl": date_crawl,
                     "link": inp['link'],
+                    "source": "BAAIData",
                 }, {
                     "org": org,
                     "dataset_name": dataset_name,
@@ -964,6 +987,7 @@ class BAAIDataInfoProcessor(PipelineStep):
         try:
             data = self._process_dataset(self.input)
             if data:
+                data.data.update(self.data)
                 yield data
         
         except Exception as e:
@@ -986,6 +1010,7 @@ class BAAIDataInfoProcessor(PipelineStep):
                 try:
                     data = self._process_dataset(inp)
                     if data:
+                        data.data.update(self.data)
                         yield data
                 except Exception as e:
                     logger.opt(exception=e).error(f"BAAIDataInfoProcessor Error with input: {inp}")
@@ -1008,6 +1033,7 @@ class BAAIDataInfoProcessor(PipelineStep):
                 try:
                     data = self._process_dataset(inp)
                     if data:
+                        data.data.update(self.data)
                         yield data
                 except Exception as e:
                     logger.opt(exception=e).error(f"BAAIDataInfoProcessor Error with input: {inp}")
@@ -1021,7 +1047,144 @@ class BAAIDataInfoProcessor(PipelineStep):
             with open(self.dataset_info_path, 'w') as f:
                 json.dump(self.dataset_infos, f, indent=4, ensure_ascii=False)
     
-    
+@deprecated("MultiSourceInfoMerge PipelineStep is deprecated. Use MultiSourceInfoMergeExecutor instead.")
 class MultiSourceInfoMerge(PipelineStep):
     
     ptype = "🚗 PROCESSOR"
+    required_keys = ['org', 'repo', 'modality', 'downloads_last_month', 
+                     'likes', 'date_crawl', 'source']
+    
+    def __init__(
+        self,
+        category: Literal['datasets', 'models'] | None = None
+    ):
+        if category == 'datasets' or category is None:
+            self.datasets_buffer = defaultdict(list)
+        if category == 'models' or category is None:
+            self.models_buffer = defaultdict(list) 
+        
+    def parse_input(self, input_data: PipelineData | None = None):
+        self.required_keys = [
+            'org', 'repo', 'modality', 'downloads_last_month', 
+            'likes', 'date_crawl', 'source'
+        ]
+        assert 'model_name' in input_data.data.keys() or 'dataset_name' in input_data.data.keys()
+        assert 'source' in input_data.data.keys()
+        if 'model_name' in input_data.data.keys():
+            self.category = 'models'
+            assert hasattr(self, "models_buffer")
+        else:
+            self.category = 'datasets'
+            assert hasattr(self, "datasets_buffer")
+        match (input_data.data['source'], self.category):
+            case ('HuggingFace', 'models'):
+                self.required_keys.extend([
+                    'model_name', 'community', 'descendants'
+                ])
+            case ('HuggingFace', 'datasets'):
+                self.required_keys.extend([
+                    'dataset_name', 'lifecircle', 'community', 'dataset_usage'
+                ])
+            case ('ModelScope', 'models'):
+                self.required_keys.extend([
+                    'model_name', 'community', 'community'
+                ])
+            case ('ModelScope', 'datasets'):
+                self.required_keys.extend([
+                    'dataset_name', 'lifecircle', 'community'
+                ])
+            case ('OpenDataLab', 'datasets'):
+                self.required_keys.extend([
+                    'dataset_name', 'lifecircle'
+                ])
+            case ('BAAIData', 'datasets'):
+                self.required_keys.extend([
+                    'dataset_name', 'lifecircle'
+                ])
+            case _:
+                logger.error(f"Unknown source-type pair {input_data.data['source']}-{self.category}")
+        
+        self.data = input_data.data.copy()
+        self.input = {}
+        for k in self.required_keys:
+            if k not in self.data:
+                raise KeyError(f"key '{k}' not found in input_data.data "
+                               f"{list(input_data.data.keys())} of {self.__class__}")
+            self.input[k] = self.data.pop(k)
+    
+    def run(self) -> PipelineResult:
+        try:
+            if self.category == 'models':
+                name = self.input['model_name']
+                key = f"{self.input['repo']}/{name}"
+                self.models_buffer[key].append(self.input)
+                data = self.input.copy()
+                data.update(self.data)
+                yield PipelineData({data, None, None})
+            else:
+                name = self.input['dataset_name']
+                key = f"{self.input['repo']}/{name}"
+                self.datasets_buffer[key].append(self.input)
+                data = self.input.copy()
+                data.update(self.data)
+                yield PipelineData({data, None, None})
+            
+        except Exception as e:
+            yield PipelineData(None, None, {
+                "type": type(e),
+                "error_msg": traceback.format_exc()
+            })
+            
+    def flush(self) -> PipelineResult:
+        try:
+            model_records = []
+            dataset_records = []
+            if hasattr(self, "models_buffer"):
+                for _, models in self.models_buffer.items():
+                    item = {
+                        "org": models[0]['org'],
+                        "repo": models[0]['repo'],
+                        "model_name": models[0]['model_name'],
+                        "modality": models[0]['modality'],
+                        "downloads_last_month": sum(model['downloads_last_month']
+                                                    for model in models
+                                                    if model['downloads_last_month'] > 0),
+                        "likes": sum(model['likes'] for model in models),
+                        "community": sum(model['community'] for model in models
+                                         if 'community' in model),
+                        "descendants": sum(model['descendants'] for model in models
+                                           if 'descendants' in model),
+                        "date_crawl": models[0]['date_crawl'],
+                    }
+                    model_records.append(item)
+            if hasattr(self, "datasets_buffer"):
+                for _, datasets in self.datasets_buffer.items():
+                    item = {
+                        "org": datasets[0]['org'],
+                        "repo": datasets[0]['repo'],
+                        "dataset_name": datasets[0]['dataset_name'],
+                        "modality": datasets[0]['modality'],
+                        "lifecircle": datasets[0]['lifecircle'],
+                        "downloads_last_month": sum(dataset['downloads_last_month']
+                                                    for dataset in datasets
+                                                    if dataset['downloads_last_month'] > 0),
+                        "likes": sum(dataset['likes'] for dataset in datasets),
+                        "community": sum(dataset['community'] for dataset in datasets
+                                         if 'community' in dataset),
+                        "dataset_usage": sum(dataset['dataset_usage'] for dataset in datasets
+                                             if 'dataset_usage' in dataset),
+                        "date_crawl": datasets[0]['date_crawl'],
+                    }
+                    dataset_records.append(item)
+            yield PipelineData({
+                'model_records': model_records,
+                'dataset_records': dataset_records,
+            }, {
+                'total_model_records': len(model_records),
+                'total_dataset_records': len(dataset_records),
+            }, None)
+        except Exception as e:
+            yield PipelineData(None, None, {
+                "type": type(e),
+                "error_msg": traceback.format_exc()
+            })

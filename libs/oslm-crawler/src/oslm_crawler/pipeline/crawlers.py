@@ -35,28 +35,28 @@ class HFRepoPageCrawler(PipelineStep):
     def parse_input(self, input_data: PipelineData | None = None):
         self.data = input_data.data.copy()
         self.input = {"link-category": []}
-        desired_data = {}
+        required_data = {}
         for k in self.required_keys:
             if k not in self.data:
                 raise KeyError(f"key '{k}' not found in input_data.data "
                                f"{list(input_data.data.keys())} of {self.__class__}")
-            desired_data[k] = self.data.pop(k)
-        for src in desired_data['target_sources']:
+            required_data[k] = self.data.pop(k)
+        for src in required_data['target_sources']:
             self.data.pop(src, None)
 
         if self.category is None:
             self.input['link-category'].extend([
-                (link, "models") for link in desired_data['HuggingFace']
+                (link, "models") for link in required_data['HuggingFace']
             ] + [
-                (link, "datasets") for link in desired_data['HuggingFace']
+                (link, "datasets") for link in required_data['HuggingFace']
             ])
         elif self.category == 'datasets':
             self.input['link-category'].extend([
-                (link, 'datasets') for link in desired_data['HuggingFace']
+                (link, 'datasets') for link in required_data['HuggingFace']
             ])
         else:
             self.input['link-category'].extend([
-                (link, 'models') for link in desired_data['HuggingFace']
+                (link, 'models') for link in required_data['HuggingFace']
             ])
         
     def run(self) -> PipelineResult:
@@ -144,16 +144,16 @@ class HFDetailPageCrawler(PipelineStep):
         
     def parse_input(self, input_data: PipelineData | None = None):
         self.data = input_data.data.copy()
-        desired_data = {}
+        required_data = {}
         self.input = {"link-category": []}
         for k in self.required_keys:
             if k not in self.data:
                 raise KeyError(f"key '{k}' not found in input_data.data "
                                f"{list(input_data.data.keys())} of {self.__class__}")
-            desired_data[k] = self.data.pop(k)
+            required_data[k] = self.data.pop(k)
         
         self.input['link-category'].extend(
-            [(link, desired_data['category']) for link in desired_data['detail_urls']]
+            [(link, required_data['category']) for link in required_data['detail_urls']]
         )
         
     def run(self) -> PipelineResult:
@@ -236,28 +236,28 @@ class MSRepoPageCrawler(PipelineStep):
     def parse_input(self, input_data: PipelineData | None = None):
         self.data = input_data.data.copy()
         self.input = {"link-category": []}
-        desired_data = {}
+        required_data = {}
         for k in self.required_keys:
             if k not in self.data:
                 raise KeyError(f"key '{k}' not found in input_data.data "
                                f"{list(input_data.data.keys())} of {self.__class__}")
-            desired_data[k] = self.data.pop(k)
-        for src in desired_data['target_sources']:
+            required_data[k] = self.data.pop(k)
+        for src in required_data['target_sources']:
             self.data.pop(src, None)
             
         if self.category is None:
             self.input['link-category'].extend([
-                (link, 'models') for link in desired_data['ModelScope']
+                (link, 'models') for link in required_data['ModelScope']
             ] + [
-                (link, 'datasets') for link in desired_data['ModelScope']
+                (link, 'datasets') for link in required_data['ModelScope']
             ])
         elif self.category == 'datasets':
             self.input['link-category'].extend([
-                (link, 'datasets') for link in desired_data['ModelScope']
+                (link, 'datasets') for link in required_data['ModelScope']
             ])
         else:
             self.input['link-category'].extenf([
-                (link, 'datasets') for link in desired_data['ModelScope']
+                (link, 'datasets') for link in required_data['ModelScope']
             ])
         
     def run(self) -> PipelineResult:
@@ -345,16 +345,16 @@ class MSDetailPageCrawler(PipelineStep):
         
     def parse_input(self, input_data: PipelineData | None = None):
         self.data = input_data.data.copy()
-        desired_data = {}
+        required_data = {}
         self.input = {"link-category": []}
         for k in self.required_keys:
             if k not in self.data:
                 raise KeyError(f"key '{k}' not fount in input_data.data "
                                f"{list(input_data.data.keys())} of {self.__class__}")
-            desired_data[k] = self.data.pop(k)
+            required_data[k] = self.data.pop(k)
         
         self.input['link-category'].extend(
-            [(link, desired_data['category']) for link in desired_data['detail_urls']]
+            [(link, required_data['category']) for link in required_data['detail_urls']]
         )
         
     def run(self) -> PipelineResult:
@@ -436,16 +436,16 @@ class OpenDataLabCrawler(PipelineStep):
         self.data = input_data.data.copy()
         self.data.pop("repo_org_mapper", None)
         self.input = {"links": []}
-        desired_data = {}
+        required_data = {}
         for k in self.required_keys:
             if k not in self.data:
                 raise KeyError(f"key '{k}' not found in input_data.data "
                                f"{list(input_data.data.keys())} of {self.__class__}")
-            desired_data[k] = self.data.pop(k)
-        for src in desired_data['target_sources']:
+            required_data[k] = self.data.pop(k)
+        for src in required_data['target_sources']:
             self.data.pop(src, None)
             
-        self.input['links'].extend(desired_data['OpenDataLab'])
+        self.input['links'].extend(required_data['OpenDataLab'])
     
     def run(self) -> PipelineResult:
         with ThreadPoolExecutor(self.threads) as executor, WebDriverPool(self.threads) as p:
@@ -516,15 +516,15 @@ class BAAIDatasetsCrawler(PipelineStep):
     def parse_input(self, input_data: PipelineData | None = None):
         self.data = input_data.data.copy()
         self.data.pop("repo_org_mapper", None)
-        desired_data = {}
+        required_data = {}
         for k in self.required_keys:
             if k not in self.data:
                 raise KeyError(f"key '{k}' not found in input_data.data "
                                f"{list(input_data.data.keys())} of {self.__class__}")
-            desired_data[k] = self.data.pop(k)
-        for src in desired_data['target_sources']:
+            required_data[k] = self.data.pop(k)
+        for src in required_data['target_sources']:
             self.data.pop(src, None)
-        self.input = desired_data['BAAI Data']
+        self.input = required_data['BAAI Data']
         
     def run(self) -> PipelineResult:
         for i in range(self.max_retries):

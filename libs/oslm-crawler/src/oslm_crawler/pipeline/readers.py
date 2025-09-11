@@ -72,7 +72,7 @@ class OrgLinksReader(PipelineStep):
             data = target_links.copy()
             total_links = sum(len(v) for v in target_links.values())
             data.update({
-                "target_sources": target_sources,
+                "target_sources": list(target_sources),
                 "repo_org_mapper": repo_org_mapper.copy(),
             })
             data.update(self.data)

@@ -413,7 +413,12 @@ class HFDatasetPage:
                 EC.presence_of_element_located(self._main_part)
             )
         except Exception:
-            raise
+            try:
+                WebDriverWait(self.driver, 5).until(
+                    EC.presence_of_element_located((By.XPATH, '/html/body/div/main/div[2]/section/div/a'))
+                ).click()
+            except Exception:
+                raise
 
         metadata = {}
         try:

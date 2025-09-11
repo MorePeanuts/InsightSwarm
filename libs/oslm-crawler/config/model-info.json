@@ -18254,5 +18254,153 @@
     "allenai/MolmoAct-7B-D-Captioner-0812": {
         "modality": "Embodied",
         "is_large_model": true
+    },
+    "baichuan-inc/Baichuan-M2-32B-GPTQ-Int4": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "baichuan-inc/Baichuan-M2-32B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "baichuan-inc/Baichuan2-7B-Intermediate-Checkpoints": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "huawei-noah/MOASpec-Llama-3-8B-Instruct": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "huawei-noah/pangu-CodeCLM-full-300m": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "huawei-noah/pangu-CodeCLM-partial-300m": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "huawei-noah/pangu-CodeCLM-300m": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "huawei-noah/pycodegpt-CodeCLM-100m": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "huawei-noah/pycodegpt-CodeCLM-partial-100m": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "huawei-noah/aipq": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/EntityCS-39-MLM-xlmr-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/EntityCS-39-PEP_MS_MLM-xlmr-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/EntityCS-39-WEP-xlmr-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/EntityCS-39-PEP_MS-xlmr-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/SPIRAL-base-MCT": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "huawei-noah/SPIRAL-Large": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "huawei-noah/SPIRAL-base": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "huawei-noah/Grad-TTS": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/AutoTinyBERT-KD-S4": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/AutoTinyBERT-KD-S3": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/AutoTinyBERT-KD-S2": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/AutoTinyBERT-KD-S1": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/AutoTinyBERT-S4": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/AutoTinyBERT-S3": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/AutoTinyBERT-S2": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/AutoTinyBERT-S1": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/JABER": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "huawei-noah/TinyBERT_General_6L_768D": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/TinyBERT_General_4L_312D": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/DynaBERT_SST-2": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/DynaBERT_MNLI": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/TernaryBERT_SST-2": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/TernaryBERT_MNLI": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/TinyBERT_6L_zh": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "huawei-noah/TinyBERT_4L_zh": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "HWERI/pythia-70m-deduped-cleansharegpt": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "HWERI/Llama2-7b-openorca-mc-v2": {
+        "modality": "Language",
+        "is_large_model": true
     }
 }

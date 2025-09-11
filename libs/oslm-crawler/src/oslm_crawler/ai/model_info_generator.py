@@ -52,6 +52,7 @@ Embodied: Models designed for robotics, or embodied AI. This includes large lang
 
 Instructions:
 If you do not have the ability to access the network, state that you cannot access the network.
+If a web page is blank or contains no valid information, then it should be considered as not belonging to the large model.
 If you cannot determine the modality of the model or whether it belongs to large models, then you should clearly point it out rather than guessing a result.
 If the model is not from the large-model era, clearly state so. If it is, output its modality from the above list.
 Keep the correspondence between each link and the conclusions you give.
