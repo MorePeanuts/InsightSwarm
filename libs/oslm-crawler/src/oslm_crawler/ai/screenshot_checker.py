@@ -85,7 +85,7 @@ prompt_template = ChatPromptTemplate.from_messages([
 checker = llm.with_structured_output(ImageInfo, include_raw=True)
 chain = prompt_template | checker
 
-def check_image_info(requests: list[CheckRequest]) -> CheckResponse:
+def check_image_info(requests: list[CheckRequest]) -> list[CheckResponse]:
     requests_dicts = [req.to_dict() for req in requests]
     responses = chain.batch_as_completed(requests_dicts)
     results = []

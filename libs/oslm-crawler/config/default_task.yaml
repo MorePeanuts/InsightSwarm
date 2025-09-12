@@ -5,20 +5,24 @@ HuggingFacePipeline:
   log_path: null
 
   init_org_links:
+    save: false
     path: null
     orgs: null
 
   crawl_repo_page:
+    save: true
     category: null
     threads: 1
     max_retries: 20
 
   crawl_detail_page:
+    save: true
     threads: 1
     max_retries: 20
     screenshot_path: null
 
   post_process:
+    save: true
     dataset_info_path: null
     model_info_path: null
     ai_gen: true
@@ -28,3 +32,89 @@ HuggingFacePipeline:
 
 ModelScopePipeline:
   task_name: 'ms-task'
+  load_dir: null
+  save_dir: null
+  log_path: null
+
+  init_org_links:
+    save: false
+    path: null
+    orgs: null
+
+  crawl_repo_page:
+    save: true
+    category: null
+    threads: 1
+    max_retries: 20
+
+  crawl_detail_page:
+    save: true
+    threads: 1
+    max_retries: 20
+    screenshot_path: null
+
+  post_process:
+    save: true
+    dataset_info_path: null
+    model_info_path: null
+    ai_gen: true
+    ai_check: false
+    buffer_size: 8
+    max_retries: 3
+    history_data_path: null
+
+OpenDataLabPipeline:
+  task_name: 'odl-task'
+  load_dir: null
+  save_dir: null
+  log_path: null
+
+  init_org_links:
+    save: false
+    path: null
+    orgs: null
+
+  crawl_repo_page:
+    save: true
+    threads: 1
+    max_retries: 20
+
+  post_process:
+    save: true
+    dataset_info_path: null
+    history_data_path: null
+    ai_gen: true
+    buffer_size: 8
+    max_retries: 3
+
+BAAIDataPipeline:
+  task_name: 'baai-task'
+  load_dir: null
+  save_dir: null
+  log_path: null
+
+  init_org_links:
+    save: false
+    path: null
+
+  crawl_repo_page:
+    save: true
+    max_retries: 20
+
+  post_process:
+    save: true
+    dataset_info_path: null
+    history_data_path: null
+    ai_gen: true
+    buffer_size: 8
+    max_retries: 3
+
+MergeAndRankingPipeline:
+  data_dir: null
+  log_path: null
+
+  merge_models:
+
+  merge_datasets:
+
+  ranking:

@@ -10,7 +10,7 @@ from loguru import logger
 from .base import PipelineStep, PipelineResult, PipelineData
 from ..ai.model_info_generator import ModelInfo, gen_model_info
 from ..ai.dataset_info_generator import DatasetInfo, gen_dataset_info
-from ..ai.screenshot_checker import check_image_info
+from ..ai.screenshot_checker import check_image_info, CheckRequest, CheckResponse
 
 
 class HFInfoProcessor(PipelineStep):
@@ -23,7 +23,7 @@ class HFInfoProcessor(PipelineStep):
         dataset_info_path: str | None = None,
         model_info_path: str | None = None,
         ai_gen: bool = True,
-        ai_check: bool = False, # TODO ai check function
+        ai_check: bool = False,
         buffer_size: int = 8,
         max_retries: int = 3,
     ):
@@ -31,6 +31,10 @@ class HFInfoProcessor(PipelineStep):
         self.ai_check = ai_check
         self.buffer_size = buffer_size
         self.max_retries = max_retries
+        
+        if ai_check:
+            self.models_check_buffer = []
+            self.datasets_check_buffer = []
 
         curr_path = Path(__file__)
         if dataset_info_path:
@@ -96,19 +100,29 @@ class HFInfoProcessor(PipelineStep):
                     self.models_buffer_counter[model_key] += 1
                 is_large_model = False
             if is_large_model:
+                downloads_last_month = inp['downloads_last_month']
+                img_path = inp['img_path']
+                if downloads_last_month == 0 and self.ai_check and Path(img_path).exists():
+                    request = CheckRequest(img_path, inp['link'], 'HuggingFace')
+                    response = check_image_info([request])[0]
+                    if response.downloads_last_month is not None and response.downloads_last_month > 0:
+                        downloads_last_month = response.downloads_last_month
+                        inp['downloads_last_month'] = response.downloads_last_month
+                        self.models_check_buffer.append(inp)
+                        logger.warning(f"Data error: {inp}, downloads_last_month corrected from {inp['downloads_last_month']} to {downloads_last_month}.")
                 return PipelineData({
                     "org": org,
                     "repo": repo,
                     "model_name": model_name,
                     "modality": modality,
-                    "downloads_last_month": inp['downloads_last_month'],
+                    "downloads_last_month": downloads_last_month,
                     "likes": inp['likes'],
                     "community": inp['community'],
                     "descendants": inp['descendants'],
                     "date_crawl": inp['date_crawl'],
                     "link": inp['link'],
                     "source": "HuggingFace",
-                    "img_path": inp['img_path']
+                    "img_path": img_path
                 }, {
                     "org": org,
                     "model_name": model_name,
@@ -136,20 +150,30 @@ class HFInfoProcessor(PipelineStep):
                     self.datasets_buffer_counter[dataset_key] += 1
                 is_valid = False
             if is_valid:
+                downloads_last_month = inp['downloads_last_month']
+                img_path = inp['img_path']
+                if downloads_last_month == 0 and self.ai_check and Path(img_path).exists():
+                    request = CheckRequest(img_path, inp['link'], 'HuggingFace')
+                    response = check_image_info([request])[0]
+                    if response.downloads_last_month is not None and response.downloads_last_month > 0:
+                        downloads_last_month = response.downloads_last_month
+                        inp['downloads_last_month'] = response.downloads_last_month
+                        self.datasets_check_buffer.append(inp)
+                        logger.warning(f"Data error: {inp}, downloads_last_month corrected from {inp['downloads_last_month']} to {downloads_last_month}.")
                 return PipelineData({
                     "org": org,
                     "repo": repo,
                     "dataset_name": dataset_name,
                     "modality": modality,
                     "lifecircle": lifecircle,
-                    "downloads_last_month": inp['downloads_last_month'],
+                    "downloads_last_month": downloads_last_month,
                     "likes": inp['likes'],
                     "community": inp['community'],
                     "dataset_usage": inp['dataset_usage'],
                     "date_crawl": inp['date_crawl'],
                     "link": inp['link'],
                     "source": "HuggingFace",
-                    "img_path": inp['img_path']
+                    "img_path": img_path
                 }, {
                     "org": org,
                     "dataset_name": dataset_name,
@@ -308,7 +332,7 @@ class MSInfoProcessor(PipelineStep):
         dataset_info_path: str | None = None,
         model_info_path: str | None = None,
         ai_gen: bool = True,
-        ai_check: bool = False, # TODO ai check function
+        ai_check: bool = False,
         buffer_size: int = 8,
         max_retries: int = 3,
     ):
@@ -316,6 +340,10 @@ class MSInfoProcessor(PipelineStep):
         self.ai_check = ai_check
         self.buffer_size = buffer_size
         self.max_retries = max_retries
+        
+        if ai_check:
+            self.models_check_buffer = []
+            self.datasets_check_buffer = []
 
         curr_path = Path(__file__)
         if history_data_path:
@@ -412,33 +440,44 @@ class MSInfoProcessor(PipelineStep):
             model_key = f'{repo}/{model_name}'
             date_crawl = inp['date_crawl']
             last_month_downloads = self.last_month_downloads_of[date_crawl].get(model_key, None)
-            if last_month_downloads:
-                downloads_last_month = inp['total_downloads'] - last_month_downloads
-            else:
-                downloads_last_month = -1
-            model_info = self.model_infos.get(model_key, None)
-            if model_info:
-                modality = model_info['modality']
-                is_large_model = model_info['is_large_model']
-            else: 
-                if self.models_buffer_counter[model_key] <= self.max_retries:
-                    self.models_buffer.append(inp.copy())
-                    self.models_buffer_counter[model_key] += 1
+            if last_month_downloads is None:
                 is_large_model = False
+            else:
+                model_info = self.model_infos.get(model_key, None)
+                if model_info:
+                    modality = model_info['modality']
+                    is_large_model = model_info['is_large_model']
+                else: 
+                    if self.models_buffer_counter[model_key] <= self.max_retries:
+                        self.models_buffer.append(inp.copy())
+                        self.models_buffer_counter[model_key] += 1
+                    is_large_model = False
+
             if is_large_model:
+                downloads = inp['total_downloads']
+                img_path = inp['img_path']
+                if downloads == 0 and self.ai_check and Path(img_path).exists():
+                    request = CheckRequest(img_path, inp['link'], 'ModelScope')
+                    response = check_image_info([request])[0]
+                    if response.downloads is not None and response.downloads > 0:
+                        downloads = response.downloads
+                        inp['total_downloads'] = response.downloads
+                        self.models_check_buffer.append(inp)
+                        logger.warning(f"Data error: {inp}, downloads corrected from {inp['total_downloads']} to {downloads}.")
+                downloads_last_month = downloads - last_month_downloads
                 return PipelineData({
                     "org": org,
                     "repo": repo,
                     "model_name": model_name,
                     "modality": modality,
                     "downloads_last_month": downloads_last_month,
-                    "total_downloads": inp['total_downloads'],
+                    "total_downloads": downloads,
                     "likes": inp['likes'],
                     "community": inp['community'],
                     "date_crawl": date_crawl,
                     "link": inp['link'],
                     "source": "ModelScope",
-                    "img_path": inp['img_path']
+                    "img_path": img_path
                 }, {
                     "org": org,
                     "model_name": model_name,
@@ -457,21 +496,32 @@ class MSInfoProcessor(PipelineStep):
             dataset_key = f"{repo}/{dataset_name}"
             date_crawl = inp['date_crawl']
             last_month_downloads = self.last_month_downloads_of[date_crawl].get(dataset_key, None)
-            if last_month_downloads:
-                downloads_last_month = inp['total_downloads'] - last_month_downloads
-            else:
-                downloads_last_month = -1
-            dataset_info = self.dataset_infos.get(dataset_key, None)
-            if dataset_info:
-                modality = dataset_info['modality']
-                lifecircle = dataset_info['lifecircle']
-                is_valid = dataset_info['is_valid']
-            else:
-                if self.datasets_buffer_counter[dataset_key] <= self.max_retries:
-                    self.datasets_buffer.append(inp.copy())
-                    self.datasets_buffer_counter[dataset_key] += 1
+            if last_month_downloads is None:
                 is_valid = False
+            else:
+                dataset_info = self.dataset_infos.get(dataset_key, None)
+                if dataset_info:
+                    modality = dataset_info['modality']
+                    lifecircle = dataset_info['lifecircle']
+                    is_valid = dataset_info['is_valid']
+                else:
+                    if self.datasets_buffer_counter[dataset_key] <= self.max_retries:
+                        self.datasets_buffer.append(inp.copy())
+                        self.datasets_buffer_counter[dataset_key] += 1
+                    is_valid = False
+            
             if is_valid:
+                downloads = inp['total_downloads']
+                img_path = inp['img_path']
+                if downloads == 0 and self.ai_check and Path(img_path).exists():
+                    request = CheckRequest(img_path, inp['link'], 'ModelScope')
+                    response = check_image_info([request])[0]
+                    if response.downloads is not None and response.downloads > 0:
+                        downloads = response.downloads
+                        inp['total_downloads'] = response.downloads
+                        self.datasets_check_buffer.append(inp)
+                        logger.warning(f"Data error: {inp}, downloads corrected from {inp['total_downloads']} to {downloads}.")
+                downloads_last_month = downloads - last_month_downloads
                 return PipelineData({
                     "org": org,
                     "repo": repo,
@@ -722,21 +772,24 @@ class OpenDataLabInfoProcessor(PipelineStep):
             dataset_key = f"{repo}/{dataset_name}"
             date_crawl = inp['date_crawl']
             last_month_downloads = self.last_month_downloads_of[date_crawl].get(dataset_key, None)
-            if last_month_downloads:
-                downloads_last_month = inp['total_downloads'] - last_month_downloads
-            else:
-                downloads_last_month = -1
-            dataset_info = self.dataset_infos.get(dataset_key, None)
-            if dataset_info:
-                modality = dataset_info['modality']
-                lifecircle = dataset_info['lifecircle']
-                is_valid = dataset_info['is_valid']
-            else:
-                if self.datasets_buffer_counter[dataset_key] <= self.max_retries:
-                    self.datasets_buffer.append(inp.copy())
-                    self.datasets_buffer_counter[dataset_key] += 1
+            if last_month_downloads is None:
                 is_valid = False
+            else:
+                dataset_info = self.dataset_infos.get(dataset_key, None)
+                if dataset_info:
+                    modality = dataset_info['modality']
+                    lifecircle = dataset_info['lifecircle']
+                    is_valid = dataset_info['is_valid']
+                else:
+                    if self.datasets_buffer_counter[dataset_key] <= self.max_retries:
+                        self.datasets_buffer.append(inp.copy())
+                        self.datasets_buffer_counter[dataset_key] += 1
+                    is_valid = False
+            
             if is_valid:
+                downloads_last_month = inp['total_downloads'] - last_month_downloads
+                if downloads_last_month < 0:
+                    return None
                 return PipelineData({
                     "org": org,
                     "repo": repo,
@@ -930,21 +983,24 @@ class BAAIDataInfoProcessor(PipelineStep):
             dataset_key = f"{repo}/{dataset_name}"
             date_crawl = inp['date_crawl']
             last_month_downloads = self.last_month_downloads_of[date_crawl].get(dataset_key, None)
-            if last_month_downloads:
-                downloads_last_month = inp['total_downloads'] - last_month_downloads
-            else:
-                downloads_last_month = -1
-            dataset_info = self.dataset_infos.get(dataset_key, None)
-            if dataset_info:
-                modality = dataset_info['modality']
-                lifecircle = dataset_info['lifecircle']
-                is_valid = dataset_info['is_valid']
-            else:
-                if self.datasets_buffer_counter[dataset_key] <= self.max_retries:
-                    self.datasets_buffer.append(inp.copy())
-                    self.datasets_buffer_counter[dataset_key] += 1
+            if last_month_downloads is None:
                 is_valid = False
+            else:
+                dataset_info = self.dataset_infos.get(dataset_key, None)
+                if dataset_info:
+                    modality = dataset_info['modality']
+                    lifecircle = dataset_info['lifecircle']
+                    is_valid = dataset_info['is_valid']
+                else:
+                    if self.datasets_buffer_counter[dataset_key] <= self.max_retries:
+                        self.datasets_buffer.append(inp.copy())
+                        self.datasets_buffer_counter[dataset_key] += 1
+                    is_valid = False
+            
             if is_valid:
+                downloads_last_month = inp['total_downloads'] - last_month_downloads
+                if downloads_last_month < 0:
+                    return None
                 return PipelineData({
                     "org": org,
                     "repo": repo,

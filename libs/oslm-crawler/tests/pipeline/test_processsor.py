@@ -188,20 +188,3 @@ def test_baaiinfo_processor():
         
     pprint(all_res[0])
     assert len(all_res) <= len(all_infos)
-
-
-def test_multisource_merge():
-    data_path = Path(__file__).parents[2] / 'data'
-    lst = list(sorted(data_path.glob('????-??-??')))
-    assert len(lst) > 0, 'No valid data'
-    
-    all_source = []
-    p = lst[-1]
-    models_path = lst[-1] / 'ModelScope/raw-models-info.jsonl'
-    datasets_path = lst[-1] / 'ModelScope/raw-datasets-info.jsonl'
-    model_info_path = data_path.parent / 'config/model-info.json'
-    dataset_info_path = data_path.parent / 'config/dataset-info.json'
-    with model_info_path.open('r') as f:
-        model_gen = json.load(f)
-    with dataset_info_path.open('r') as f:
-        dataset_gen = json.load(f)

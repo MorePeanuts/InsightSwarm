@@ -1,35 +1,134 @@
 import sys
+import yaml
 import argparse
 from pathlib import Path
 from typing_extensions import deprecated
-from .core import HFPipeline, MSPipeline
+from .core import BAAIDataPipeline, HFPipeline, MSPipeline, OpenDataLabPipeline
 
 
 def main() -> None:
     print("Hello from oslm-crawler!")
-    fix_error_test()
-
-
-def fix_error_test():
-    # save_path = Path(__file__).parents[2] / 'tmp-data/hf-fix'
-    # save_path.mkdir(exist_ok=True)
-    # HFPipeline(
-    #     'fix-0907-hf', 
-    #     load_dir='/Users/liaofeng/Documents/Codespace/InsightSwarm/libs/oslm-crawler/tmp-data/log-fix-hf',
-    #     save_dir=save_path,
-    # ).step(
-    #     'crawl_detail_page', True 
-    # ).done()
+    parser = get_parser()
+    args = parser.parse_args()
+    config = init_config(args)
     
-    save_path = Path(__file__).parents[2] / 'tmp-data/ms-fix'
-    save_path.mkdir(exist_ok=True)
-    MSPipeline(
-        'fix-0907-ms', 
-        load_dir='/Users/liaofeng/Documents/Codespace/InsightSwarm/libs/oslm-crawler/tmp-data/log-fix-ms',
-        save_dir=save_path,
-    ).step(
-        'crawl_detail_page', True 
-    ).done()
+    if hasattr(args, 'func'):
+        args.func(config)
+    else:
+        parser.print_help()
+
+
+def init_config(args):
+    if not hasattr(args, 'config'):
+        args.config = Path(__file__).parents[2] / 'config/default_task.yaml'
+    with open(args.config, 'r') as f:
+        config: dict = yaml.safe_load(f)
+    
+    if args.command == 'crawl':
+        match args.pipeline:
+            case 'huggingface':
+                pipelines = ["HuggingFacePipeline"]
+            case 'modelscope':
+                pipelines = ["ModelScopePipeline"]
+            case 'opendatalab':
+                pipelines = ["OpenDataLabPipeline"]
+            case 'baaidata':
+                pipelines = ["BAAIDataPipeline"]
+            case 'all':
+                pipelines = ["BAAIDataPipeline", "OpenDataLabPipeline", 
+                             "ModelScopePipeline", "HuggingFacePipeline"]
+        config = {k: v for k, v in config.items() if k in pipelines}
+    elif args.command == 'gen-rank':
+        raise NotImplementedError # TODO
+        
+    return config
+    
+
+def get_parser():
+    parser = argparse.ArgumentParser(prog="oslm-crawler", description="oslm-crawler", add_help=False)
+    sub_parsers = parser.add_subparsers(description='command', help='Available commands')
+    
+    parent_parser = argparse.ArgumentParser(add_help=False)
+    parent_parser.add_argument("--config", type=str, default=argparse.SUPPRESS, help="Path of the YAML configuration file.")
+
+    crawl_parser = sub_parsers.add_parser("crawl", parents=[parent_parser], help="Crawl data from huggingface, modelscope, opendatalab, or baai")
+    crawl_parser.add_argument("pipeline", choices=["huggingface, modelscope, opendatalab, baaidata", "all"], help="Pipeline")
+    crawl_parser.set_defaults(func=crawl)
+
+    gen_rank_parser = sub_parsers.add_parser("gen-rank", parents=[parent_parser], help="Merge data from different source and generate rank table.")
+    gen_rank_parser.set_defaults(func=gen_rank)
+    
+    return parser
+
+
+def crawl(config):
+    if 'HuggingFacePipeline' in config:
+        conf = config['HuggingFacePipeline']
+        proc = HFPipeline(
+            conf['task_name'],
+            conf['load_dir'],
+            conf['save_dir'],
+            conf['log_path'],
+        )
+        if 'init_org_links' in conf:
+            proc = proc.step('init_org_links', **conf['init_org_links'])
+        if 'crawl_repo_page' in conf:
+            proc = proc.step('crawl_repo_page' **conf['crawl_repo_page'])
+        if 'crawl_detail_page' in conf:
+            proc = proc.step('crawl_detail_page', **conf['crawl_detail_page'])
+        if 'post_process' in conf:
+            proc = proc.step('post_process', **conf['post_process'])
+        proc.done()
+    if 'ModelScopePipeline' in config:
+        conf = config['ModelScopePipeline']
+        proc = MSPipeline(
+            conf['task_name'],
+            conf['load_dir'],
+            conf['save_dir'],
+            conf['log_path'],
+        )
+        if 'init_org_links' in conf:
+            proc = proc.step('init_org_links', **conf['init_org_links'])
+        if 'crawl_repo_page' in conf:
+            proc = proc.step('crawl_repo_page' **conf['crawl_repo_page'])
+        if 'crawl_detail_page' in conf:
+            proc = proc.step('crawl_detail_page', **conf['crawl_detail_page'])
+        if 'post_process' in conf:
+            proc = proc.step('post_process', **conf['post_process'])
+        proc.done()
+    if 'OpenDataLabPipeline' in config:
+        conf = config['OpenDataLabPipeline']
+        proc = OpenDataLabPipeline(
+            conf['task_name'],
+            conf['load_dir'],
+            conf['save_dir'],
+            conf['log_path'],
+        )
+        if 'init_org_links' in conf:
+            proc = proc.step('init_org_links', **conf['init_org_links'])
+        if 'crawl_repo_page' in conf:
+            proc = proc.step('crawl_repo_page' **conf['crawl_repo_page'])
+        if 'post_process' in conf:
+            proc = proc.step('post_process', **conf['post_process'])
+        proc.done()
+    if 'BAAIDataPipeline' in config:
+        conf = config['BAAIDataPipeline']
+        proc = BAAIDataPipeline(
+            conf['task_name'],
+            conf['load_dir'],
+            conf['save_dir'],
+            conf['log_path'],
+        )
+        if 'init_org_links' in conf:
+            proc = proc.step('init_org_links', **conf['init_org_links'])
+        if 'crawl_repo_page' in conf:
+            proc = proc.step('crawl_repo_page' **conf['crawl_repo_page'])
+        if 'post_process' in conf:
+            proc = proc.step('post_process', **conf['post_process'])
+        proc.done()
+
+def gen_rank(config):
+    pass
 
 
 def test_hf_pipeline():
@@ -44,6 +143,7 @@ def test_hf_pipeline():
     ).step(
         'post_process', True
     ).done()
+
 
 @deprecated("Temporary function for web crawler, deprecated.")
 def tmp_executor(target_org=None):
