@@ -11,6 +11,7 @@ wheels/
 config/env.yaml
 
 **/screenshots
+**/.DS_Store
 **/tmp-*
 **/tmp_*
 **/logs

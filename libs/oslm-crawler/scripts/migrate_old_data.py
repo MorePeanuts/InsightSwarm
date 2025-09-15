@@ -200,7 +200,7 @@ modality_mapper = {
     '具身': 'Embodied',
     '评测': None
 }
-lifecircle_mapper = {
+lifecycle_mapper = {
     '预训练': 'Pre-training',
     '微调': 'Fine-tuning',
     '偏好': 'Preference',
@@ -224,14 +224,14 @@ def trans_hf_dataset(src_item: dict, date_crawl: str):
     tgt_item['metadata'] = {}
     
     modality = src_item['模态']
-    lifecircle = src_item['生命周期']
-    if modality in modality_mapper and lifecircle in lifecircle_mapper:
+    lifecycle = src_item['生命周期']
+    if modality in modality_mapper and lifecycle in lifecycle_mapper:
         modality = modality_mapper[modality]
-        lifecircle = lifecircle_mapper[lifecircle]
+        lifecycle = lifecycle_mapper[lifecycle]
         return tgt_item, {
             f"{tgt_item['repo']}/{tgt_item['dataset_name']}": {
                 'modality': modality,
-                'lifecircle': lifecircle,
+                'lifecycle': lifecycle,
                 'is_valid': True
             }
         }
@@ -239,7 +239,7 @@ def trans_hf_dataset(src_item: dict, date_crawl: str):
         return {}, {
             f"{tgt_item['repo']}/{tgt_item['dataset_name']}": {
                 'modality': None,
-                'lifecircle': None,
+                'lifecycle': None,
                 'is_valid': False
             }
         }
@@ -259,14 +259,14 @@ def trans_ms_dataset(src_item: dict, date_crawl: str):
     tgt_item['error_msg'] = None
     tgt_item['metadata'] = {}
     modality = src_item['模态']
-    lifecircle = src_item['生命周期']
-    if modality in modality_mapper and lifecircle in lifecircle_mapper:
+    lifecycle = src_item['生命周期']
+    if modality in modality_mapper and lifecycle in lifecycle_mapper:
         modality = modality_mapper[modality]
-        lifecircle = lifecircle_mapper[lifecircle]
+        lifecycle = lifecycle_mapper[lifecycle]
         return tgt_item, {
             f"{tgt_item['repo']}/{tgt_item['dataset_name']}": {
                 'modality': modality,
-                'lifecircle': lifecircle,
+                'lifecycle': lifecycle,
                 'is_valid': True
             }
         }
@@ -274,7 +274,7 @@ def trans_ms_dataset(src_item: dict, date_crawl: str):
         return {}, {
             f"{tgt_item['repo']}/{tgt_item['dataset_name']}": {
                 'modality': None,
-                'lifecircle': None,
+                'lifecycle': None,
                 'is_valid': False
             }
         }
@@ -293,14 +293,14 @@ def trans_open_data_lab_dataset(src_item: dict, date_crawl):
     tgt_item['metadata'] = {}
 
     modality = src_item['模态']
-    lifecircle = src_item['生命周期']
-    if modality in modality_mapper and lifecircle in lifecircle_mapper:
+    lifecycle = src_item['生命周期']
+    if modality in modality_mapper and lifecycle in lifecycle_mapper:
         modality = modality_mapper[modality]
-        lifecircle = lifecircle_mapper[lifecircle]
+        lifecycle = lifecycle_mapper[lifecycle]
         return tgt_item, {
             f"{tgt_item['repo']}/{tgt_item['dataset_name']}": {
                 'modality': modality,
-                'lifecircle': lifecircle,
+                'lifecycle': lifecycle,
                 'is_valid': True
             }
         }
@@ -308,7 +308,7 @@ def trans_open_data_lab_dataset(src_item: dict, date_crawl):
         return {}, {
             f"{tgt_item['repo']}/{tgt_item['dataset_name']}": {
                 'modality': None,
-                'lifecircle': None,
+                'lifecycle': None,
                 'is_valid': False
             }
         }
@@ -326,14 +326,14 @@ def trans_baai_data_dataset(src_item: dict, date_crawl):
     tgt_item['link'] = link
 
     modality = src_item['模态']
-    lifecircle = src_item['生命周期']
-    if modality in modality_mapper and lifecircle in lifecircle_mapper:
+    lifecycle = src_item['生命周期']
+    if modality in modality_mapper and lifecycle in lifecycle_mapper:
         modality = modality_mapper[modality]
-        lifecircle = lifecircle_mapper[lifecircle]
+        lifecycle = lifecycle_mapper[lifecycle]
         return tgt_item, {
             f"{tgt_item['repo']}/{tgt_item['dataset_name']}": {
                 'modality': modality,
-                'lifecircle': lifecircle,
+                'lifecycle': lifecycle,
                 'is_valid': True
             }
         }
@@ -341,7 +341,7 @@ def trans_baai_data_dataset(src_item: dict, date_crawl):
         return {}, {
             f"{tgt_item['repo']}/{tgt_item['dataset_name']}": {
                 'modality': None,
-                'lifecircle': None,
+                'lifecycle': None,
                 'is_valid': False
             }
         }
@@ -354,10 +354,10 @@ def trans_tmp_dataset(src_item: dict, date_crawl: str):
     tgt_item['dataset_name'] = src_item['数据集名称']
     tgt_item['link'] = src_item['链接']
     modality = src_item['模态']
-    lifecircle = src_item['生命周期']
-    if modality in modality_mapper and lifecircle in lifecircle_mapper:
+    lifecycle = src_item['生命周期']
+    if modality in modality_mapper and lifecycle in lifecycle_mapper:
         tgt_item['modality'] = modality_mapper[modality]
-        tgt_item['lifecircle'] = lifecircle_mapper[lifecircle]
+        tgt_item['lifecycle'] = lifecycle_mapper[lifecycle]
         return tgt_item
     else:
         return {}

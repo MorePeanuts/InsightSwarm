@@ -23,7 +23,7 @@ class DatasetRecord:
     repo: str
     dataset_name: str
     modality: Literal['Language', 'Speech', 'Vision', 'Multimodal', 'Embodied']
-    lifecircle: Literal['Pre-training', 'Fine-tuning', 'Preference', 'Evaluation']
+    lifecycle: Literal['Pre-training', 'Fine-tuning', 'Preference', 'Evaluation']
     downloads_last_month: int
     likes: int
     community: int
@@ -56,7 +56,7 @@ class HFDatasetRecord:
     repo: str
     dataset_name: str
     modality: Literal['Language', 'Speech', 'Vision', 'Multimodal', 'Embodied']
-    lifecircle: Literal['Pre-training', 'Fine-tuning', 'Preference', 'Evaluation']
+    lifecycle: Literal['Pre-training', 'Fine-tuning', 'Preference', 'Evaluation']
     downloads_last_month: int
     likes: int
     community: int
@@ -91,7 +91,7 @@ class MSDatasetRecord:
     repo: str
     dataset_name: str
     modality: Literal['Language', 'Speech', 'Vision', 'Multimodal', 'Embodied']
-    lifecircle: Literal['Pre-training', 'Fine-tuning', 'Preference', 'Evaluation']
+    lifecycle: Literal['Pre-training', 'Fine-tuning', 'Preference', 'Evaluation']
     downloads_last_month: int
     total_downloads: int
     likes: int
@@ -109,7 +109,7 @@ class OpenDataLabRecord:
     repo: str
     dataset_name: str
     modality: Literal['Language', 'Speech', 'Vision', 'Multimodal', 'Embodied']
-    lifecircle: Literal['Pre-training', 'Fine-tuning', 'Preference', 'Evaluation']
+    lifecycle: Literal['Pre-training', 'Fine-tuning', 'Preference', 'Evaluation']
     downloads_last_month: int
     total_downloads: int
     likes: int
@@ -125,7 +125,7 @@ class BAAIDataRecord:
     repo: str
     dataset_name: str
     modality: Literal['Language', 'Speech', 'Vision', 'Multimodal', 'Embodied']
-    lifecircle: Literal['Pre-training', 'Fine-tuning', 'Preference', 'Evaluation']
+    lifecycle: Literal['Pre-training', 'Fine-tuning', 'Preference', 'Evaluation']
     downloads_last_month: int
     total_downloads: int
     likes: int

@@ -3,7 +3,7 @@ import yaml
 import argparse
 from pathlib import Path
 from typing_extensions import deprecated
-from .core import BAAIDataPipeline, HFPipeline, MSPipeline, OpenDataLabPipeline
+from .core import BAAIDataPipeline, HFPipeline, MSPipeline, MergeAndRankingPipeline, OpenDataLabPipeline
 
 
 def main() -> None:
@@ -39,7 +39,8 @@ def init_config(args):
                              "ModelScopePipeline", "HuggingFacePipeline"]
         config = {k: v for k, v in config.items() if k in pipelines}
     elif args.command == 'gen-rank':
-        raise NotImplementedError # TODO
+        if args.data_dir:
+            config['MergeAndRankingPipeline']['data_dir'] = args.data_dir
         
     return config
     
@@ -56,6 +57,7 @@ def get_parser():
     crawl_parser.set_defaults(func=crawl)
 
     gen_rank_parser = sub_parsers.add_parser("gen-rank", parents=[parent_parser], help="Merge data from different source and generate rank table.")
+    gen_rank_parser.add_argument("--data-dir", help="Data directory, default value is the current day")
     gen_rank_parser.set_defaults(func=gen_rank)
     
     return parser
@@ -127,8 +129,17 @@ def crawl(config):
             proc = proc.step('post_process', **conf['post_process'])
         proc.done()
 
+
 def gen_rank(config):
-    pass
+    config = config['MergeAndRankingPipeline']
+    proc = MergeAndRankingPipeline(config['data_dir'])
+    if 'merge_models' in config:
+        proc = proc.step('merge_models', **config['merge_models'])
+    if 'merge_datasets' in config:
+        proc = proc.step('merge_datasets', **config['merge_datasets'])
+    if 'ranking' in config:
+        proc = proc.step('ranking', **config['ranking'])
+    proc.done()
 
 
 def test_hf_pipeline():

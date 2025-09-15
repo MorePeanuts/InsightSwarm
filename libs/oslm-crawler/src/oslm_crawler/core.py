@@ -1,5 +1,7 @@
 import jsonlines
 import sys
+import pandas as pd
+import numpy as np
 from collections import defaultdict
 from typing import Literal
 from loguru import logger
@@ -923,7 +925,7 @@ class MergeAndRankingPipeline:
             case 'merge_models':
                 return self._merge_models(save, **kargs)
             case 'merge_datasets':
-                return self._merge_datasets(save, **kargs)
+                return self._merge_dataset(save, **kargs)
             case 'ranking':
                 return self._ranking(save, **kargs)
     
@@ -944,6 +946,7 @@ class MergeAndRankingPipeline:
         if len(buffer) == 0:
             raise RuntimeError("No processed data found.")
         save_path = self.data_dir / 'merged-models-info.jsonl'
+        res = []
         with jsonlines.open(save_path, 'w') as writer:
             for _, models in buffer.items():
                 data = {
@@ -961,10 +964,14 @@ class MergeAndRankingPipeline:
                                         if 'descendants' in model),
                     "date_crawl": models[0]['date_crawl'],
                 } # TODO Currently missing the date_last_crawl and date_enter_db fields
+                if data['downloads_last_month'] < 50:
+                    continue
                 writer.write(data)
+                res.append(data)
+        self._merge_models_res = res
         logger.info(f"Total model records: {len(buffer)}")
         
-    def _merge_datasets(self, save, **kargs):
+    def _merge_dataset(self, save, **kargs):
         logger.info("Merge datasets")
         buffer = defaultdict(list)
         for p in self.data_dir.iterdir():
@@ -978,6 +985,7 @@ class MergeAndRankingPipeline:
         if len(buffer) == 0:
             raise RuntimeError("No processed data found.")
         save_path = self.data_dir / 'merged-datasets-info.jsonl'
+        res = []
         with jsonlines.open(save_path, 'w') as writer:
             for _, datasets in buffer.items():
                 data = {
@@ -985,7 +993,7 @@ class MergeAndRankingPipeline:
                     "repo": datasets[0]['repo'],
                     "dataset_name": datasets[0]['dataset_name'],
                     "modality": datasets[0]['modality'],
-                    "lifecircle": datasets[0]['lifecircle'],
+                    "lifecycle": datasets[0]['lifecycle'],
                     "downloads_last_month": sum(dataset['downloads_last_month']
                                                 for dataset in datasets
                                                 if dataset['downloads_last_month'] > 0),
@@ -997,7 +1005,173 @@ class MergeAndRankingPipeline:
                     "date_crawl": datasets[0]['date_crawl'],
                 } # TODO Currently missing the date_last_crawl and date_enter_db fields
                 writer.write(data)
+                res.append(data)
+        self._merge_datasets_res = res
         logger.info(f"Total datasets records: {len(buffer)}")
+
+    def _summary_data(
+        self, 
+        df: pd.DataFrame, 
+        config: dict,
+        target_orgs: list,
+    ) -> pd.DataFrame:
+        weights: dict[str, float | int] = config[1]
+        if target_orgs[0] == 'all':
+            target_orgs = df['org'].unique()
+        res = pd.DataFrame(index=target_orgs)
+        for key in weights.keys():
+            if key.startswith('num'):
+                if key.split("_")[-1] in ['pretraining', 'finetuning', 'preference']:
+                    lifecycle = key.split("_")[-1].title()
+                    res[key] = df[df["lifecycle"] == lifecycle].groupby(
+                        'org').size().reindex(target_orgs, fill_value=0)
+                else:
+                    modality = key.split("_")[-1].title()
+                    res[key] = df[df['modality'] == modality].groupby(
+                        'org').size().reindex(target_orgs, fill_value=0)
+            elif key.startswith("downloads"):
+                if key.split("_")[-1] in ['pretraining', 'finetuning', 'preference']:
+                    lifecycle = key.split("_")[-1].title()
+                    res[key] = df[df["lifecycle"] == lifecycle].groupby(
+                        'org').sum().reindex(target_orgs, fill_value=0)
+                else: 
+                    modality = key.split("_")[-1].title()
+                    res[key] = df[df['modality'] == modality].groupby(
+                        'org').sum().reindex(target_orgs, fill_value=0)
+            elif key == 'dataset_usage':
+                res[key] = df.groupby('org')['dataset_usage'].sum().reindex(
+                    target_orgs, fill_value=0)
+            elif key == 'operators':
+                # TODO data process tool operators
+                res[key] = pd.Series({
+                    "BAAI": 24,
+                    "Ali": 105,
+                }).reindex(target_orgs, fill_value=0)
+            else:
+                raise RuntimeError(f"Unrecognized field {key}")
+            
+        return res
+
+    def _summary_model(
+        self, 
+        df: pd.DataFrame, 
+        config: dict,
+        target_orgs: list,
+    ) -> pd.DataFrame:
+        weights: dict[str, float | int] = config[1]
+        if target_orgs[0] == 'all':
+            target_orgs = df['org'].unique()
+        res = pd.DataFrame(index=target_orgs)
+        for key in weights.keys():
+            if key.startswith('num'):
+                modality = key.split("_")[-1].title()
+                res[key] = df[df['modality'] == modality].groupby(
+                    'org').size().reindex(target_orgs, fill_value=0)
+            elif key.startswith('downloads'):
+                modality = key.split("_")[-1].title()
+                res[key] = df[df['modality'] == modality].groupby(
+                    'org')['downloads_last_month'].sum().reindex(
+                        target_orgs, fill_value=0)
+            elif key == 'descendants':
+                res[key] = df.groupby('org')['descendants'].sum().reindex(
+                    target_orgs, fill_value=0)
+            elif key in ['likes', 'issue']:
+                res[key] = df.groupby('org')[key].sum().reindex(
+                    target_orgs, fill_value=0)
+            elif key == 'num_adapted_chips':
+                # TODO chips model
+                res[key] = pd.Series({
+                    "BAAI": 4,
+                    "Baidu": 2,
+                    "Huawei": 2,
+                    "Meta": 2,
+                    "Google": 2,
+                    "ByteDance": 2
+                }).reindex(target_orgs, fill_value=1)
+            else:
+                raise RuntimeError(f"Unrecognized field {key}")
+
+        return res
+
+    def _summary_infra(self, config: dict, target_orgs: list) -> pd.DataFrame:
+        infra_path = self.data_dir / 'infra-summary.csv'
+        weights: dict[str, float | int] = config[1]
+        df = pd.read_csv(infra_path, index_col='org')
+        df = df[list(weights.keys())]
+        df = df[df['org'] in target_orgs]
+        return df
     
+    def _summary_eval(self, config: dict, target_orgs: list) -> pd.DataFrame:
+        eval_path = self.data_dir / 'eval_summary.csv'
+        weights: dict[str, float | int] = config[1]
+        df = pd.read_csv(eval_path, index_col='org')
+        df = df[list(weights.keys())]
+        df = df[df['org'] in target_orgs]
+        return df
+
+    def _normalize_summary(self, summary: pd.DataFrame, config: dict) -> pd.DataFrame:
+        df = summary.div(summary.max())
+        weights = config[1]
+        if config[0] == 'average':
+            df['score'] = df.mean(axis=1)
+            df['rank'] = df['score'].rank(method='dense')
+        elif config[0] == 'weight':
+            df['score'] = df.mul(weights).sum(axis=1)
+            df['rank'] = df['score'].rank(method='dense')
+        else:
+            raise RuntimeError(f'Unrecognized method: {config[0]}, accept `average` or `weight`')
+        return df
+
     def _ranking(self, save, **kargs):
-        pass
+        logger.info("Calculate ranking.")
+
+        if not hasattr(self, "_merge_models_res"):
+            logger.info(f"Trying load merged models from {self.data_dir}")
+            merged_models = pd.read_json(self.data_dir/'merged-models-info.jsonl', 
+                                         lines=True)
+        else:
+            merged_models = pd.DataFrame(self._merge_models_res)
+        if not hasattr(self, "_merge_datasets_res"):
+            logger.info(f"Trying load merged datasets from {self.data_dir}")
+            merged_datasets = pd.read_json(self.data_dir/'merged-datasets-info.jsonl', 
+                                           lines=True)
+        else:
+            merged_datasets = pd.DataFrame(self._merge_datasets_res)
+
+        kargs = {k: v for k, v in kargs.items() if k in [
+            'data_config', 'model_config', 'infra_config', 'eval_config',
+            'target_orgs', 'ranking_weights'
+        ]}
+        target_orgs = kargs.get('target_orgs', ['all'])
+
+        logger.info("Summary table of data from four dimensions.")
+        data_summary = self._summary_data(merged_models, kargs['data_config'], target_orgs)
+        model_summary = self._summary_model(merged_datasets, kargs['model_config'], target_orgs)
+        infra_summary = self._summary_infra(kargs['infra_config'], target_orgs)
+        eval_summary = self._summary_eval(kargs['eval_config'], target_orgs)
+        
+        data_summary.to_csv("data-summary.csv")
+        model_summary.to_csv("model-summary.csv")
+
+        logger.info("Normalize the summary table and calculate the rankings for each dimension.")
+        data_normalization = self._normalize_summary(data_summary, kargs['data_config'])
+        model_normalization = self._normalize_summary(model_summary, kargs['model_config'])
+        infra_normalization = self._normalize_summary(infra_summary, kargs['infra_config'])
+        eval_normalization = self._normalize_summary(eval_summary, kargs['eval_config'])
+        
+        data_normalization.to_csv('data-rank.csv')
+        model_normalization.to_csv('model-rank.csv')
+        infra_normalization.to_csv('infra-rank.csv')
+        eval_normalization.to_csv('eval-rank.csv')
+
+        logger.info("Calculate overall ranking based on sub-dimension rankings.")
+        overall_ranking = pd.DataFrame(index=target_orgs)
+        overall_ranking['data'] = 1 / np.log2(data_normalization['rank'] + 1)
+        overall_ranking['model'] = 1 / np.log2(model_normalization['rank'] + 1)
+        overall_ranking['infra'] = 1 / np.log2(infra_normalization['rank'] + 1)
+        overall_ranking['eval'] = 1 / np.log2(eval_normalization['rank'] + 1)
+        overall_weights = kargs['ranking_weights']
+        overall_ranking['score'] = overall_ranking.mul(overall_weights).sum(axis=1)
+        overall_ranking['rank'] = overall_ranking['score'].rank(method='dense')
+        
+        overall_ranking.to_csv("overall_rank.csv")

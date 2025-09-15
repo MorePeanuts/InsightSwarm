@@ -142,7 +142,7 @@ class HFInfoProcessor(PipelineStep):
             dataset_info = self.dataset_infos.get(dataset_key, None)
             if dataset_info:
                 modality = dataset_info['modality']
-                lifecircle = dataset_info['lifecircle']
+                lifecycle = dataset_info['lifecycle']
                 is_valid = dataset_info['is_valid']
             else:
                 if self.datasets_buffer_counter[dataset_key] <= self.max_retries:
@@ -165,7 +165,7 @@ class HFInfoProcessor(PipelineStep):
                     "repo": repo,
                     "dataset_name": dataset_name,
                     "modality": modality,
-                    "lifecircle": lifecircle,
+                    "lifecycle": lifecycle,
                     "downloads_last_month": downloads_last_month,
                     "likes": inp['likes'],
                     "community": inp['community'],
@@ -178,7 +178,7 @@ class HFInfoProcessor(PipelineStep):
                     "org": org,
                     "dataset_name": dataset_name,
                     "modality": modality,
-                    "lifecircle": lifecircle
+                    "lifecycle": lifecycle
                 }, None)
             else:
                 return None
@@ -200,7 +200,7 @@ class HFInfoProcessor(PipelineStep):
             elif isinstance(info, DatasetInfo):
                 res[key] = {
                     'modality': info.modality,
-                    'lifecircle': info.lifecircle,
+                    'lifecycle': info.lifecycle,
                     'is_valid': info.is_valid
                 }
         return res
@@ -502,7 +502,7 @@ class MSInfoProcessor(PipelineStep):
                 dataset_info = self.dataset_infos.get(dataset_key, None)
                 if dataset_info:
                     modality = dataset_info['modality']
-                    lifecircle = dataset_info['lifecircle']
+                    lifecycle = dataset_info['lifecycle']
                     is_valid = dataset_info['is_valid']
                 else:
                     if self.datasets_buffer_counter[dataset_key] <= self.max_retries:
@@ -527,7 +527,7 @@ class MSInfoProcessor(PipelineStep):
                     "repo": repo,
                     "dataset_name": dataset_name,
                     "modality": modality,
-                    "lifecircle": lifecircle,
+                    "lifecycle": lifecycle,
                     "downloads_last_month": downloads_last_month,
                     "total_downloads": inp['total_downloads'],
                     "likes": inp['likes'], 
@@ -540,7 +540,7 @@ class MSInfoProcessor(PipelineStep):
                     "org": org,
                     "dataset_name": dataset_name,
                     "modality": modality,
-                    "lifecircle": lifecircle
+                    "lifecycle": lifecycle
                 }, None)
             else:
                 return None
@@ -562,7 +562,7 @@ class MSInfoProcessor(PipelineStep):
             elif isinstance(info, DatasetInfo):
                 res[key] = {
                     'modality': info.modality,
-                    'lifecircle': info.lifecircle,
+                    'lifecycle': info.lifecycle,
                     'is_valid': info.is_valid
                 }
         return res
@@ -778,7 +778,7 @@ class OpenDataLabInfoProcessor(PipelineStep):
                 dataset_info = self.dataset_infos.get(dataset_key, None)
                 if dataset_info:
                     modality = dataset_info['modality']
-                    lifecircle = dataset_info['lifecircle']
+                    lifecycle = dataset_info['lifecycle']
                     is_valid = dataset_info['is_valid']
                 else:
                     if self.datasets_buffer_counter[dataset_key] <= self.max_retries:
@@ -795,7 +795,7 @@ class OpenDataLabInfoProcessor(PipelineStep):
                     "repo": repo,
                     "dataset_name": dataset_name,
                     "modality": modality,
-                    "lifecircle": lifecircle,
+                    "lifecycle": lifecycle,
                     "downloads_last_month": downloads_last_month,
                     "total_downloads": inp['total_downloads'],
                     "likes": inp['likes'], 
@@ -806,7 +806,7 @@ class OpenDataLabInfoProcessor(PipelineStep):
                     "org": org,
                     "dataset_name": dataset_name,
                     "modality": modality,
-                    "lifecircle": lifecircle
+                    "lifecycle": lifecycle
                 }, None)
             else:
                 return None
@@ -823,7 +823,7 @@ class OpenDataLabInfoProcessor(PipelineStep):
             if isinstance(info, DatasetInfo):
                 res[key] = {
                     'modality': info.modality,
-                    'lifecircle': info.lifecircle,
+                    'lifecycle': info.lifecycle,
                     'is_valid': info.is_valid
                 }
         return res
@@ -989,7 +989,7 @@ class BAAIDataInfoProcessor(PipelineStep):
                 dataset_info = self.dataset_infos.get(dataset_key, None)
                 if dataset_info:
                     modality = dataset_info['modality']
-                    lifecircle = dataset_info['lifecircle']
+                    lifecycle = dataset_info['lifecycle']
                     is_valid = dataset_info['is_valid']
                 else:
                     if self.datasets_buffer_counter[dataset_key] <= self.max_retries:
@@ -1006,7 +1006,7 @@ class BAAIDataInfoProcessor(PipelineStep):
                     "repo": repo,
                     "dataset_name": dataset_name,
                     "modality": modality,
-                    "lifecircle": lifecircle,
+                    "lifecycle": lifecycle,
                     "downloads_last_month": downloads_last_month,
                     "total_downloads": inp['total_downloads'],
                     "likes": inp['likes'], 
@@ -1017,7 +1017,7 @@ class BAAIDataInfoProcessor(PipelineStep):
                     "org": org,
                     "dataset_name": dataset_name,
                     "modality": modality,
-                    "lifecircle": lifecircle
+                    "lifecycle": lifecycle
                 }, None)
             else:
                 return None
@@ -1034,7 +1034,7 @@ class BAAIDataInfoProcessor(PipelineStep):
             if isinstance(info, DatasetInfo):
                 res[key] = {
                     'modality': info.modality,
-                    'lifecircle': info.lifecircle,
+                    'lifecycle': info.lifecycle,
                     'is_valid': info.is_valid
                 }
         return res
@@ -1139,7 +1139,7 @@ class MultiSourceInfoMerge(PipelineStep):
                 ])
             case ('HuggingFace', 'datasets'):
                 self.required_keys.extend([
-                    'dataset_name', 'lifecircle', 'community', 'dataset_usage'
+                    'dataset_name', 'lifecycle', 'community', 'dataset_usage'
                 ])
             case ('ModelScope', 'models'):
                 self.required_keys.extend([
@@ -1147,15 +1147,15 @@ class MultiSourceInfoMerge(PipelineStep):
                 ])
             case ('ModelScope', 'datasets'):
                 self.required_keys.extend([
-                    'dataset_name', 'lifecircle', 'community'
+                    'dataset_name', 'lifecycle', 'community'
                 ])
             case ('OpenDataLab', 'datasets'):
                 self.required_keys.extend([
-                    'dataset_name', 'lifecircle'
+                    'dataset_name', 'lifecycle'
                 ])
             case ('BAAIData', 'datasets'):
                 self.required_keys.extend([
-                    'dataset_name', 'lifecircle'
+                    'dataset_name', 'lifecycle'
                 ])
             case _:
                 logger.error(f"Unknown source-type pair {input_data.data['source']}-{self.category}")
@@ -1220,7 +1220,7 @@ class MultiSourceInfoMerge(PipelineStep):
                         "repo": datasets[0]['repo'],
                         "dataset_name": datasets[0]['dataset_name'],
                         "modality": datasets[0]['modality'],
-                        "lifecircle": datasets[0]['lifecircle'],
+                        "lifecycle": datasets[0]['lifecycle'],
                         "downloads_last_month": sum(dataset['downloads_last_month']
                                                     for dataset in datasets
                                                     if dataset['downloads_last_month'] > 0),

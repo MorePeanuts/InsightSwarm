@@ -26,7 +26,7 @@ class DatasetInfo(BaseModel):
     link: str = Field(description="The link of the dataset")
     modality: Optional[Literal["Language", "Speech", "Vision", "Multimodal", "Vector", "Protein", 
                                "3D", "Embodied"]] = Field(default=None, description="The modality of the dataset")
-    lifecircle: Optional[Literal["Pre-training", "Fine-tuning", "Preference", "Evaluation"]] = Field(default=None, description="Which stage of model training/evaluation is the dataset used for")
+    lifecycle: Optional[Literal["Pre-training", "Fine-tuning", "Preference", "Evaluation"]] = Field(default=None, description="Which stage of model training/evaluation is the dataset used for")
     is_valid: Optional[bool] = Field(default=None, description="Is it a valid dataset that can be used for large model evaluation/training")
     
     
@@ -58,8 +58,8 @@ You are an expert in machine learning datasets and their applications. Your task
 Instructions:
 If you do not have the ability to access the network, state that you cannot access the network.
 For each link, you must first state whether it is a valid dataset.
-If a dataset is judged as not valid, you should clearly state so and do not need to provide its modality or lifecircle.
-If you cannot determine any piece of information (validity, modality, or lifecircle), you should clearly point it out rather than guessing a result.
+If a dataset is judged as not valid, you should clearly state so and do not need to provide its modality or lifecycle.
+If you cannot determine any piece of information (validity, modality, or lifecycle), you should clearly point it out rather than guessing a result.
 Keep the correspondence between each link and the conclusions you give.
 
 Dataset links:
@@ -67,15 +67,15 @@ Dataset links:
 """
 
 json_parse_prompt = """\
-You are an expert skilled at extracting effective information. Your task is to extract information based on a summary text from web searches, following the format of the `DatasetInfoList` class. This summary text describes information from a list of HuggingFace or Modelscope dataset repositories, including whether the dataset is valid, its modality, its use in the model lifecircle, and the web link.
+You are an expert skilled at extracting effective information. Your task is to extract information based on a summary text from web searches, following the format of the `DatasetInfoList` class. This summary text describes information from a list of HuggingFace or Modelscope dataset repositories, including whether the dataset is valid, its modality, its use in the model lifecycle, and the web link.
 
 Follow these critical rules during extraction:
 1. First, determine the value for the `is_valid` field (true or false).
-2. Crucially, if `is_valid` is `False`, then both `modality` and `lifecircle` must be set to `None`, regardless of any other information present in the text.
-3. If the text states that it cannot determine any of the fields (`is_valid`, `modality`, or `lifecircle`), then you should set that specific field to `None`.
+2. Crucially, if `is_valid` is `False`, then both `modality` and `lifecycle` must be set to `None`, regardless of any other information present in the text.
+3. If the text states that it cannot determine any of the fields (`is_valid`, `modality`, or `lifecycle`), then you should set that specific field to `None`.
 
 The `modality` must be one of the following: Language, Speech, Vision, Multimodal, Embodied.
-The `lifecircle` must be one of the following: Pre-training, Fine-tuning, Preference, Evaluation.
+The `lifecycle` must be one of the following: Pre-training, Fine-tuning, Preference, Evaluation.
 
 Here is the summary text:
 {web_search_result}
@@ -100,7 +100,7 @@ def gen_dataset_info(urls: list[str]):
         return result['parsed'].infos
     else:
         print("Parsing error:", result['parsing_error'])
-        return [DatasetInfo(link=url, modality=None, lifecircle=None) for url in urls]
+        return [DatasetInfo(link=url, modality=None, lifecycle=None) for url in urls]
 
 
 if __name__ == "__main__":
