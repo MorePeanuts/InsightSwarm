@@ -212,7 +212,7 @@ class MSModelPage:
     _main_parts = [
         (By.XPATH, '//*[@id="root"]/div/div/main/div[1]/div/div[1]/div[1]/div/div'),
         (By.XPATH, '//*[@id="modelDetail_bottom"]/div/div[1]/div'),
-        (By.XPATH, '//*[@id="modelDetail_bottom"]/div/div[2]/div[1]/div'),
+        # (By.XPATH, '//*[@id="modelDetail_bottom"]/div/div[2]/div[1]/div'),
     ]
     _downloads = (By.XPATH, '//*[@id="root"]/div/div/main/div[1]/div/div[1]/div[1]/div/div/div[3]/div[1]')
     _navigation_tabs = (By.XPATH, '//*[@id="root"]/div/div/main/div[1]/div/div[1]/div[2]/div/div/div/div[1]/div[1]/div')

@@ -43006,5 +43006,21 @@
     "iic/cv_F3Net_product-segmentation": {
         "modality": "Vision",
         "is_large_model": false
+    },
+    "iic/cv_quadtree_attention_image-matching_outdoor": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_structbert_alimeeting_action-classification_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_ddsar_face-detection_iclr23-damofd-10G": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_cartoon_stable_diffusion_clipart": {
+        "modality": "Vision",
+        "is_large_model": true
     }
 }

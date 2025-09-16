@@ -257,7 +257,7 @@ class MSRepoPageCrawler(PipelineStep):
             ])
         else:
             self.input['link-category'].extend([
-                (link, 'datasets') for link in required_data['ModelScope']
+                (link, 'models') for link in required_data['ModelScope']
             ])
         
     def run(self) -> PipelineResult:

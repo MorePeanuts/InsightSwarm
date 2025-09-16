@@ -408,16 +408,18 @@ class MSInfoProcessor(PipelineStep):
             return last_month_downloads
         
         p = self.history_data_path[closest_date] / 'ModelScope/raw-models-info.jsonl'
-        with jsonlines.open(p, 'r') as f:
-            for item in f:
-                key = f"{item['repo']}/{item['model_name']}"
-                last_month_downloads[key] = item['total_downloads']
+        if p.exists():
+            with jsonlines.open(p, 'r') as f:
+                for item in f:
+                    key = f"{item['repo']}/{item['model_name']}"
+                    last_month_downloads[key] = item['total_downloads']
         p = self.history_data_path[closest_date] / 'ModelScope/raw-datasets-info.jsonl'
-        with jsonlines.open(p, 'r') as f:
-            for item in f:
-                key = f"{item['repo']}/{item['dataset_name']}"
-                last_month_downloads[key] = item['total_downloads']
-        
+        if p.exists():
+            with jsonlines.open(p, 'r') as f:
+                for item in f:
+                    key = f"{item['repo']}/{item['dataset_name']}"
+                    last_month_downloads[key] = item['total_downloads']
+
         return last_month_downloads
     
     def parse_input(self, input_data: PipelineData | None = None):
@@ -770,10 +772,11 @@ class OpenDataLabInfoProcessor(PipelineStep):
             return last_month_downloads
         
         p = self.history_data_path[closest_date] / 'OpenDataLab/raw-datasets-info.jsonl'
-        with jsonlines.open(p, 'r') as f:
-            for item in f:
-                key = f"{item['repo']}/{item['dataset_name']}"
-                last_month_downloads[key] = item['total_downloads']
+        if p.exists():
+            with jsonlines.open(p, 'r') as f:
+                for item in f:
+                    key = f"{item['repo']}/{item['dataset_name']}"
+                    last_month_downloads[key] = item['total_downloads']
         
         return last_month_downloads
     
@@ -983,10 +986,11 @@ class BAAIDataInfoProcessor(PipelineStep):
             return last_month_downloads
         
         p = self.history_data_path[closest_date] / 'BAAIData/raw-datasets-info.jsonl'
-        with jsonlines.open(p, 'r') as f:
-            for item in f:
-                key = f"{item['repo']}/{item['dataset_name']}"
-                last_month_downloads[key] = item['total_downloads']
+        if p.exists():
+            with jsonlines.open(p, 'r') as f:
+                for item in f:
+                    key = f"{item['repo']}/{item['dataset_name']}"
+                    last_month_downloads[key] = item['total_downloads']
         
         return last_month_downloads
     
