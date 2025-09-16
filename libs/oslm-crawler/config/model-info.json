@@ -40414,5 +40414,2053 @@
     "PaddlePaddle/uie-base": {
         "modality": null,
         "is_large_model": false
+    },
+    "iic/InspireMusic": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/ClearerVoice-Studio": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_frcrn_ans_cirm_16k": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/gme-Qwen2-VL-2B-Instruct": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/gme-Qwen2-VL-7B-Instruct": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ACE_Plus": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/punc_ct-transformer_zh-cn-common-vocab272727-pytorch": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_resnet34_sv_zh-cn_3dspeaker_16k": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/WebRPG": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/ofasys_multimodal_multitask_pretrain_base_en": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ofa_visual-question-answering_pretrain_huge_en": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ofa_visual-grounding_refcoco_large_en": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ofa_visual-entailment_snli-ve_large_en": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ofa_visual-entailment_snli-ve_distilled_v2_en": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ofa_pretrain_tiny_en": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ofa_pretrain_medium_en": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ofa_pretrain_large_zh": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ofa_pretrain_large_en": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ofa_pretrain_huge_en": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ofa_pretrain_base_zh": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ofa_pretrain_base_en": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ofa_ocr-recognition_web_base_zh": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/ofa_ocr-recognition_handwriting_base_zh": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/ofa_mmspeech_pretrain_base_zh": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ofa_image-caption_muge_base_zh": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/ofa_image-caption_meme_large_zh": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/nlp_gpt3_sft_text-generation_1.3B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_gpt3_text-generation_1.3B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_gpt3_text-generation_2.7B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_ecomgpt_multilingual-7B-ecom": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_polylm_assistant_13b_text_generation": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_palm2.0_text-generation_meeting_title_chinese-base": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_polylm_multialpaca_13b_text_generation": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_gpt2_text-generation_english-base": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_plug_text-generation_27B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/cv_resnest101_animal_recognition": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/scepter": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/In-Context-LoRA": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/cv_resnet50-bert_video-scene-segmentation_movienet": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_hrnetv2w32_body-2d-keypoints_image": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_resnet18_human-detection": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/scepter_tuner": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/speech_sanm_kws_phone-xiaoyun-commands-offline": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_charctc_kws_phone-xiaoyun_mt": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_charctc_kws_phone-xiaoyun": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/punc_ct-transformer_zh-cn-common-vad_realtime-vocab272727-onnx": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/punc_ct-transformer_zh-cn-common-vocab272727-onnx": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/cv_resnet18_ocr-detection-line-level_damo": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_yolov5_video-multi-object-tracking_fairmot": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/mgeo_geographic_elements_tagging_chinese_base": {
+        "modality": "Language",
+        "is_large_model": false
+    },
+    "iic/speech_sambert-hifigan_nsf_tts_en-us_multisp_pretrain_24k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/nlp_structbert_alimeeting_action-classification_spoken_chinese-base": {
+        "modality": "Language",
+        "is_large_model": false
+    },
+    "iic/cv_sceneflow_estimation": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/speech_eres2netv2w24s4ep4_sv_zh-cn_16k-common": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_eres2net_large_200k_sv_zh-cn_16k-common": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_eres2net_base_200k_sv_zh-cn_16k-common": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/multi-modal_efficient-diffusion-tuning-swift-adapter": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/multi-modal_efficient-diffusion-tuning-swift-prompt": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/multi-modal_efficient-diffusion-tuning-control-lora": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/multi-modal_efficient-diffusion-tuning-lora": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/speech_paraformer-large-contextual_asr_nat-zh-cn-16k-common-vocab8404-torchscript": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_paraformer-large-vad-punc_asr_nat-zh-cn-16k-common-vocab8404-torchscript": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-torchscript": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/stylebooth": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/speech_eres2net-large_speaker-diarization_common": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_campplus_sv_zh_en_16k-common_advanced": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_fsmn_vad_zh-cn-16k-common-onnx": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/scepter_annotator": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/SVPO_7B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/AlphaMath-7B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/InstructVideo": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/Blsp-Emo-Qwen-7B": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-pt-16k-common-vocab1617-tensorflow1-online": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_tdnn_sv_en_voxceleb_16k": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/funasr-runtime-win-cpu-x64": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/gte_Qwen1.5-7B-instruct": {
+        "modality": "Vector",
+        "is_large_model": true
+    },
+    "iic/nlp_bart_text-error-correction_chinese-law": {
+        "modality": "Language",
+        "is_large_model": false
+    },
+    "iic/speech_diarization_sond-en-us-swbd_sre-8k-n16k4-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_eres2net_large_sv_zh-cn_cnceleb_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/TinyChart-3B-768-siglip": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/TinyChart-3B-768": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/speech_fsmn_vad_zh-cn-8k-common-onnx": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/structured_model_probing": {
+        "modality": null,
+        "is_large_model": null
+    },
+    "iic/cv_man_image-quality-assessment": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_FreqHPT_human-image-generation": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_xlmr_named-entity-recognition_eng-ecommerce-title": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_xlmr_word-segmentation_viet": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/alpha-umi-backbone-13b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/alpha-umi-backbone-7b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/scepter_scedit": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/dreamvideo-t2v": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/FlashFace": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/tf-t2v": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/DocOwl1.5-Omni": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/DocOwl1.5": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/DocOwl1.5-Chat": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/DocOwl1.5-stage1": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/face_chain_fact_model": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/LARGEN": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/speech_paraformer-large-contextual_asr_nat-zh-cn-16k-common-vocab8404": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/HiGen": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/LCB-NET": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/mPLUG-Owl2.1": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-cantonese-CHS-16k-common-vocab1468-tensorflow1-online": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-ja-16k-common-vocab93-tensorflow1-online": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-ja-16k-common-vocab93-tensorflow1-offline": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/face_frombase_c4": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/speech_ptts_autolabel_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_rwkv_transducer_asr-en-16k-gigaspeech-vocab5001-pytorch-online": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_rwkv_bat_asr-en-16k-librispeech-vocab5003-pytorch-online": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_rwkv_bat_asr-zh-cn-16k-aishell1-vocab4234-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_bat_asr-zh-cn-16k-aishell1-vocab4234-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_conformer_transducer_asr-en-16k-librispeech-vocab5003-pytorch-online": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_conformer_transducer_asr-en-16k-gigaspeech-vocab5001-pytorch-online": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_fsmn_vad_zh-cn-8k-common": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_fsmn_vad_zh-cn-16k-common-pytorch": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/cv_resnet50_ocr-detection-vlpt": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/speech_conformer_larger_asr_multi_language-16k-common-vocab30392-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_conformer_asr_nat-zh-cn-16k-aishell1-vocab4234-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/alpha-umi-summarizer-13b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/alpha-umi-summarizer-7b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/alpha-umi-caller-13b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/alpha-umi-caller-7b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/alpha-umi-planner-13b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/alpha-umi-planner-7b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/speech_eres2net_large_sv_en_voxceleb_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-my-16k-common-vocab696-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-tr-16k-common-vocab1582-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-fr-16k-common-vocab3472-tensorflow1-online": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-es-16k-common-vocab3445-tensorflow1-online": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-id-16k-common-vocab1067-tensorflow1-online": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-ru-16k-common-vocab1664-tensorflow1-online": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/cv_hrnet_image-human-reconstruction": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/RankingGPT-baichuan2-7b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-zh-cn-16k-common-vocab8358-tensorflow1-online": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/cv_mdm_motion-generation": {
+        "modality": "3D",
+        "is_large_model": true
+    },
+    "iic/speech_paraformer_asr-en-16k-vocab4199-1B-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8358-tensorflow1": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_paraformer_asr_nat-zh-cn-8k-common-vocab8358-tensorflow1": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/cv_resnet18_card_correction": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/MARIO-34B-v0": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/MARIO-7B-v1": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/MARIO-OVM-7B-v1": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/RankingGPT-qwen-7b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/udever-bloom-7b1": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_corom_sentence-embedding_chinese-tiny": {
+        "modality": "Vector",
+        "is_large_model": true
+    },
+    "iic/ONE-PEACE-4B": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/nlp_structbert_sentiment-classification_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/RankingGPT-llama2-7b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/RankingGPT-bloom-7b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/RankingGPT-bloom-3b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/RankingGPT-bloom-1b1": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/RankingGPT-bloom-560m": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/dreamtalk": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_nsf_tts_eric_en-gb_24k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_nsf_tts_emily_en-gb_24k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/cv_3d-human-synthesis-library": {
+        "modality": "3D",
+        "is_large_model": true
+    },
+    "iic/AnyDoor_models": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/mask_refine": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/audio_codec-encodec-zh_en-general-16k-nq32ds640-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_synthesizer-laura-en-libritts-16k-codec_nq2-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/AnyDoor": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/speech_eres2net_large_lre_en-cn_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_eres2net_base_five_lre_8k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_eres2net_large_five_lre_8k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_campplus_five_lre_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_eres2net_base_five_lre_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_ngram_lm_zh-cn-ai-wesp-fst-token8358": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/MiniGPT-v2": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/speech_ngram_lm_zh-cn-ai-wesp-fst": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_background_generation_sd": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/ModelScope-Agent-14B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/cv_stable-diffusion_paint-by-example": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_s2net_panorama-depth-estimation": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_resnet50_face-reconstruction": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_HRN_head-reconstruction": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_HRN_text-to-head": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_nsf_tts_david_en-us_24k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_nsf_tts_donna_en-us_24k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_tts_waan_Thai_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/nlp_deberta_rex-uninlu_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_crnn_ocr-recognition-general_damo": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_convnextTiny_ocr-recognition-handwritten_damo": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/multimodal_multiview_avatar_gen": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/Pose-driven-image-generation-HumanSD": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_stable-diffusion-v2_image-feature": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_unet_skin_retouching_torch": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_nanodet_face-human-hand-detection": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_mobileface_hand-static": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/nlp_raner_named-entity-recognition_chinese-base-ecom-50cls": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_minilm_ibkd_sentence-embedding_english-msmarco": {
+        "modality": "Vector",
+        "is_large_model": true
+    },
+    "iic/nlp_minilm_ibkd_sentence-embedding_english-sts": {
+        "modality": "Vector",
+        "is_large_model": true
+    },
+    "iic/cv_swin-t_referring_video-object-segmentation": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_proxylessnas_ocr-detection-db-line-level_damo": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_siamese-uninlu_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_sdxl_lora": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/mPLUG-Owl2": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/speech_personal_sambert-hifigan_nsf_tts_zh-cn_pretrain_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/cv_image-view-transform": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_unet_image-matting": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/multi-modal_freeu_stable_diffusion": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/cv_resnet18_ocr-detection-db-line-level_damo": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/udever-bloom-560m": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/udever-bloom-3b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/udever-bloom-1b1": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/speech_bert_semantic-spk-turn-detection-punc_speaker-diarization_chinese": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/speech_bert_dialogue-detetction_speaker-diarization_chinese": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/speech_ecapa-tdnn_sv_zh-cn_3dspeaker_16k": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_ecapa-tdnn_sv_zh-cn_cnceleb_16k": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_ecapa-tdnn_sv_en_voxceleb_16k": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_whisper-small_asr_english": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/PMR-base": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/PMR-large": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/EQA-PMR-large": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/cv_face_detection_landmark": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/NER-PMR-Large": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-zh-cn-8k-common-vocab8358-tensorflow1-offline": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_UniASR_asr_2pass-zh-cn-8k-common-vocab8358-tensorflow1-online": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_UniASR_asr_2pass-zh-cn-16k-common-vocab8358-tensorflow1-offline": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_UniASR_asr_2pass-cn-dialect-16k-vocab8358-tensorflow1-offline": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_UniASR_asr_2pass-zh-cn-8k-finance-vocab3445-online": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_UniASR_asr_2pass-zh-cn-16k-audio_and_video-vocab3445-online": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_UniASR_asr_2pass-zh-cn-8k-common-vocab3445-pytorch-offline": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/Cones2": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/zero-shot-classify-SSTuning-XLM-R": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/zero-shot-classify-SSTuning-base": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/cv_face_pose": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_face_landmark105": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/face_detection_model": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_face_quality": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_face_attr": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_diffuser_text-texture-generation": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_tts_multilingual_multisp_pretrain_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/multi-modal_efficient-diffusion-tuning-swift-base": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/audio_codec-freqcodec_magphase-en-libritts-16k-gr8nq32ds320-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/audio_codec-freqcodec_magphase-en-libritts-16k-gr1nq32ds320-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/audio_codec-encodec-zh_en-general-16k-nq32ds320-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/audio_codec-encodec-en-libritts-16k-nq32ds320-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/audio_codec-encodec-en-libritts-16k-nq32ds640-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/cv_resnet18_ocr-detection-word-level_damo": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_vitb16_classification_vision-efficient-tuning-base": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_surface-reconstruction-common": {
+        "modality": "3D",
+        "is_large_model": true
+    },
+    "iic/cv_vit_image-control-3d-portrait-synthesis": {
+        "modality": "3D",
+        "is_large_model": true
+    },
+    "iic/multi-modal_clip-vit-large-patch14_zh": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/cv_vit-b16_vision-middleware": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/ViDT-logo-detection": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/ViDT-face-detection": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_resnet152_open-vocabulary-detection_vild": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_corom_passage-ranking_chinese-base-medical": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_corom_passage-ranking_chinese-tiny-medical": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_xlmr_named-entity-recognition_eng-ecommerce-query": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_clip-it_video-summarization_language-guided_en": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/speech_personal_sambert-hifigan_nsf_tts_zh-cn_pretrain_24k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/blsp_lslm_7b": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/cv_unet-image-face-fusion_damo": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/MSAgent-Qwen-7B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/PASD_image_super_resolution": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/image_view_translation": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_chinese-base-ecom": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_raner_named-entity-recognition_chinese-base-news": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_fastsam_image-instance-segmentation_sa1b": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_image_variation_sd": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-en-16k-common-vocab1080-tensorflow1-offline": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/cv_vit-base_human-pose-estimation_cvpr23-cvf": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/speech_eres2net_base_sv_zh-cn_cnceleb_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_campplus_sv_cn_cnceleb_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_eres2net_base_sv_zh-cn_3dspeaker_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/TextDiffuser_en": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/multi_modal_clip_vtretrieval_prost": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/speech_campplus_lre_en-cn_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/cv_ir_face-recognition-ood_rts": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_unet_skin-retouching": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_manual_face-quality-assessment_fqa": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_ddsar_face-detection_iclr23-damofd": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_nsf_tts_cally_en-us_24k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/cv_masactrl_image-editing": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/VideoComposer": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_tts_clara_French_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/nlp_structbert_emotion-classification_chinese-tiny": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_emotion-classification_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_emotion-classification_chinese-large": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_swinb_video-instance-segmentation": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_csanmt_translation_zh2es": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_csanmt_translation_es2zh": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_csanmt_translation_fr2zh": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_csanmt_translation_zh2fr": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/multi-modal_mplug_owl_bilingual_multimodal-dialogue_7b": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/nlp_roberta_machine-reading-comprehension_for-ner": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_star_conversational-text-to-sql": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/cv_diffusion_text-to-360panorama-image_generation": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_dro-resnet18_video-depth-estimation_indoor": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/speech_sambert-hifigan_nsf_tts_farah_Malay_24k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_nsf_tts_tien_Vietnamese_24k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/ChatPLUG-3.7B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/speech_xvector_sv-en-us-callhome-8k-spk6135-pytorch": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_xvector_sv-zh-cn-cnceleb-16k-spk3465-pytorch": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_diarization_sond-zh-cn-alimeeting-16k-n16k4-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_paraformerbert_asr_nat-zh-cn-16k-aishell2-vocab5212-pytorch": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_paraformerbert_asr_nat-zh-cn-16k-aishell1-vocab4234-pytorch": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_paraformer_asr_nat-aishell1-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/multi-modal_efficient-diffusion-tuning-swift-restuning": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/nlp_bert_sentiment-analysis_english-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_unet_video-deinterlace": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_tinynas_object-detection_damoyolo-m": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_tinynas_object-detection_damoyolo-t": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_dut-raft_video-stabilization_base": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_siamese-aoe_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/multi-modal_mplug_owl_multimodal-dialogue_7b": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/speech_data2vec_pretrain-paraformer-zh-cn-aishell2-16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/cv_msrresnet_video-super-resolution_lite": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_unet_person-image-cartoon-sketch_compound-models": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_unet_person-image-cartoon-handdrawn_compound-models": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_unet_person-image-cartoon-3d_compound-models": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_resnet50_fast-instance-segmentation_coco": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_mobilenet_face-2d-keypoints_alignment": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/ONE-PEACE": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/nlp_corom_passage-ranking_chinese-tiny": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_csanmt_translation_zh2en": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/speech_charctc_kws_phone-xiaoyun-commands": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_charctc_kws_phone-speechcommands": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_word-segmentation_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_rom_passage-ranking_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_yolox-pai_hand-detection": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_unet_video-colorization": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/speech_transformer_lm_zh-cn-common-vocab8404-pytorch": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/multi-modal_convnext-roberta-base_vldoc-embedding": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/cv_fdin_video-deinterlace": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_manual_face-recognition_frfm": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_unite_up_translation_evaluation_English_large": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_unite_mup_translation_evaluation_multilingual_base": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_unite_mup_translation_evaluation_multilingual_large": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_automatic_post_editing_for_translation_en2de": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-fa-16k-common-vocab1257-pytorch-offline": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/cv_cspnet_image-object-detection_yolox_nano_coco": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_r50_panoptic-segmentation_cocopan": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_hrnetw18_hand-pose-keypoints_coco-wholebody": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_structbert_backbone_lite_law": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_canmt_translation_zh2en_large": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/speech_saasr_asr-zh-cn-16k-alimeeting": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/cv_swinL_panoptic-segmentation_cocopan": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_ResNetC3D_action-detection_detection2d": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_ponet_document-segmentation_topic-level_english-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_diffusion_text-to-image-synthesis": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_structbert_sentiment-classification_chinese-tiny": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/speech_dfsmn_kws_char_farfield_16k_nihaomiya": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/speech_UniASR_asr_2pass-minnan-16k-common-vocab3825": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/cv_ddsar_face-detection_iclr23-damofd-2.5G": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_chinese-base-cmeee": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_resnet50_pedestrian-attribute-recognition_image": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_composer_multi-modal-image-synthesis": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/nlp_maoe_named-entity-recognition_chinese-base-general": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_unet_person-image-cartoon_compound-models": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_effnetv2_video-human-matting": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_casmvs_multi-view-depth-estimation_general": {
+        "modality": "3D",
+        "is_large_model": true
+    },
+    "iic/cv_pointnet2_sceneflow-estimation_general": {
+        "modality": "3D",
+        "is_large_model": true
+    },
+    "iic/cv_cspnet_video-object-detection_streamyolo": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_cartoon_stable_diffusion_watercolor": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_cartoon_stable_diffusion_illustration": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_cartoon_stable_diffusion_flat": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_cartoon_stable_diffusion_design": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_diffusion_text-to-video-synthesis": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_tts_zhida_zh-cn_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_tts_zhimao_zh-cn_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_tts_zhiyuan_zh-cn_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_tts_zhiyue_zh-cn_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_tts_zhishuo_zh-cn_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_tts_zhigui_zh-cn_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_tts_hanna_German_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_tts_tala_Filipino_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/nlp_structbert_siamese-uie_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_csanmt_translation_ru2en_base": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/multi-modal_soonet_video-temporal-grounding": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/nlp_structbert_faq-question-answering_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_fft_inpainting_lama": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_vitb16_classification_vision-efficient-tuning-sidetuning": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_vitb16_classification_vision-efficient-tuning-prompt": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_vitb16_classification_vision-efficient-tuning-prefix": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_vitb16_classification_vision-efficient-tuning-bitfit": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/speech_diarization_eend-ola-en-us-callhome-8k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/nlp_bart_text-error-correction_chinese": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/cv_yolox_image-object-detection-auto": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_masts_backbone_clue_chinese-large": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_csanmt_translation_en2zh": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_translation_quality_estimation_multilingual": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_tts_indah_Indonesian_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_sambert-hifigan_tts_luna_en-gb_16k": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/multi-modal_rleg-vit-large-patch14": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/nlp_faq-question-answering_multilingual-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_backbone_tiny_law": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_qd_spoken_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_gpt3_text-generation_30B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_gpt3_text-generation_13B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/cv_vit-b32_retrieval_vop_partial": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_vit-b32_retrieval_vop_proj": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_vit-b32_retrieval_vop_bias": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_densenet161_image-depth-estimation_bts": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_mivos-stcn_video-object-segmentation": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/3rd_Anti-UAV_CVPR23": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_peer_mnli_english-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/ViDT-item-detection": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/ViDT-text-detection": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_llformer_low-light-image-enhancement_UHD-LOL4K": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_ecbsr_image-super-resolution_mobile": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_manual_uav-detection_uav": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_spoken_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_resnet_facedetection_scrfd10gkps": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_mobilenet-v2_bad-image-detecting": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_object-detection-3d_depe": {
+        "modality": "3D",
+        "is_large_model": true
+    },
+    "iic/nlp_xlmr_word-segmentation_thai": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_imt_translation_en2zh": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_structbert_word-segmentation_chinese-lite-ecommerce": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_word-segmentation_chinese-lite": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_word-segmentation_chinese-base-ecommerce": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_part-of-speech_chinese-lite": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_part-of-speech_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_controlnet_image-generation": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/CVPR2023_NTIRE_Video_Colorization": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_plug-mental_backbone_base": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/cv_vitadapter_semantic-segmentation_cocostuff164k": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_swinL_semantic-segmentation_cocopanmerge": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_corom_passage-ranking_english-tiny": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-vi-16k-common-vocab1001-pytorch-offline": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-id-16k-common-vocab1067-tensorflow1-offline": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/speech_UniASR_asr_2pass-pt-16k-common-vocab1617-tensorflow1-offline": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_chinese-base-resume": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_russian-large-generic": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_russian-large-ecom": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_korean-large-generic": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_hindi-large-generic": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_german-large-generic": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_french-large-ecom": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_english-large-science": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_english-large-politics": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_english-large-literature": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_english-large-ai": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_dutch-large-generic": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_chinese-large-generic": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_raner_named-entity-recognition_chinese-base-literature": {
+        "modality": "Language",
+        "is_large_model": false
+    },
+    "iic/nlp_raner_named-entity-recognition_chinese-base-generic": {
+        "modality": "Language",
+        "is_large_model": false
+    },
+    "iic/nlp_raner_named-entity-recognition_chinese-base-game": {
+        "modality": "Language",
+        "is_large_model": false
+    },
+    "iic/nlp_raner_named-entity-recognition_chinese-base-book": {
+        "modality": "Language",
+        "is_large_model": false
+    },
+    "iic/nlp_user-satisfaction-estimation_chinese": {
+        "modality": "Language",
+        "is_large_model": false
+    },
+    "iic/nlp_debertav2_fill-mask_chinese-base": {
+        "modality": "Language",
+        "is_large_model": false
+    },
+    "iic/nlp_debertav2_fill-mask_chinese-lite": {
+        "modality": "Language",
+        "is_large_model": false
+    },
+    "iic/nlp_mgimn_faq-question-answering_chinese-gov-base": {
+        "modality": "Language",
+        "is_large_model": false
+    },
+    "iic/nlp_mgimn_faq-question-answering_chinese-finance-base": {
+        "modality": "Language",
+        "is_large_model": false
+    },
+    "iic/nlp_mgimn_faq-question-answering_chinese-base": {
+        "modality": "Language",
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_faq-question-answering_chinese-gov-base": {
+        "modality": "Language",
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_faq-question-answering_chinese-finance-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_resnet50_anomaly-detection_patchcore": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_language_identification-classification-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_rrdb_image-debanding": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_deeplpfnet_image-color-enhance-models": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_swinb_video-panoptic-segmentation_vipseg": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_panovit_indoor-layout-estimation": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_unifuse_panorama-depth-estimation": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_diffusion_image-segmentation": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_resnet50_object-detection_maskscoring": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_manual_face-liveness_flxc": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_resnet50_image-classification_cc": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_manual_face-recognition_frir": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_csanmt_translation_es2en": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_csanmt_translation_en2es": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_csanmt_translation_fr2en": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_csanmt_translation_en2fr": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_csanmt_translation_en2zh_base": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_csanmt_translation_en2ru_base": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_structbert_sentiment-classification_chinese-large": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_sentiment-classification_chinese-ecommerce-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_manual_facial-landmark-confidence_flcm": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_vgg19_facial-expression-recognition_fer": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_resnet34_face-attribute-recognition_fairface": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_resnet_face-recognition_facemask": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_ir50_face-recognition_arcface": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_manual_face-liveness_flir": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_manual_face-liveness_flrgb": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_manual_face-detection_ulfd": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_manual_face-detection_mtcnn": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_manual_face-detection_tinymog": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_resnet101_face-detection_cvpr22papermogface": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_resnet50_face-detection_retinaface": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_adaint_image-color-enhance-models": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_resnet50_image-quality-assessment_degradation": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_resnet_image-quality-assessment-mos_youtubeUGC": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_resnet101_image-single-human-parsing": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_resnet101_image-multiple-human-parsing": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_vitb_video-single-object-tracking_ostrack-l": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/speech_UniASR_asr_2pass-fr-16k-common-vocab3472-tensorflow1-offline": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_UniASR_asr_2pass-de-16k-common-vocab3690-tensorflow1-offline": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/speech_UniASR_asr_2pass-persian-16k-common-vocab1124-pytorch": {
+        "modality": "Speech",
+        "is_large_model": false
+    },
+    "iic/cv_resnet101_detection_fewshot-defrcn": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_tinynas_uav-detection_damoyolo-l": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_resnet_video-single-object-tracking_siamfc-uav": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_alex_video-single-object-tracking_siamfc": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_tinynas_uav-detection_damoyolo": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/cv_raft_video-frame-interpolation_practical": {
+        "modality": "Vision",
+        "is_large_model": false
+    },
+    "iic/nlp_corom_passage-ranking_chinese-tiny-ecom": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/cv_canonical_body-3d-keypoints_video": {
+        "modality": "3D",
+        "is_large_model": true
+    },
+    "iic/nlp_structbert_fact-checking_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_structbert_sentence-similarity_chinese-retail-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_corom_passage-ranking_english_tiny": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/nlp_nested-ner_named-entity-recognition_chinese-base-med": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_rdevos_video-object-segmentation": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_hrnetocr_skychange": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_bnext-small_image-classification_ImageNet-labels": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_structbert_backbone_base_law": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_masts_sentence-similarity_clue_chinese-large": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/cv_nextvit-small_image-classification_Dailylife-labels": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/cv_beitv2-base_image-classification_patch16_224_pt1k_ft22k_in1k": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/nlp_ponet_fill-mask_english-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/nlp_ponet_fill-mask_chinese-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/ofa_text-classification_mnli_large_en": {
+        "modality": "Multimodal",
+        "is_large_model": true
     }
 }

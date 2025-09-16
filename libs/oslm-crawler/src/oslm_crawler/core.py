@@ -1052,10 +1052,15 @@ class MergeAndRankingPipeline:
         if target_orgs[0] == 'all':
             target_orgs = df['org'].unique()
         res = pd.DataFrame(index=target_orgs)
+        lifecycle_mapper = {
+            'pretraining': 'Pre-training',
+            'finetuning': 'Fine-tuning',
+            'preference': 'Preference'
+        }
         for key in weights.keys():
             if key.startswith('num'):
                 if key.split("_")[-1] in ['pretraining', 'finetuning', 'preference']:
-                    lifecycle = key.split("_")[-1].title()
+                    lifecycle = lifecycle_mapper.get(key.split("_")[-1])
                     res[key] = df[df["lifecycle"] == lifecycle].groupby(
                         'org').size().reindex(target_orgs, fill_value=0)
                 else:
@@ -1064,7 +1069,7 @@ class MergeAndRankingPipeline:
                         'org').size().reindex(target_orgs, fill_value=0)
             elif key.startswith("downloads"):
                 if key.split("_")[-1] in ['pretraining', 'finetuning', 'preference']:
-                    lifecycle = key.split("_")[-1].title()
+                    lifecycle = lifecycle_mapper.get(key.split("_")[-1])
                     res[key] = df[df["lifecycle"] == lifecycle].groupby(
                         'org')['downloads_last_month'].sum().reindex(target_orgs, fill_value=0)
                 else: 
@@ -1202,6 +1207,7 @@ class MergeAndRankingPipeline:
 
         logger.info("Calculate overall ranking based on sub-dimension rankings.")
         overall_ranking = pd.DataFrame(index=target_orgs)
+        overall_ranking.index.name = 'org'
         overall_ranking['data'] = 1 / np.log2(data_normalization['rank'] + 1)
         overall_ranking['model'] = 1 / np.log2(model_normalization['rank'] + 1)
         overall_ranking['infra'] = 1 / np.log2(infra_normalization['rank'] + 1)

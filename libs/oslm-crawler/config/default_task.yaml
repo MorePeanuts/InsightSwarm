@@ -194,10 +194,10 @@ MergeAndRankingPipeline:
         num_evaluation_tools: 0
 
     ranking_weights:
-      data: 0.2
-      model: 0.4
-      infra: 0.2
-      eval: 0.2
+      data: 0.1667
+      model: 0.5
+      infra: 0.1667
+      eval: 0.1667
 
     target_orgs:
       - 'all'
