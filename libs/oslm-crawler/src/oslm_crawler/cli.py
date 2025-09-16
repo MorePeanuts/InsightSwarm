@@ -47,7 +47,7 @@ def init_config(args):
 
 def get_parser():
     parser = argparse.ArgumentParser(prog="oslm-crawler", description="oslm-crawler", add_help=False)
-    sub_parsers = parser.add_subparsers(description='command', help='Available commands')
+    sub_parsers = parser.add_subparsers(dest='command', help='Available commands')
     
     parent_parser = argparse.ArgumentParser(add_help=False)
     parent_parser.add_argument("--config", type=str, default=argparse.SUPPRESS, help="Path of the YAML configuration file.")
@@ -59,6 +59,10 @@ def get_parser():
     gen_rank_parser = sub_parsers.add_parser("gen-rank", parents=[parent_parser], help="Merge data from different source and generate rank table.")
     gen_rank_parser.add_argument("--data-dir", help="Data directory, default value is the current day")
     gen_rank_parser.set_defaults(func=gen_rank)
+    
+    accumulate_parser = sub_parsers.add_parser("accumulate", parents=[parent_parser], help="Accumulate historical download data and generate rankings.")
+    accumulate_parser.add_argument("--data-dir", help="Data directory, default value is the current day")
+    accumulate_parser.set_defaults(func=accumulate)
     
     return parser
 
@@ -140,6 +144,10 @@ def gen_rank(config):
     if 'ranking' in config:
         proc = proc.step('ranking', **config['ranking'])
     proc.done()
+    
+
+def accumulate(config):
+    pass
 
 
 def test_hf_pipeline():

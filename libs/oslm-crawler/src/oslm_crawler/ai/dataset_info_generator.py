@@ -59,7 +59,6 @@ Instructions:
 If you do not have the ability to access the network, state that you cannot access the network.
 For each link, you must first state whether it is a valid dataset.
 If a dataset is judged as not valid, you should clearly state so and do not need to provide its modality or lifecycle.
-If you cannot determine any piece of information (validity, modality, or lifecycle), you should clearly point it out rather than guessing a result.
 Keep the correspondence between each link and the conclusions you give.
 
 Dataset links:
@@ -118,10 +117,15 @@ if __name__ == "__main__":
         "https://huggingface.co/datasets/facebook/community-alignment-dataset",
         "https://huggingface.co/datasets/nvidia/Nemotron-Post-Training-Dataset-v1",
         "https://huggingface.co/datasets/zai-org/LongBench",
-        "https://modelscope.cn/datasets/ZhipuAI/VisionRewardDB-Image-regression",
         "https://huggingface.co/datasets/allenai/PRISM",
         "https://huggingface.co/datasets/microsoft/mocapact-data",
         "https://huggingface.co/datasets/BAAI/ShareRobot"
     ]
-    datasets = gen_dataset_info(urls)
+    ms_urls = [
+        "https://modelscope.cn/datasets/meituan/Meeseeks",
+        "https://modelscope.cn/datasets/ZhipuAI/VisionRewardDB-Image-regression",
+        "https://modelscope.cn/datasets/Tongyi-DataEngine/SA1B-Dense-Caption",
+        "https://modelscope.cn/datasets/Qwen/CC-OCR"
+    ]
+    datasets = gen_dataset_info(ms_urls)
     pprint(datasets)

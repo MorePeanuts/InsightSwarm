@@ -1,25 +1,25 @@
 HuggingFacePipeline:
-  task_name: 'hf-task'
-  load_dir: null
-  save_dir: null
-  log_path: null
+  task_name: 'hf-task'  # Related to the default filename of the log
+  load_dir: null        # When skipping the prerequisite steps, the data required for subsequent steps is loaded from this path. The default value is data/{today-date}/HuggingFace. When an error occurs and you need to rerun, you should manually specify to the error output directory.
+  save_dir: null        # Save directory for crawler results, default value is data/{today-date}/HuggingFace
+  log_path: null        # Log output directory, default value is logs/{task_name}-{datetime}
 
   init_org_links:
-    save: false
-    path: null
-    orgs: null
+    save: false         # Whether to save the result
+    path: null          # The path of org links, the default value is config/org-links.json
+    orgs: null          # Specify the org name to crawl, default value is all orgs in the path
 
   crawl_repo_page:
-    save: true
-    category: null
-    threads: 1
-    max_retries: 20
+    save: true          # Whether to save the result
+    category: null      # Dataset or model, optional values are models, datasets, null. If empty, it represents both datasets and models.
+    threads: 1          # The number of threads for the crawler program, default value is 1, note: too many threads can easily cause failure.
+    max_retries: 20     # Maximum retry times for crawler failure, default value is 10
 
   crawl_detail_page:
-    save: true
-    threads: 1
-    max_retries: 20
-    screenshot_path: null
+    save: true            # Whether to save the result
+    threads: 1            # The number of threads for the crawler program, default value is 1, note: too many threads can easily cause failure.
+    max_retries: 20       # Maximum retry times for crawler failure, default value is 10
+    screenshot_path: null # The screenshot save path for the warehouse details page. When null, it means no screenshot will be taken.
 
   post_process:
     save: true

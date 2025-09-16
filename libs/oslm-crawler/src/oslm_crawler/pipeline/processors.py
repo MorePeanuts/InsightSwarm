@@ -8,9 +8,9 @@ from typing_extensions import deprecated
 import jsonlines
 from loguru import logger
 from .base import PipelineStep, PipelineResult, PipelineData
-from ..ai.model_info_generator import ModelInfo, gen_model_info
+from ..ai.model_info_generator import ModelInfo, gen_model_info_huggingface, gen_model_info_modelscope
 from ..ai.dataset_info_generator import DatasetInfo, gen_dataset_info
-from ..ai.screenshot_checker import check_image_info, CheckRequest, CheckResponse
+from ..ai.screenshot_checker import check_image_info, CheckRequest
 
 
 class HFInfoProcessor(PipelineStep):
@@ -89,6 +89,9 @@ class HFInfoProcessor(PipelineStep):
             model_name = inp['model_name']
             repo = inp['repo']
             org = inp['repo_org_mapper'][repo]
+            org = inp['repo_org_mapper'].get(repo, None)
+            if org is None:
+                return None
             model_key = f'{repo}/{model_name}'
             model_info = self.model_infos.get(model_key, None)
             if model_info:
@@ -102,14 +105,16 @@ class HFInfoProcessor(PipelineStep):
             if is_large_model:
                 downloads_last_month = inp['downloads_last_month']
                 img_path = inp['img_path']
-                if downloads_last_month == 0 and self.ai_check and Path(img_path).exists():
+                if downloads_last_month == 0 and self.ai_check and img_path and Path(img_path).exists():
                     request = CheckRequest(img_path, inp['link'], 'HuggingFace')
                     response = check_image_info([request])[0]
                     if response.downloads_last_month is not None and response.downloads_last_month > 0:
                         downloads_last_month = response.downloads_last_month
+                        logger.warning(f"Data error: {inp}, downloads_last_month corrected from {inp['downloads_last_month']} to {downloads_last_month}.")
                         inp['downloads_last_month'] = response.downloads_last_month
                         self.models_check_buffer.append(inp)
-                        logger.warning(f"Data error: {inp}, downloads_last_month corrected from {inp['downloads_last_month']} to {downloads_last_month}.")
+                if downloads_last_month < 50:
+                    return None
                 return PipelineData({
                     "org": org,
                     "repo": repo,
@@ -137,7 +142,9 @@ class HFInfoProcessor(PipelineStep):
         try:
             dataset_name = inp['dataset_name']
             repo = inp['repo']
-            org = inp['repo_org_mapper'][repo]
+            org = inp['repo_org_mapper'].get(repo, None)
+            if org is None:
+                return None
             dataset_key = f'{repo}/{dataset_name}'
             dataset_info = self.dataset_infos.get(dataset_key, None)
             if dataset_info:
@@ -152,14 +159,14 @@ class HFInfoProcessor(PipelineStep):
             if is_valid:
                 downloads_last_month = inp['downloads_last_month']
                 img_path = inp['img_path']
-                if downloads_last_month == 0 and self.ai_check and Path(img_path).exists():
+                if downloads_last_month == 0 and self.ai_check and img_path and Path(img_path).exists():
                     request = CheckRequest(img_path, inp['link'], 'HuggingFace')
                     response = check_image_info([request])[0]
                     if response.downloads_last_month is not None and response.downloads_last_month > 0:
                         downloads_last_month = response.downloads_last_month
+                        logger.warning(f"Data error: {inp}, downloads_last_month corrected from {inp['downloads_last_month']} to {downloads_last_month}.")
                         inp['downloads_last_month'] = response.downloads_last_month
                         self.datasets_check_buffer.append(inp)
-                        logger.warning(f"Data error: {inp}, downloads_last_month corrected from {inp['downloads_last_month']} to {downloads_last_month}.")
                 return PipelineData({
                     "org": org,
                     "repo": repo,
@@ -204,6 +211,14 @@ class HFInfoProcessor(PipelineStep):
                     'is_valid': info.is_valid
                 }
         return res
+    
+    def update_model_info(self):
+        with open(self.model_info_path, 'w') as f:
+            json.dump(self.model_infos, f, indent=4, ensure_ascii=False)
+            
+    def update_dataset_info(self):
+        with open(self.dataset_info_path, 'w') as f:
+            json.dump(self.dataset_infos, f, indent=4, ensure_ascii=False)
             
     def run(self) -> PipelineResult:
         try:
@@ -227,10 +242,11 @@ class HFInfoProcessor(PipelineStep):
 
         if len(self.models_buffer) >= self.buffer_size:
             urls = [inp['link'] for inp in self.models_buffer]
-            model_infos = gen_model_info(urls)
+            model_infos = gen_model_info_huggingface(urls)
             model_infos = self._gen_new_info(model_infos)
             logger.info(f"Generate model informations:\n{json.dumps(model_infos, indent=2, ensure_ascii=False)}")
             self.model_infos.update(model_infos)
+            self.update_model_info()
             inps = self.models_buffer.copy()
             self.models_buffer.clear()
             for inp in inps:
@@ -253,6 +269,7 @@ class HFInfoProcessor(PipelineStep):
             dataset_infos = self._gen_new_info(dataset_infos)
             logger.info(f"Generate dataset informations:\n{json.dumps(dataset_infos, indent=2, ensure_ascii=False)}")
             self.dataset_infos.update(dataset_infos)
+            self.update_dataset_info()
             inps = self.datasets_buffer.copy()
             self.datasets_buffer.clear()
             for inp in inps:
@@ -272,10 +289,11 @@ class HFInfoProcessor(PipelineStep):
     def flush(self, update_infos: bool = True) -> Optional[PipelineResult]:
         if len(self.models_buffer) > 0:
             urls = [inp['link'] for inp in self.models_buffer]
-            model_infos = gen_model_info(urls)
+            model_infos = gen_model_info_huggingface(urls)
             model_infos = self._gen_new_info(model_infos)
             logger.info(f"Generate model informations:\n{json.dumps(model_infos, indent=2, ensure_ascii=False)}")
             self.model_infos.update(model_infos)
+            self.update_model_info()
             inps = self.models_buffer.copy()
             self.models_buffer.clear()
             for inp in inps:
@@ -298,6 +316,7 @@ class HFInfoProcessor(PipelineStep):
             dataset_infos = self._gen_new_info(dataset_infos)
             logger.info(f"Generate dataset informations:\n{json.dumps(dataset_infos, indent=2, ensure_ascii=False)}")
             self.dataset_infos.update(dataset_infos)
+            self.update_dataset_info()
             inps = self.datasets_buffer.copy()
             self.datasets_buffer.clear()
             for inp in inps:
@@ -313,12 +332,6 @@ class HFInfoProcessor(PipelineStep):
                         "type": type(e),
                         "error_msg": error_msg
                     })
-
-        if update_infos:
-            with open(self.model_info_path, 'w') as f:
-                json.dump(self.model_infos, f, indent=4, ensure_ascii=False)
-            with open(self.dataset_info_path, 'w') as f:
-                json.dump(self.dataset_infos, f, indent=4, ensure_ascii=False)
 
 
 class MSInfoProcessor(PipelineStep):
@@ -391,7 +404,7 @@ class MSInfoProcessor(PipelineStep):
                 closest_date = date
         
         last_month_downloads = {}
-        if min_diff < 15:
+        if min_diff > 15:
             return last_month_downloads
         
         p = self.history_data_path[closest_date] / 'ModelScope/raw-models-info.jsonl'
@@ -436,7 +449,9 @@ class MSInfoProcessor(PipelineStep):
         try:
             model_name = inp['model_name']
             repo = inp['repo']
-            org = inp['repo_org_mapper'][repo]
+            org = inp['repo_org_mapper'].get(repo, None)
+            if org is None:
+                return None
             model_key = f'{repo}/{model_name}'
             date_crawl = inp['date_crawl']
             last_month_downloads = self.last_month_downloads_of[date_crawl].get(model_key, None)
@@ -456,15 +471,17 @@ class MSInfoProcessor(PipelineStep):
             if is_large_model:
                 downloads = inp['total_downloads']
                 img_path = inp['img_path']
-                if downloads == 0 and self.ai_check and Path(img_path).exists():
+                if downloads == 0 and self.ai_check and img_path and Path(img_path).exists():
                     request = CheckRequest(img_path, inp['link'], 'ModelScope')
                     response = check_image_info([request])[0]
                     if response.downloads is not None and response.downloads > 0:
                         downloads = response.downloads
+                        logger.warning(f"Data error: {inp}, downloads corrected from {inp['total_downloads']} to {downloads}.")
                         inp['total_downloads'] = response.downloads
                         self.models_check_buffer.append(inp)
-                        logger.warning(f"Data error: {inp}, downloads corrected from {inp['total_downloads']} to {downloads}.")
                 downloads_last_month = downloads - last_month_downloads
+                if downloads_last_month < 50:
+                    return None
                 return PipelineData({
                     "org": org,
                     "repo": repo,
@@ -492,7 +509,9 @@ class MSInfoProcessor(PipelineStep):
         try:
             dataset_name = inp['dataset_name']
             repo = inp['repo']
-            org = inp['repo_org_mapper'][repo]
+            org = inp['repo_org_mapper'].get(repo, None)
+            if org is None:
+                return None
             dataset_key = f"{repo}/{dataset_name}"
             date_crawl = inp['date_crawl']
             last_month_downloads = self.last_month_downloads_of[date_crawl].get(dataset_key, None)
@@ -513,14 +532,14 @@ class MSInfoProcessor(PipelineStep):
             if is_valid:
                 downloads = inp['total_downloads']
                 img_path = inp['img_path']
-                if downloads == 0 and self.ai_check and Path(img_path).exists():
+                if downloads == 0 and self.ai_check and img_path and Path(img_path).exists():
                     request = CheckRequest(img_path, inp['link'], 'ModelScope')
                     response = check_image_info([request])[0]
                     if response.downloads is not None and response.downloads > 0:
                         downloads = response.downloads
+                        logger.warning(f"Data error: {inp}, downloads corrected from {inp['total_downloads']} to {downloads}.")
                         inp['total_downloads'] = response.downloads
                         self.datasets_check_buffer.append(inp)
-                        logger.warning(f"Data error: {inp}, downloads corrected from {inp['total_downloads']} to {downloads}.")
                 downloads_last_month = downloads - last_month_downloads
                 return PipelineData({
                     "org": org,
@@ -567,6 +586,14 @@ class MSInfoProcessor(PipelineStep):
                 }
         return res
     
+    def update_model_info(self):
+        with open(self.model_info_path, 'w') as f:
+            json.dump(self.model_infos, f, indent=4, ensure_ascii=False)
+    
+    def update_dataset_info(self):
+        with open(self.dataset_info_path, 'w') as f:
+            json.dump(self.dataset_infos, f, indent=4, ensure_ascii=False)
+    
     def run(self) -> PipelineResult:
         try:
             if self.category == 'models':
@@ -589,10 +616,11 @@ class MSInfoProcessor(PipelineStep):
             
         if len(self.models_buffer) >= self.buffer_size:
             urls = [inp['link'] for inp in self.models_buffer]
-            model_infos = gen_model_info(urls)
+            model_infos = gen_model_info_modelscope(urls)
             model_infos = self._gen_new_info(model_infos)
             logger.info(f"Generate model informations:\n{json.dumps(model_infos, indent=2, ensure_ascii=False)}")
             self.model_infos.update(model_infos)
+            self.update_model_info()
             inps = self.models_buffer.copy()
             self.models_buffer.clear()
             for inp in inps:
@@ -615,6 +643,7 @@ class MSInfoProcessor(PipelineStep):
             dataset_infos = self._gen_new_info(dataset_infos)
             logger.info(f"Generate dataset informations:\n{json.dumps(dataset_infos, indent=2, ensure_ascii=False)}")
             self.dataset_infos.update(dataset_infos)
+            self.update_dataset_info()
             inps = self.datasets_buffer.copy()
             self.datasets_buffer.clear()
             for inp in inps:
@@ -634,10 +663,11 @@ class MSInfoProcessor(PipelineStep):
     def flush(self, update_infos: bool = True) -> Optional[PipelineResult]:
         if len(self.models_buffer) > 0:
             urls = [inp['link'] for inp in self.models_buffer]
-            model_infos = gen_model_info(urls)
+            model_infos = gen_model_info_modelscope(urls)
             model_infos = self._gen_new_info(model_infos)
             logger.info(f"Generate model informations:\n{json.dumps(model_infos, indent=2, ensure_ascii=False)}")
             self.model_infos.update(model_infos)
+            self.update_model_info()
             inps = self.models_buffer.copy()
             self.models_buffer.clear()
             for inp in inps:
@@ -660,6 +690,7 @@ class MSInfoProcessor(PipelineStep):
             dataset_infos = self._gen_new_info(dataset_infos)
             logger.info(f"Generate dataset informations:\n{json.dumps(dataset_infos, indent=2, ensure_ascii=False)}")
             self.dataset_infos.update(dataset_infos)
+            self.update_dataset_info()
             inps = self.datasets_buffer.copy()
             self.datasets_buffer.clear()
             for inp in inps:
@@ -676,11 +707,6 @@ class MSInfoProcessor(PipelineStep):
                         "error_msg": error_msg
                     })
 
-        if update_infos:
-            with open(self.model_info_path, 'w') as f:
-                json.dump(self.model_infos, f, indent=4, ensure_ascii=False)
-            with open(self.dataset_info_path, 'w') as f:
-                json.dump(self.dataset_infos, f, indent=4, ensure_ascii=False)
     
 class OpenDataLabInfoProcessor(PipelineStep):
     
@@ -740,7 +766,7 @@ class OpenDataLabInfoProcessor(PipelineStep):
                 closest_date = date
         
         last_month_downloads = {}
-        if min_diff < 15:
+        if min_diff > 15:
             return last_month_downloads
         
         p = self.history_data_path[closest_date] / 'OpenDataLab/raw-datasets-info.jsonl'
@@ -828,6 +854,10 @@ class OpenDataLabInfoProcessor(PipelineStep):
                 }
         return res
     
+    def update_dataset_info(self):
+        with open(self.dataset_info_path, 'w') as f:
+            json.dump(self.dataset_infos, f, indent=4, ensure_ascii=False)
+    
     def run(self) -> PipelineResult:
         try:
             data = self._process_dataset(self.input)
@@ -849,6 +879,7 @@ class OpenDataLabInfoProcessor(PipelineStep):
             dataset_infos = self._gen_new_info(dataset_infos)
             logger.info(f"Generate dataset informations:\n{json.dumps(dataset_infos, indent=2, ensure_ascii=False)}")
             self.dataset_infos.update(dataset_infos)
+            self.update_dataset_info()
             inps = self.datasets_buffer.copy()
             self.datasets_buffer.clear()
             for inp in inps:
@@ -872,6 +903,7 @@ class OpenDataLabInfoProcessor(PipelineStep):
             dataset_infos = self._gen_new_info(dataset_infos)
             logger.info(f"Generate dataset informations:\n{json.dumps(dataset_infos, indent=2, ensure_ascii=False)}")
             self.dataset_infos.update(dataset_infos)
+            self.update_dataset_info()
             inps = self.datasets_buffer.copy()
             self.datasets_buffer.clear()
             for inp in inps:
@@ -888,11 +920,7 @@ class OpenDataLabInfoProcessor(PipelineStep):
                         "error_msg": error_msg
                     })
 
-        if update_infos:
-            with open(self.dataset_info_path, 'w') as f:
-                json.dump(self.dataset_infos, f, indent=4, ensure_ascii=False)
-    
-    
+
 class BAAIDataInfoProcessor(PipelineStep):
     
     ptype = "🚗 PROCESSOR"
@@ -951,7 +979,7 @@ class BAAIDataInfoProcessor(PipelineStep):
                 closest_date = date
         
         last_month_downloads = {}
-        if min_diff < 15:
+        if min_diff > 15:
             return last_month_downloads
         
         p = self.history_data_path[closest_date] / 'BAAIData/raw-datasets-info.jsonl'

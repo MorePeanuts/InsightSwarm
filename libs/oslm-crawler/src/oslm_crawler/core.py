@@ -33,10 +33,14 @@ class HFPipeline:
         self.crawl_date = datetime.now().strftime(r"%Y-%m-%d_%H-%M-%S")
         if load_dir:
             self.load_dir = Path(load_dir)
+            if self.load_dir.name != 'HuggingFace':
+                self.load_dir = self.load_dir / 'HuggingFace'
         else:
             self.load_dir = Path(__file__).parents[2] / f'data/{str(datetime.today().date())}/HuggingFace'
         if save_dir:
             self.save_dir = Path(save_dir)
+            if self.save_dir.name != 'HuggingFace':
+                self.save_dir = self.save_dir / 'HuggingFace'
         else:
             self.save_dir = Path(__file__).parents[2] / f'data/{str(datetime.today().date())}/HuggingFace'
         if log_path is None:
@@ -225,13 +229,18 @@ class HFPipeline:
             logger.info("Missing the running result of the previous step (crawl_detail_page)")
             logger.info(f"Trying load required data from {self.save_dir}")
             org_links_reader = OrgLinksReader(sources=['HuggingFace'])
+            org_links_reader.parse_input()
             models_reader = JsonlineReader(self.save_dir / 'raw-models-info.jsonl')
             datasets_reader = JsonlineReader(self.save_dir / 'raw-datasets-info.jsonl')
             repo_org_mapper = next(org_links_reader.run()).data['repo_org_mapper']
             self._crawl_detail_page_res = next(models_reader.run()).data.get('content')
-            self._crawl_detail_page_res.extend(next(datasets_reader.run()).data.get['content'])
+            self._crawl_detail_page_res.extend(next(datasets_reader.run()).data.get('content'))
             for inp in self._crawl_detail_page_res:
                 inp['repo_org_mapper'] = repo_org_mapper
+            self._crawl_detail_page_res = [
+                PipelineData(inp, None, None) for inp in self._crawl_detail_page_res
+            ]
+            
         inps = self._crawl_detail_page_res
         kargs = {k: v for k, v in kargs.items() if k in [
             'dataset_info_path', 'model_info_path', 'ai_gen', 'ai_check',
@@ -321,10 +330,14 @@ class MSPipeline:
         self.crawl_date = datetime.now().strftime(r"%Y-%m-%d_%H-%M-%S")
         if load_dir:
             self.load_dir = Path(load_dir)
+            if self.load_dir.name != 'ModelScope':
+                self.load_dir = self.load_dir / 'ModelScope'
         else:
             self.load_dir = Path(__file__).parents[2] / f'data/{str(datetime.today().date())}/ModelScope'
         if save_dir:
             self.save_dir = Path(save_dir)
+            if self.save_dir.name != 'ModelScope':
+                self.save_dir = self.save_dir / 'ModelScope'
         else:
             self.save_dir = Path(__file__).parents[2] / f'data/{str(datetime.today().date())}/ModelScope'
         if log_path is None:
@@ -513,13 +526,17 @@ class MSPipeline:
             logger.info("Missing the running result of the previous step (crawl_detail_page)")
             logger.info(f"Trying load required data from {self.save_dir}")
             org_links_reader = OrgLinksReader(sources=['ModelScope'])
+            org_links_reader.parse_input()
             models_reader = JsonlineReader(self.save_dir / 'raw-models-info.jsonl')
             datasets_reader = JsonlineReader(self.save_dir / 'raw-datasets-info.jsonl')
             repo_org_mapper = next(org_links_reader.run()).data['repo_org_mapper']
             self._crawl_detail_page_res = next(models_reader.run()).data.get('content')
-            self._crawl_detail_page_res.extend(next(datasets_reader.run()).data.get['content'])
+            self._crawl_detail_page_res.extend(next(datasets_reader.run()).data.get('content'))
             for inp in self._crawl_detail_page_res:
                 inp['repo_org_mapper'] = repo_org_mapper
+            self._crawl_detail_page_res = [
+                PipelineData(inp, None, None) for inp in self._crawl_detail_page_res
+            ]
         inps = self._crawl_detail_page_res
         kargs = {k: v for k, v in kargs.items() if k in [
             'dataset_info_path', 'model_info_path', 'ai_gen', 'ai_check',
@@ -609,10 +626,14 @@ class OpenDataLabPipeline:
         self.crawl_date = datetime.now().strftime(r"%Y-%m-%d_%H-%M-%S")
         if load_dir:
             self.load_dir = Path(load_dir)
+            if self.load_dir.name != 'OpenDataLab':
+                self.load_dir = self.load_dir / 'OpenDataLab'
         else:
             self.load_dir = Path(__file__).parents[2] / f'data/{str(datetime.today().date())}/OpenDataLab'
         if save_dir:
             self.save_dir = Path(save_dir)
+            if self.save_dir.name != 'OpenDataLab':
+                self.save_dir = self.save_dir / 'OpenDataLab'
         else:
             self.save_dir = Path(__file__).parents[2] / f'data/{str(datetime.today().date())}/OpenDataLab'
         if log_path is None:
@@ -702,7 +723,11 @@ class OpenDataLabPipeline:
             logger.info("Missing the running result of the previous step (crawl_repo_page)")
             logger.info(f"Trying load required data from {self.save_dir}")
             datasets_reader = JsonlineReader(self.save_dir / 'raw-datasets-info.jsonl')
-            self._crawl_repo_page_res = next(datasets_reader.run()).data.get['content']
+            self._crawl_repo_page_res = next(datasets_reader.run()).data.get('content')
+            self._crawl_repo_page_res = [
+                PipelineData(inp, None, None) for inp in self._crawl_repo_page_res
+            ]
+
         inps = self._crawl_repo_page_res
         kargs = {k: v for k, v in kargs.items() if k in [
             'dataset_info_path', 'history_data_path', 'ai_gen',
@@ -757,10 +782,14 @@ class BAAIDataPipeline:
         self.crawl_date = datetime.now().strftime(r"%Y-%m-%d_%H-%M-%S")
         if load_dir:
             self.load_dir = Path(load_dir)
+            if self.load_dir.name != 'BAAIData':
+                self.load_dir = self.load_dir / 'BAAIData'
         else:
             self.load_dir = Path(__file__).parents[2] / f'data/{str(datetime.today().date())}/BAAIData'
         if save_dir:
             self.save_dir = Path(save_dir)
+            if self.save_dir.name != 'BAAIData':
+                self.save_dir = self.save_dir / 'BAAIData'
         else:
             self.save_dir = Path(__file__).parents[2] / f'data/{str(datetime.today().date())}/BAAIData'
         if log_path is None:
@@ -846,7 +875,11 @@ class BAAIDataPipeline:
             logger.info("Missing the running result of the previous step (crawl_repo_page)")
             logger.info(f"Trying load required data from {self.save_dir}")
             datasets_reader = JsonlineReader(self.save_dir / 'raw-datasets-info.jsonl')
-            self._crawl_repo_page_res = next(datasets_reader.run()).data.get['content']
+            self._crawl_repo_page_res = next(datasets_reader.run()).data.get('content')
+            self._crawl_repo_page_res = [
+                PipelineData(inp, None, None) for inp in self._crawl_repo_page_res
+            ]
+
         inps = self._crawl_repo_page_res
         kargs = {k: v for k, v in kargs.items() if k in [
             'dataset_info_path', 'history_data_path', 'ai_gen',
@@ -892,8 +925,8 @@ class MergeAndRankingPipeline:
     
     def __init__(
         self,
-        data_dir: str | None,
-        log_path: str | None,
+        data_dir: str | None = None,
+        log_path: str | None = None,
     ):
         self.now = datetime.now().strftime(r"%Y-%m-%d_%H-%M-%S")
         date = str(datetime.today().date())
@@ -964,12 +997,11 @@ class MergeAndRankingPipeline:
                                         if 'descendants' in model),
                     "date_crawl": models[0]['date_crawl'],
                 } # TODO Currently missing the date_last_crawl and date_enter_db fields
-                if data['downloads_last_month'] < 50:
-                    continue
                 writer.write(data)
                 res.append(data)
         self._merge_models_res = res
         logger.info(f"Total model records: {len(buffer)}")
+        return self
         
     def _merge_dataset(self, save, **kargs):
         logger.info("Merge datasets")
@@ -1008,6 +1040,7 @@ class MergeAndRankingPipeline:
                 res.append(data)
         self._merge_datasets_res = res
         logger.info(f"Total datasets records: {len(buffer)}")
+        return self
 
     def _summary_data(
         self, 
@@ -1033,11 +1066,11 @@ class MergeAndRankingPipeline:
                 if key.split("_")[-1] in ['pretraining', 'finetuning', 'preference']:
                     lifecycle = key.split("_")[-1].title()
                     res[key] = df[df["lifecycle"] == lifecycle].groupby(
-                        'org').sum().reindex(target_orgs, fill_value=0)
+                        'org')['downloads_last_month'].sum().reindex(target_orgs, fill_value=0)
                 else: 
                     modality = key.split("_")[-1].title()
                     res[key] = df[df['modality'] == modality].groupby(
-                        'org').sum().reindex(target_orgs, fill_value=0)
+                        'org')['downloads_last_month'].sum().reindex(target_orgs, fill_value=0)
             elif key == 'dataset_usage':
                 res[key] = df.groupby('org')['dataset_usage'].sum().reindex(
                     target_orgs, fill_value=0)
@@ -1075,8 +1108,11 @@ class MergeAndRankingPipeline:
             elif key == 'descendants':
                 res[key] = df.groupby('org')['descendants'].sum().reindex(
                     target_orgs, fill_value=0)
-            elif key in ['likes', 'issue']:
+            elif key == 'likes':
                 res[key] = df.groupby('org')[key].sum().reindex(
+                    target_orgs, fill_value=0)
+            elif key == 'issue':
+                res[key] = df.groupby('org')['community'].sum().reindex(
                     target_orgs, fill_value=0)
             elif key == 'num_adapted_chips':
                 # TODO chips model
@@ -1098,15 +1134,15 @@ class MergeAndRankingPipeline:
         weights: dict[str, float | int] = config[1]
         df = pd.read_csv(infra_path, index_col='org')
         df = df[list(weights.keys())]
-        df = df[df['org'] in target_orgs]
+        df = df[df.index.isin(target_orgs)]
         return df
     
     def _summary_eval(self, config: dict, target_orgs: list) -> pd.DataFrame:
-        eval_path = self.data_dir / 'eval_summary.csv'
+        eval_path = self.data_dir / 'eval-summary.csv'
         weights: dict[str, float | int] = config[1]
         df = pd.read_csv(eval_path, index_col='org')
         df = df[list(weights.keys())]
-        df = df[df['org'] in target_orgs]
+        df = df[df.index.isin(target_orgs)]
         return df
 
     def _normalize_summary(self, summary: pd.DataFrame, config: dict) -> pd.DataFrame:
@@ -1114,10 +1150,10 @@ class MergeAndRankingPipeline:
         weights = config[1]
         if config[0] == 'average':
             df['score'] = df.mean(axis=1)
-            df['rank'] = df['score'].rank(method='dense')
+            df['rank'] = df['score'].rank(ascending=False, method='dense').astype(int)
         elif config[0] == 'weight':
             df['score'] = df.mul(weights).sum(axis=1)
-            df['rank'] = df['score'].rank(method='dense')
+            df['rank'] = df['score'].rank(ascending=False, method='dense').astype(int)
         else:
             raise RuntimeError(f'Unrecognized method: {config[0]}, accept `average` or `weight`')
         return df
@@ -1145,13 +1181,13 @@ class MergeAndRankingPipeline:
         target_orgs = kargs.get('target_orgs', ['all'])
 
         logger.info("Summary table of data from four dimensions.")
-        data_summary = self._summary_data(merged_models, kargs['data_config'], target_orgs)
-        model_summary = self._summary_model(merged_datasets, kargs['model_config'], target_orgs)
+        data_summary = self._summary_data(merged_datasets, kargs['data_config'], target_orgs)
+        model_summary = self._summary_model(merged_models, kargs['model_config'], target_orgs)
         infra_summary = self._summary_infra(kargs['infra_config'], target_orgs)
         eval_summary = self._summary_eval(kargs['eval_config'], target_orgs)
         
-        data_summary.to_csv("data-summary.csv")
-        model_summary.to_csv("model-summary.csv")
+        data_summary.to_csv(self.data_dir / "data-summary.csv")
+        model_summary.to_csv(self.data_dir / "model-summary.csv")
 
         logger.info("Normalize the summary table and calculate the rankings for each dimension.")
         data_normalization = self._normalize_summary(data_summary, kargs['data_config'])
@@ -1159,10 +1195,10 @@ class MergeAndRankingPipeline:
         infra_normalization = self._normalize_summary(infra_summary, kargs['infra_config'])
         eval_normalization = self._normalize_summary(eval_summary, kargs['eval_config'])
         
-        data_normalization.to_csv('data-rank.csv')
-        model_normalization.to_csv('model-rank.csv')
-        infra_normalization.to_csv('infra-rank.csv')
-        eval_normalization.to_csv('eval-rank.csv')
+        data_normalization.to_csv(self.data_dir / 'data-rank.csv')
+        model_normalization.to_csv(self.data_dir / 'model-rank.csv')
+        infra_normalization.to_csv(self.data_dir / 'infra-rank.csv')
+        eval_normalization.to_csv(self.data_dir / 'eval-rank.csv')
 
         logger.info("Calculate overall ranking based on sub-dimension rankings.")
         overall_ranking = pd.DataFrame(index=target_orgs)
@@ -1172,6 +1208,266 @@ class MergeAndRankingPipeline:
         overall_ranking['eval'] = 1 / np.log2(eval_normalization['rank'] + 1)
         overall_weights = kargs['ranking_weights']
         overall_ranking['score'] = overall_ranking.mul(overall_weights).sum(axis=1)
-        overall_ranking['rank'] = overall_ranking['score'].rank(method='dense')
+        overall_ranking['rank'] = overall_ranking['score'].rank(ascending=False, method='dense').astype(int)
         
-        overall_ranking.to_csv("overall_rank.csv")
+        overall_ranking.to_csv(self.data_dir / "overall-rank.csv")
+        return self
+
+
+class AccumulateAndRankingPipeline:
+    
+    def __init__(
+        self,
+        data_dir: str | None,
+        log_path: str | None,
+    ):
+        self.now = datetime.now().strftime(r"%Y-%m-%d_%H-%M-%S")
+        self.date = str(datetime.today().date())
+        if data_dir:
+            self.data_dir = Path(data_dir)
+        else:
+            self.data_dir = Path(__file__).parents[2] / f'data/{self.date}'
+        if log_path is None:
+            log_path = Path(__file__).parents[2] / f"logs/accumulating-{self.now}/running.log"
+        else:
+            log_path = Path(log_path)
+        self.log_path = log_path
+        self.log_path.parent.mkdir(exist_ok=True, parents=True)
+        logger.remove()
+        logger.add(sys.stderr, level="DEBUG")
+        logger.add(log_path, level="DEBUG")
+        
+    def step(
+        self,
+        stage: Literal[
+            'accumulate',
+            'rank'
+        ],
+        save: bool = True,
+        **kargs,
+    ):
+        match stage:
+            case 'accumulate':
+                return self._accumulate(save, **kargs)
+            case 'rank':
+                return self._rank(save, **kargs)
+    
+    def done(self):
+        logger.success("AccumulateAndRankingPipeline done.")
+    
+    def _accumulate(self, save, **kargs):
+        date = datetime.strptime(self.date, r"%Y-%m-%d")
+        base_path = self.data_dir.parent
+        models_buffer = defaultdict(list)
+        datasets_buffer = defaultdict(list)
+        for path in base_path.iterdir():
+            if datetime.strptime(path.name, r"%Y-%m-%d") > date:
+                continue
+            with jsonlines.open(path/'merged-models-info.jsonl', 'r') as f:
+                for item in f:
+                    key = f"{item['repo']}/{item['model_name']}"
+                    models_buffer[key].append(item)
+            with jsonlines.open(path/'merged-datasets-info.jsonl', 'r') as f:
+                for item in f:
+                    key = f"{item['repo']}/{item['dataset_name']}"
+                    datasets_buffer[key].append(item)
+        models_buffer = [
+            {
+                'org': lst[0]['org'],
+                'repo': lst[0]['repo'],
+                'model_name': lst[0]['model_name'],
+                'modality': lst[0]['modality'],
+                'accumulated_downloads': sum(item['downloads_last_month'] for item in lst),
+                'likes': max([item['likes'] for item in lst]),
+                'community': max([item['community'] for item in lst]),
+                'descendants': max([item['descendants'] for item in lst]), 
+            }
+            for lst in models_buffer
+        ]
+        datasets_buffer = [
+            {
+                'org': lst[0]['org'],
+                'repo': lst[0]['repo'],
+                'dataset_name': lst[0]['dataset_name'],
+                'modality': lst[0]['modality'],
+                'lifecycle': lst[0]['lifecycle'],
+                'accumulated_downloads': sum(item['downloads_last_month'] for item in lst),
+                'likes': max([item['likes'] for item in lst]),
+                'community': max([item['community'] for item in lst]),
+                'dataset_usage': max([item['dataset_usage'] for item in lst])
+            }
+            for lst in datasets_buffer
+        ]
+        with jsonlines.open(self.data_dir/'accumulated-models-info.jsonl', 'w') as f:
+            f.write_all(models_buffer)
+        with jsonlines.open(self.data_dir/'accumulated_datasets-info.jsonl', 'w') as f:
+            f.write_all(datasets_buffer)
+            
+        self._accumulated_models = models_buffer
+        self._accumulated_datasets = datasets_buffer
+        
+    def _summary_data(
+        self, 
+        df: pd.DataFrame, 
+        config: dict,
+        target_orgs: list,
+    ) -> pd.DataFrame:
+        weights: dict[str, float | int] = config[1]
+        if target_orgs[0] == 'all':
+            target_orgs = df['org'].unique()
+        res = pd.DataFrame(index=target_orgs)
+        for key in weights.keys():
+            if key.startswith('num'):
+                if key.split("_")[-1] in ['pretraining', 'finetuning', 'preference']:
+                    lifecycle = key.split("_")[-1].title()
+                    res[key] = df[df["lifecycle"] == lifecycle].groupby(
+                        'org').size().reindex(target_orgs, fill_value=0)
+                else:
+                    modality = key.split("_")[-1].title()
+                    res[key] = df[df['modality'] == modality].groupby(
+                        'org').size().reindex(target_orgs, fill_value=0)
+            elif key.startswith("downloads"):
+                if key.split("_")[-1] in ['pretraining', 'finetuning', 'preference']:
+                    lifecycle = key.split("_")[-1].title()
+                    res[key] = df[df["lifecycle"] == lifecycle].groupby(
+                        'org')['accumulated_downloads'].sum().reindex(target_orgs, fill_value=0)
+                else: 
+                    modality = key.split("_")[-1].title()
+                    res[key] = df[df['modality'] == modality].groupby(
+                        'org')['accumulated_downloads'].sum().reindex(target_orgs, fill_value=0)
+            elif key == 'dataset_usage':
+                res[key] = df.groupby('org')['dataset_usage'].sum().reindex(
+                    target_orgs, fill_value=0)
+            elif key == 'operators':
+                # TODO data process tool operators
+                res[key] = pd.Series({
+                    "BAAI": 24,
+                    "Ali": 105,
+                }).reindex(target_orgs, fill_value=0)
+            else:
+                raise RuntimeError(f"Unrecognized field {key}")
+            
+        return res
+
+    def _summary_model(
+        self, 
+        df: pd.DataFrame, 
+        config: dict,
+        target_orgs: list,
+    ) -> pd.DataFrame:
+        weights: dict[str, float | int] = config[1]
+        if target_orgs[0] == 'all':
+            target_orgs = df['org'].unique()
+        res = pd.DataFrame(index=target_orgs)
+        for key in weights.keys():
+            if key.startswith('num'):
+                modality = key.split("_")[-1].title()
+                res[key] = df[df['modality'] == modality].groupby(
+                    'org').size().reindex(target_orgs, fill_value=0)
+            elif key.startswith('downloads'):
+                modality = key.split("_")[-1].title()
+                res[key] = df[df['modality'] == modality].groupby(
+                    'org')['accumulated_downloads'].sum().reindex(
+                        target_orgs, fill_value=0)
+            elif key == 'descendants':
+                res[key] = df.groupby('org')['descendants'].sum().reindex(
+                    target_orgs, fill_value=0)
+            elif key in ['likes', 'issue']:
+                res[key] = df.groupby('org')[key].sum().reindex(
+                    target_orgs, fill_value=0)
+            elif key == 'num_adapted_chips':
+                # TODO chips model
+                res[key] = pd.Series({
+                    "BAAI": 4,
+                    "Baidu": 2,
+                    "Huawei": 2,
+                    "Meta": 2,
+                    "Google": 2,
+                    "ByteDance": 2
+                }).reindex(target_orgs, fill_value=1)
+            else:
+                raise RuntimeError(f"Unrecognized field {key}")
+
+        return res
+    
+    def _summary_infra(self, config: dict, target_orgs: list) -> pd.DataFrame:
+        infra_path = self.data_dir / 'infra-summary.csv'
+        weights: dict[str, float | int] = config[1]
+        df = pd.read_csv(infra_path, index_col='org')
+        df = df[list(weights.keys())]
+        df = df[df.index.isin(target_orgs)]
+        return df
+    
+    def _summary_eval(self, config: dict, target_orgs: list) -> pd.DataFrame:
+        eval_path = self.data_dir / 'eval-summary.csv'
+        weights: dict[str, float | int] = config[1]
+        df = pd.read_csv(eval_path, index_col='org')
+        df = df[list(weights.keys())]
+        df = df[df.index.isin(target_orgs)]
+        return df
+    
+    def _normalize_summary(self, summary: pd.DataFrame, config: dict) -> pd.DataFrame:
+        df = summary.div(summary.max())
+        weights = config[1]
+        if config[0] == 'average':
+            df['score'] = df.mean(axis=1)
+            df['rank'] = df['score'].rank(ascending=False, method='dense').astype(int)
+        elif config[0] == 'weight':
+            df['score'] = df.mul(weights).sum(axis=1)
+            df['rank'] = df['score'].rank(ascending=False, method='dense').astype(int)
+        else:
+            raise RuntimeError(f'Unrecognized method: {config[0]}, accept `average` or `weight`')
+        return df
+
+    def _rank(self, save, **kargs):
+        logger.info("Calculate accumulated ranking.")
+        
+        if not hasattr(self, '_accumulated_models'):
+            logger.info(f"Trying load accumulated models from {self.data_dir}")
+            accumulated_models = pd.read_json(self.data_dir/'accumulated-models-info.jsonl',
+                                              lines=True)
+        else:
+            accumulated_models = pd.DataFrame(self._accumulated_models)
+        if not hasattr(self, '_accumulated_datasets'):
+            logger.info(f"Trying load accumulated datasets from {self.data_dir}")
+            accumulated_datasets = pd.read_json(self.data_dir/'accumulated-datasets-info.jsonl',
+                                                lines=True)
+        else:
+            accumulated_datasets = pd.DataFrame(self._accumulated_datasets)
+
+        kargs = {k: v for k, v in kargs.items() if k in [
+            'data_config', 'model_config', 'infra_config', 'eval_config',
+            'target_orgs', 'ranking_weights'
+        ]}
+        target_orgs = kargs.get('target_orgs', ['all'])
+        
+        logger.info("Summary table of data from four dimensions.")
+        data_summary = self._summary_data(accumulated_datasets, kargs['data_config'], target_orgs)
+        model_summary = self._summary_model(accumulated_models, kargs['model_config'], target_orgs)
+        infra_summary = self._summary_infra(kargs['infra_config'], target_orgs)
+        eval_summary = self._summary_eval(kargs['eval_config'], target_orgs)
+        
+        data_summary.to_csv("accumulated-data-summary.csv")
+        model_summary.to_csv("accumulated-model-summary.csv")
+        
+        logger.info("Normalize the summary table and calculate the rankings for datasets and models.")
+        data_normalization = self._normalize_summary(data_summary, kargs['data_config'])
+        model_normalization = self._normalize_summary(model_summary, kargs['model_config'])
+        infra_normalization = self._normalize_summary(infra_summary, kargs['infra_config'])
+        eval_normalization = self._normalize_summary(eval_summary, kargs['eval_config'])
+        
+        data_normalization.to_csv('accumulated-data-rank.csv')
+        model_normalization.to_csv('accumulated-model-rank.csv')
+
+        logger.info("Calculate overall ranking based on sub-dimension rankings.")
+        overall_ranking = pd.DataFrame(index=target_orgs)
+        overall_ranking['data'] = 1 / np.log2(data_normalization['rank'] + 1)
+        overall_ranking['model'] = 1 / np.log2(model_normalization['rank'] + 1)
+        overall_ranking['infra'] = 1 / np.log2(infra_normalization['rank'] + 1)
+        overall_ranking['eval'] = 1 / np.log2(eval_normalization['rank'] + 1)
+        overall_weights = kargs['ranking_weights']
+        overall_ranking['score'] = overall_ranking.mul(overall_weights).sum(axis=1)
+        overall_ranking['rank'] = overall_ranking['score'].rank(ascending=False, method='dense').astype(int)
+        
+        overall_ranking.to_csv("accumulated-rank.csv")
+        return self

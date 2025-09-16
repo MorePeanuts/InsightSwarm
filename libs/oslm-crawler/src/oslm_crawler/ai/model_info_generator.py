@@ -4,6 +4,8 @@ and whether it belongs to a large model through the repository link.
 """
 import yaml
 import os
+import json
+from openai import OpenAI
 from pathlib import Path
 from langchain.chat_models import init_chat_model
 from langchain_core.prompts import ChatPromptTemplate
@@ -53,7 +55,6 @@ Embodied: Models designed for robotics, or embodied AI. This includes large lang
 Instructions:
 If you do not have the ability to access the network, state that you cannot access the network.
 If a web page is blank or contains no valid information, then it should be considered as not belonging to the large model.
-If you cannot determine the modality of the model or whether it belongs to large models, then you should clearly point it out rather than guessing a result.
 If the model is not from the large-model era, clearly state so. If it is, output its modality from the above list.
 Keep the correspondence between each link and the conclusions you give.
 
@@ -85,7 +86,70 @@ chain = (
     | json_parser
 )
 
-def gen_model_info(urls: list[str]) -> list[ModelInfo]:
+
+client = OpenAI(
+    api_key=os.environ.get("MOONSHOT_API_KEY"),
+    base_url="https://api.moonshot.cn/v1",
+)
+
+
+def gen_model_info_modelscope(urls: list[str]) -> list[ModelInfo]:
+    system_prompt = """\
+You are an expert in modern machine learning and model classification.
+
+Your task:
+- Use $web_search to look at each given ModelScope model link.
+- For each model, judge whether it belongs to the "era of large models".
+  * Large models = Transformer or newer architectures (LLMs, multimodal, vector/embedding, etc.)
+  * Exclude: T5, BERT, RoBERTa, ALBERT, DistilBERT and other "pre-LLM" models.
+- If the model is a large model, output its modality (choose from: Language, Speech, Vision, Multimodal, Vector, Protein, 3D, Embodied).
+- If not large, set modality=null and is_large_model=false.
+- If you cannot access or the webpage has no valid info, set both fields to null.
+
+Return your results in the following JSON format:
+
+{
+  "infos": [
+    {
+      "link": "MODEL_LINK",
+      "modality": "Language | Speech | Vision | Multimodal | Protein | Vector | 3D | Embodied | null",
+      "is_large_model": true | false | null
+    },
+    ...
+  ]
+}
+"""
+
+    user_prompt = "Here are the model links:\n" + "\n".join(urls)
+
+    completion = client.chat.completions.create(
+        model="kimi-k2-0905-preview",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ],
+        temperature=0,
+        response_format={"type": "json_object"},
+        tools=[
+            {
+                "type": "builtin_function",
+                "function": {"name": "$web_search"},
+            }
+        ]
+    )
+
+    content = completion.choices[0].message.content
+    data = json.loads(content)
+
+    try:
+        result = ModelInfoList(**data)
+        return result.infos
+    except Exception as e:
+        print("Parsing error:", e)
+        return [ModelInfo(link=url, modality=None, is_large_model=None) for url in urls]
+
+
+def gen_model_info_huggingface(urls: list[str]) -> list[ModelInfo]:
     result = chain.invoke({"model_links": urls})
     if result['parsing_error'] is None:
         return result['parsed'].infos
@@ -96,7 +160,7 @@ def gen_model_info(urls: list[str]) -> list[ModelInfo]:
 
 if __name__ == "__main__":
     from pprint import pprint
-    urls = [
+    hf_urls = [
         "https://huggingface.co/nvidia/GR00T-N1-2B",
         "https://huggingface.co/microsoft/renderformer-v1.1-swin-large",
         "https://huggingface.co/TencentARC/InstantMesh",
@@ -117,5 +181,15 @@ if __name__ == "__main__":
         "https://huggingface.co/tencent/Hunyuan-GameCraft-1.0",
         "https://huggingface.co/facebook/opt-125m",
     ]
-    models = gen_model_info(urls)
+    ms_urls = [
+        "https://modelscope.cn/models/BAAI/OpenSeek-Mid-v1",
+        "https://modelscope.cn/models/Qwen/Qwen3-Next-80B-A3B-Instruct",
+        "https://modelscope.cn/models/Tencent-Hunyuan/Hunyuan-MT-7B",
+        "https://modelscope.cn/models/OpenBMB/MiniCPM-V-4_5",
+        "https://modelscope.cn/models/meituan-longcat/LongCat-Flash-Chat",
+        "https://modelscope.cn/models/ByteDance-Seed/Seed-OSS-36B-Instruct",
+        "https://modelscope.cn/models/deepseek-ai/DeepSeek-V3.1",
+        "https://modelscope.cn/models/Shanghai_AI_Laboratory/Intern-S1-mini"
+    ]
+    models = gen_model_info_modelscope(ms_urls)
     pprint(models)
