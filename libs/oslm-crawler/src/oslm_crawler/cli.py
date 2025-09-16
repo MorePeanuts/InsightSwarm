@@ -53,7 +53,7 @@ def get_parser():
     parent_parser.add_argument("--config", type=str, default=argparse.SUPPRESS, help="Path of the YAML configuration file.")
 
     crawl_parser = sub_parsers.add_parser("crawl", parents=[parent_parser], help="Crawl data from huggingface, modelscope, opendatalab, or baai")
-    crawl_parser.add_argument("pipeline", choices=["huggingface, modelscope, opendatalab, baaidata", "all"], help="Pipeline")
+    crawl_parser.add_argument("pipeline", choices=["huggingface", "modelscope", "opendatalab", "baaidata", "all"], help="Pipeline")
     crawl_parser.set_defaults(func=crawl)
 
     gen_rank_parser = sub_parsers.add_parser("gen-rank", parents=[parent_parser], help="Merge data from different source and generate rank table.")
@@ -96,7 +96,7 @@ def crawl(config):
         if 'init_org_links' in conf:
             proc = proc.step('init_org_links', **conf['init_org_links'])
         if 'crawl_repo_page' in conf:
-            proc = proc.step('crawl_repo_page' **conf['crawl_repo_page'])
+            proc = proc.step('crawl_repo_page', **conf['crawl_repo_page'])
         if 'crawl_detail_page' in conf:
             proc = proc.step('crawl_detail_page', **conf['crawl_detail_page'])
         if 'post_process' in conf:

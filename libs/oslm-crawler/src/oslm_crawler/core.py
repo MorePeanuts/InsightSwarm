@@ -403,7 +403,7 @@ class MSPipeline:
             writer = JsonlineWriter(save_path)
             writer.parse_input(res)
             res = next(writer.run())
-        writer.close()
+            writer.close()
         self._init_org_links_res = res
         return self
     

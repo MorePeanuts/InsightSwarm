@@ -1,0 +1,33 @@
+ModelScopePipeline:
+  task_name: 'fix0907ms'
+  load_dir: null
+  save_dir: '/Users/liaofeng/Documents/Codespace/InsightSwarm/libs/oslm-crawler/data/fix0907'
+  log_path: null
+
+  init_org_links:
+    save: false
+    path: null
+    orgs: 
+      - 'Ali'
+
+  crawl_repo_page:
+    save: true
+    category: 'models'
+    threads: 1
+    max_retries: 20
+
+  crawl_detail_page:
+    save: true
+    threads: 1
+    max_retries: 20
+    screenshot_path: '/Users/liaofeng/Documents/Codespace/InsightSwarm/libs/oslm-crawler/screenshots/2025-09-07/ModelScope'
+
+  # post_process:
+  #   save: true
+  #   dataset_info_path: null
+  #   model_info_path: null
+  #   ai_gen: true
+  #   ai_check: false
+  #   buffer_size: 8
+  #   max_retries: 3
+  #   history_data_path: null
