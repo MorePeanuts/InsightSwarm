@@ -6,7 +6,7 @@ from pathlib import Path
 def set_multi_level_columns(df, mapping):
     new_columns = []
     for col in df.columns:
-        level1, level2 = mapping.get(col, ('', col))
+        level1, level2 = mapping.get(col, ('合计', col))
         new_columns.append((level1, level2))
     
     df.columns = pd.MultiIndex.from_tuples(new_columns)
@@ -26,11 +26,11 @@ for path in (root_path / 'data').glob("????-??-??"):
         
 option = st.selectbox(
     "Select date",
-    list(sorted(choices))
+    list(sorted(choices, reverse=True))
 )
 table_type = st.selectbox(
     "Select table type",
-    ['monthly rank', 'accumulated rank', 'monthly metrics', 'accumulated metrics']
+    ['monthly rank', 'accumulated rank', 'monthly metrics', 'accumulated metrics', 'delta metrics']
 )
 
 match table_type:
@@ -42,6 +42,8 @@ match table_type:
         cur_path = root_path / 'data' / option / 'data-summary.csv'
     case 'accumulated metrics':
         cur_path = root_path / 'data' / option / 'data-summary.csv'
+    case 'delta metrics':
+        cur_path = root_path / 'data' / option / 'data-summary-delta.csv'
 
 data = pd.read_csv(cur_path, index_col='org')
 data = set_multi_level_columns(data, mapping)

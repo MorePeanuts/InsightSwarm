@@ -43438,5 +43438,17 @@
     "iic/Llama_3.2_3B_Instruct_ZeroSearch_V2": {
         "modality": "Language",
         "is_large_model": true
+    },
+    "iic/WebSailor-7B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/WebDancer-32B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/WebSailor-3B": {
+        "modality": "Language",
+        "is_large_model": true
     }
 }

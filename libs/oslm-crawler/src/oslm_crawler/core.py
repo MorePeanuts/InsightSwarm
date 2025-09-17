@@ -1138,7 +1138,7 @@ class MergeAndRankingPipeline:
             target_orgs = df['org'].unique()
         res = pd.DataFrame(index=target_orgs)
         for key in weights.keys():
-            if key.startswith('num'):
+            if key.startswith('num') and key != 'num_adapted_chips':
                 modality = key.split("_")[-1].title()
                 res[key] = df[df['modality'] == modality].groupby(
                     'org').size().reindex(target_orgs, fill_value=0)
@@ -1230,12 +1230,18 @@ class MergeAndRankingPipeline:
             'target_orgs', 'ranking_weights'
         ]}
         target_orgs = kargs.get('target_orgs', ['all'])
+        
+        # TODO Add embodied model? If not adding embodied model, then reset to multimodal.
+        if kargs['model_config'][1].get('num_embodied') is None and kargs['model_config'][1].get('downloads_embodied') is None:
+            merged_models['modality'].replace('Embodied', 'Multimodal')
 
         logger.info("Summary table of data from four dimensions.")
-        data_summary = self._summary_data(merged_datasets, kargs['data_config'], target_orgs)
-        model_summary = self._summary_model(merged_models, kargs['model_config'], target_orgs)
         infra_summary = self._summary_infra(kargs['infra_config'], target_orgs)
         eval_summary = self._summary_eval(kargs['eval_config'], target_orgs)
+        if target_orgs[0] == 'all':
+            target_orgs = infra_summary.index.tolist()
+        data_summary = self._summary_data(merged_datasets, kargs['data_config'], target_orgs)
+        model_summary = self._summary_model(merged_models, kargs['model_config'], target_orgs)
         
         if self.data_dir_last_month:
             data_summary_last_month = pd.read_csv(self.data_dir_last_month/'data-summary.csv',
@@ -1498,7 +1504,7 @@ class AccumulateAndRankingPipeline:
             target_orgs = df['org'].unique()
         res = pd.DataFrame(index=target_orgs)
         for key in weights.keys():
-            if key.startswith('num'):
+            if key.startswith('num') and key != 'num_adapted_chips':
                 modality = key.split("_")[-1].title()
                 res[key] = df[df['modality'] == modality].groupby(
                     'org').size().reindex(target_orgs, fill_value=0)
@@ -1588,11 +1594,17 @@ class AccumulateAndRankingPipeline:
         ]}
         target_orgs = kargs.get('target_orgs', ['all'])
         
+        # TODO Add embodied model? If not adding embodied model, then reset to multimodal.
+        if kargs['model_config'][1].get('num_embodied') is None and kargs['model_config'][1].get('downloads_embodied') is None:
+            accumulated_models['modality'].replace('Embodied', 'Multimodal')
+        
         logger.info("Summary table of data from four dimensions.")
-        data_summary = self._summary_data(accumulated_datasets, kargs['data_config'], target_orgs)
-        model_summary = self._summary_model(accumulated_models, kargs['model_config'], target_orgs)
         infra_summary = self._summary_infra(kargs['infra_config'], target_orgs)
         eval_summary = self._summary_eval(kargs['eval_config'], target_orgs)
+        if target_orgs[0] == 'all':
+            target_orgs = infra_summary.index.tolist()
+        data_summary = self._summary_data(accumulated_datasets, kargs['data_config'], target_orgs)
+        model_summary = self._summary_model(accumulated_models, kargs['model_config'], target_orgs)
         
         data_summary.to_csv("data-accumulated-summary.csv")
         model_summary.to_csv("model-accumulated-summary.csv")

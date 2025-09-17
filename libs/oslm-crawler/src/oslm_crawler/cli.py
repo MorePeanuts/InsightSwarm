@@ -4,7 +4,7 @@ import argparse
 from datetime import datetime
 from pathlib import Path
 from typing_extensions import deprecated
-from .core import BAAIDataPipeline, HFPipeline, MSPipeline, MergeAndRankingPipeline, OpenDataLabPipeline
+from .core import AccumulateAndRankingPipeline, BAAIDataPipeline, HFPipeline, MSPipeline, MergeAndRankingPipeline, OpenDataLabPipeline
 
 
 def main() -> None:
@@ -176,7 +176,20 @@ def gen_rank(config):
     
 
 def accumulate(config):
-    pass
+    config = config['MergeAndRankingPipeline']
+    if config['data_dir'] == "all":
+        data_dir_base = Path(__file__).parents[2] / 'data'
+        log_path = Path(__file__).parents[2] / f'logs/rank-all-{datetime.now().strftime(r"%Y-%m-%d_%H-%M-%S")}'
+        for data_dir in sorted(data_dir_base.glob(r"????-??-??"))[1:]:
+            proc = AccumulateAndRankingPipeline(data_dir, log_path/f"{data_dir.name}.log")
+            proc = proc.step('accumulate')
+            proc = proc.step('ranking', **config['ranking'])
+            proc.done()
+    else:
+        proc = AccumulateAndRankingPipeline(config['data_dir'])
+        proc = proc.step('accumulate')
+        proc = proc.step('ranking', **config['ranking'])
+        proc.done()
 
 
 def test_hf_pipeline():

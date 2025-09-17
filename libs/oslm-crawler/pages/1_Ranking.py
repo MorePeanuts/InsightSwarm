@@ -12,7 +12,7 @@ for path in (root_path / 'data').glob("????-??-??"):
         
 option = st.selectbox(
     "Select date",
-    list(sorted(choices))
+    list(sorted(choices, reverse=True))
 )
 
 cur_path = root_path / 'data' / option / 'overall-rank.csv'
