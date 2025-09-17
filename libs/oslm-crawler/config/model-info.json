@@ -43022,5 +43022,421 @@
     "iic/cv_cartoon_stable_diffusion_clipart": {
         "modality": "Vision",
         "is_large_model": true
+    },
+    "baidu/APPS-Gemma-2B-MA-PPO-Fixed10": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "baidu/HH-RLHF-Gemma-7B-MA-PPO-Fixed5": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "baidu/TLDR-Gemma-2B-MA-PPO-Fixed5": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "baidu/APPS-Gemma-7B-MA-PPO-Fixed10": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "baidu/HH-RLHF-Gemma-2B-MA-PPO-Fixed5": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "baidu/TLDR-Gemma-7B-MA-PPO-Fixed5": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "baidu/TLDR-Gemma-2-27B-MA-PPO-Fixed5": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/InspireMusic-1.5B": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/InspireMusic-1.5B-24kHz": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/InspireMusic-1.5B-Long": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/NL2SQL-StarCoder-15B-GGUF": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/InspireMusic-Base-24kHz": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/gte-modernbert-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/gte-reranker-modernbert-base": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/cv_anytext2": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/HumanOmni-7B": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/HumanOmni-7B-Audio": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/HumanOmni-7B-Video": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "THUDM/SWE-Dev-9B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "THUDM/SWE-Dev-7B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/VACE-Wan2.1-1.3B-Preview": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/VACE-LTX-Video-0.9": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/VACE-Annotators": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/R1-Omni-0.5B": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/EMER-SFT-0.5B": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/MAFW-DFEW-SF-0.5": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/HumanOmni-0.5B": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/Writing-Model-Qwen-32B-thinking": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Writing-Model-Qwen-7B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/WritingBench-Critic-Model-Qwen-7B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/opencpop_visinger1": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/opencpop_visinger2": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/WritingBench-Critic-Model-7B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/MelQCD": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "THUDM/androidgen-llama-3-70b": {
+        "modality": "Embodied",
+        "is_large_model": true
+    },
+    "THUDM/androidgen-glm-4-9b": {
+        "modality": "Embodied",
+        "is_large_model": true
+    },
+    "EleutherAI/rats": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "EleutherAI/stranger": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "EleutherAI/oran": {
+        "modality": null,
+        "is_large_model": false
+    },
+    "iic/Simulation_LLM_wiki_3B_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/QwenLong-L1-32B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Llama_3.2_3B_Instruct_ZeroSearch_wiki_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_7B_ZeroSearch_wiki_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_7B_Instruct_ZeroSearch_wiki_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_3B_ZeroSearch_wiki_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_3B_Instruct_ZeroSearch_google_v1": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_3B_ZeroSearch_google_v1": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_7B_Instruct_ZeroSearch_google_V1": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_7B_ZeroSearch_google_V1": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Llama_3.2_3B_ZeroSearch_wiki_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Llama_3.2_3B_Instruct_ZeroSearch_google_v1": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Simulation_LLM_google_14B_V1": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_3B_Instruct_ZeroSearch_wiki_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Simulation_LLM_wiki_7B_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Simulation_LLM_google_7B_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Simulation_LLM_google_3B_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Simulation_LLM_google_14B_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Simulation_LLM_google_7B_V1": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Llama_3.Llama_3.2_3B_ZeroSearch_wiki_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Simulation_LLM_google_3B_V1": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Llama_3.2_3B_ZeroSearch_google_v1": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Simulation_LLM_wiki_14B_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/QwenLong-L1-32B-AWQ": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/QwenLong-CPRS-7B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_3B_ZeroSearch_google": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_7B_ZeroSearch_google": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_3B_Instruct_ZeroSearch_google": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_7B_Instruct_ZeroSearch_google": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_3B_Instruct_ZeroSearch_google_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Llama_3.2_3B_Instruct_ZeroSearch_google_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Llama_3.2_3B_ZeroSearch_google_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Llama_3.2_3B_ZeroSearch_google": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_7B_ZeroSearch_google_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_3B_ZeroSearch_google_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5_7B_Instruct_ZeroSearch_google_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Llama_3.2_3B_Instruct_ZeroSearch_google": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/ViSpeak-s3": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/ViSpeak-s2": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/cogenav": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5-7B_ZeroSearch_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Llama-3.2-3B-Instruct_ZeroSearch_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5-7B-Instruct_ZeroSearch_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5-3B_ZeroSearch_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5-3B-Instruct_ZeroSearch_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Llama-3.2-3B_ZeroSearch_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/SearchSimulation_14B_v2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/SearchSimulation_3B_V2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/SearchSimulation_7B_v2": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5-3B_ZeroSearch": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5-3B-Instruct_ZeroSearch": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5-7B_ZeroSearch": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Qwen2.5-7B-Instruct_ZeroSearch": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/SearchSimulation_3B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Llama-3.2-3B_ZeroSearch": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/Llama-3.2-3B-Instruct_ZeroSearch": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/SearchSimulation_14B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/SearchSimulation_7B": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/ThinkSound": {
+        "modality": "Speech",
+        "is_large_model": true
+    },
+    "iic/WebSailor": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/humanomniv2": {
+        "modality": "Vision",
+        "is_large_model": true
+    },
+    "iic/DecoupleSearch_Qwen2.5_14B_Instruct": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/DecoupleSearch_Qwen2.5_7B_Instruct": {
+        "modality": "Language",
+        "is_large_model": true
+    },
+    "iic/MIMO": {
+        "modality": "Multimodal",
+        "is_large_model": true
+    },
+    "iic/Llama_3.2_3B_Instruct_ZeroSearch_V2": {
+        "modality": "Language",
+        "is_large_model": true
     }
 }

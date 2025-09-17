@@ -1178,7 +1178,7 @@ class MergeAndRankingPipeline:
         df = pd.read_csv(infra_path, index_col='org')
         if target_orgs[0] == 'all':
             target_orgs = df.index.unique()
-        df = df[list(weights.keys())]
+        df = df[df.columns.intersection(weights.keys())]
         df = df[df.index.isin(target_orgs)]
         return df
     
@@ -1188,7 +1188,7 @@ class MergeAndRankingPipeline:
         df = pd.read_csv(eval_path, index_col='org')
         if target_orgs[0] == 'all':
             target_orgs = df.index.unique()
-        df = df[list(weights.keys())]
+        df = df[df.columns.intersection(weights.keys())]
         df = df[df.index.isin(target_orgs)]
         return df
 
@@ -1197,7 +1197,7 @@ class MergeAndRankingPipeline:
         weights = config[1]
         weights = {
             k: v if isinstance(v, (int, float)) else eval(v)
-            for k, v in weights.items()
+            for k, v in weights.items() if k in summary.columns
         }
         if config[0] == 'average':
             df['score'] = df.mean(axis=1)
@@ -1535,7 +1535,7 @@ class AccumulateAndRankingPipeline:
         df = pd.read_csv(infra_path, index_col='org')
         if target_orgs[0] == 'all':
             target_orgs = df.index.unique()
-        df = df[list(weights.keys())]
+        df = df[df.columns.intersection(weights.keys())]
         df = df[df.index.isin(target_orgs)]
         return df
     
@@ -1545,7 +1545,7 @@ class AccumulateAndRankingPipeline:
         df = pd.read_csv(eval_path, index_col='org')
         if target_orgs[0] == 'all':
             target_orgs = df.index.unique()
-        df = df[list(weights.keys())]
+        df = df[df.columns.intersection(weights.keys())]
         df = df[df.index.isin(target_orgs)]
         return df
     
@@ -1554,7 +1554,7 @@ class AccumulateAndRankingPipeline:
         weights = config[1]
         weights = {
             k: v if isinstance(v, (int, float)) else eval(v)
-            for k, v in weights.items()
+            for k, v in weights.items() if k in summary.columns
         }
         if config[0] == 'average':
             df['score'] = df.mean(axis=1)

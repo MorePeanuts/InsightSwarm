@@ -38,7 +38,6 @@ def init_config(args):
             case 'all':
                 pipelines = ["BAAIDataPipeline", "OpenDataLabPipeline", 
                              "ModelScopePipeline", "HuggingFacePipeline"]
-        config = {}
         for k, v in config.items():
             if k in pipelines:
                 if args.load_dir:

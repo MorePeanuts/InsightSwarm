@@ -1,5 +1,3 @@
-oslm-crawler crawl all --config libs/oslm-crawler/config/process.yaml --save-dir libs/oslm-crawler/data/2024-11-14
-
 oslm-crawler crawl all --config libs/oslm-crawler/config/process.yaml --save-dir libs/oslm-crawler/data/2024-12-13
 
 oslm-crawler crawl all --config libs/oslm-crawler/config/process.yaml --save-dir libs/oslm-crawler/data/2025-01-14
