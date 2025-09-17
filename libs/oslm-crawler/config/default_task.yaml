@@ -1,7 +1,7 @@
 HuggingFacePipeline:
   task_name: 'hf-task'  # Related to the default filename of the log
   load_dir: null        # When skipping the prerequisite steps, the data required for subsequent steps is loaded from this path. The default value is data/{today-date}/HuggingFace. When an error occurs and you need to rerun, you should manually specify to the error output directory.
-  save_dir: null        # Save directory for crawler results, default value is data/{today-date}/HuggingFace
+  save_dir: null        # Save directory for crawler results, default value is data/{today-date}/HuggingFace. The load_dir of post_process is different from other steps, it loads from save_dir by default.
   log_path: null        # Log output directory, default value is logs/{task_name}-{datetime}
 
   init_org_links:
@@ -13,12 +13,12 @@ HuggingFacePipeline:
     save: true          # Whether to save the result
     category: null      # Dataset or model, optional values are models, datasets, null. If empty, it represents both datasets and models.
     threads: 1          # The number of threads for the crawler program, default value is 1, note: too many threads can easily cause failure.
-    max_retries: 20     # Maximum retry times for crawler failure, default value is 10
+    max_retries: 10     # Maximum retry times for crawler failure, default value is 10
 
   crawl_detail_page:
     save: true            # Whether to save the result
     threads: 1            # The number of threads for the crawler program, default value is 1, note: too many threads can easily cause failure.
-    max_retries: 20       # Maximum retry times for crawler failure, default value is 10
+    max_retries: 10       # Maximum retry times for crawler failure, default value is 10
     screenshot_path: null # The screenshot save path for the warehouse details page. When null, it means no screenshot will be taken.
 
   post_process:
@@ -45,12 +45,12 @@ ModelScopePipeline:
     save: true
     category: null
     threads: 1
-    max_retries: 20
+    max_retries: 10
 
   crawl_detail_page:
     save: true
     threads: 1
-    max_retries: 20
+    max_retries: 10
     screenshot_path: null
 
   post_process:
@@ -77,7 +77,7 @@ OpenDataLabPipeline:
   crawl_repo_page:
     save: true
     threads: 1
-    max_retries: 20
+    max_retries: 10
 
   post_process:
     save: true
@@ -99,7 +99,7 @@ BAAIDataPipeline:
 
   crawl_repo_page:
     save: true
-    max_retries: 20
+    max_retries: 10
 
   post_process:
     save: true
@@ -177,8 +177,8 @@ MergeAndRankingPipeline:
         support_heterogeneous_training_frameworks: 0
         num_adapted_chips_frameworks: 0
         support_lifecycle: 0
-        num_adapted_frameworkds_ai_compiler: 0
-        num_adatped_chips_ai_compiler: 0
+        num_adapted_frameworks_ai_compiler: 0
+        num_adapted_chips_ai_compiler: 0
         deep_learning_framework: 0
         num_adapted_chips_communication_lib: 0
         support_cross_chip_communication: 0
@@ -194,10 +194,10 @@ MergeAndRankingPipeline:
         num_evaluation_tools: 0
 
     ranking_weights:
-      data: 0.1667
+      data: '0.5/3'
       model: 0.5
-      infra: 0.1667
-      eval: 0.1667
+      infra: '0.5/3'
+      eval: '0.5/3'
 
     target_orgs:
       - 'all'

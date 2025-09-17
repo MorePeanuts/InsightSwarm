@@ -1,6 +1,7 @@
 import sys
 import yaml
 import argparse
+from datetime import datetime
 from pathlib import Path
 from typing_extensions import deprecated
 from .core import BAAIDataPipeline, HFPipeline, MSPipeline, MergeAndRankingPipeline, OpenDataLabPipeline
@@ -37,10 +38,21 @@ def init_config(args):
             case 'all':
                 pipelines = ["BAAIDataPipeline", "OpenDataLabPipeline", 
                              "ModelScopePipeline", "HuggingFacePipeline"]
-        config = {k: v for k, v in config.items() if k in pipelines}
+        config = {}
+        for k, v in config.items():
+            if k in pipelines:
+                if args.load_dir:
+                    v['load_dir'] = args.load_dir
+                if args.save_dir:
+                    v['save_dir'] = args.save_dir
+                if args.log_path:
+                    v['log_path'] = args.log_path
+                config[k] = v
     elif args.command == 'gen-rank':
         if args.data_dir:
             config['MergeAndRankingPipeline']['data_dir'] = args.data_dir
+        elif args.all:
+            config['MergeAndRankingPipeline']['data_dir'] = 'all'
         
     return config
     
@@ -54,10 +66,15 @@ def get_parser():
 
     crawl_parser = sub_parsers.add_parser("crawl", parents=[parent_parser], help="Crawl data from huggingface, modelscope, opendatalab, or baai")
     crawl_parser.add_argument("pipeline", choices=["huggingface", "modelscope", "opendatalab", "baaidata", "all"], help="Pipeline")
+    crawl_parser.add_argument("--load-dir", help="When skipping the prerequisite steps, the data required for subsequent steps is loaded from this path. The default value is data/{today-date}/HuggingFace. When an error occurs and you need to rerun, you should manually specify to the error output directory.")
+    crawl_parser.add_argument("--save-dir", help="Save directory for crawler results, default value is data/{today-date}/HuggingFace. The load_dir of post_process is different from other steps, it loads from save_dir by default.")
+    crawl_parser.add_argument("--log-path", help=r"Log output directory, default value is logs/{task_name}-{datetime}")
     crawl_parser.set_defaults(func=crawl)
 
     gen_rank_parser = sub_parsers.add_parser("gen-rank", parents=[parent_parser], help="Merge data from different source and generate rank table.")
-    gen_rank_parser.add_argument("--data-dir", help="Data directory, default value is the current day")
+    group = gen_rank_parser.add_mutually_exclusive_group()
+    group.add_argument("--all", action="store_true", help="Generate rankings for all data in the default path.")
+    group.add_argument("--data-dir", help="Data directory, default value is the current day")
     gen_rank_parser.set_defaults(func=gen_rank)
     
     accumulate_parser = sub_parsers.add_parser("accumulate", parents=[parent_parser], help="Accumulate historical download data and generate rankings.")
@@ -136,14 +153,27 @@ def crawl(config):
 
 def gen_rank(config):
     config = config['MergeAndRankingPipeline']
-    proc = MergeAndRankingPipeline(config['data_dir'])
-    if 'merge_models' in config:
-        proc = proc.step('merge_models', **config['merge_models'])
-    if 'merge_datasets' in config:
-        proc = proc.step('merge_datasets', **config['merge_datasets'])
-    if 'ranking' in config:
-        proc = proc.step('ranking', **config['ranking'])
-    proc.done()
+    if config['data_dir'] == "all":
+        data_dir_base = Path(__file__).parents[2] / 'data'
+        log_path = Path(__file__).parents[2] / f'logs/rank-all-{datetime.now().strftime(r"%Y-%m-%d_%H-%M-%S")}'
+        for data_dir in sorted(data_dir_base.glob(r"????-??-??"))[1:]:
+            proc = MergeAndRankingPipeline(data_dir, log_path/f"{data_dir.name}.log")
+            if 'merge_models' in config:
+                proc = proc.step('merge_models', **config['merge_models'])
+            if 'merge_datasets' in config:
+                proc = proc.step('merge_datasets', **config['merge_datasets'])
+            if 'ranking' in config:
+                proc = proc.step('ranking', **config['ranking'])
+            proc.done()
+    else:
+        proc = MergeAndRankingPipeline(config['data_dir'])
+        if 'merge_models' in config:
+            proc = proc.step('merge_models', **config['merge_models'])
+        if 'merge_datasets' in config:
+            proc = proc.step('merge_datasets', **config['merge_datasets'])
+        if 'ranking' in config:
+            proc = proc.step('ranking', **config['ranking'])
+        proc.done()
     
 
 def accumulate(config):

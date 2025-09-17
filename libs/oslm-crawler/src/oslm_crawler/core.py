@@ -1,3 +1,4 @@
+import re
 import jsonlines
 import sys
 import pandas as pd
@@ -17,7 +18,7 @@ from .pipeline.crawlers import HFRepoPageCrawler, MSRepoPageCrawler
 from .pipeline.crawlers import HFDetailPageCrawler, MSDetailPageCrawler
 from .pipeline.crawlers import OpenDataLabCrawler, BAAIDatasetsCrawler
 from .pipeline.writers import ModelDatasetJsonlineWriter, JsonlineWriter
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class HFPipeline:
@@ -930,15 +931,38 @@ class MergeAndRankingPipeline:
             self.data_dir = Path(data_dir)
         else:
             self.data_dir = Path(__file__).parents[2] / f'data/{date}'
+        assert re.match(r"\d+-\d+-\d+", self.data_dir.name) 
         if log_path is None:
             log_path = Path(__file__).parents[2] / f"logs/ranking-{self.now}/running.log"
         else:
             log_path = Path(log_path)
+        self.data_dir_last_month = self._get_last_month_path(self.data_dir.name)
         self.log_path = log_path
         self.log_path.parent.mkdir(exist_ok=True, parents=True)
         logger.remove()
         logger.add(sys.stderr, level="DEBUG")
         logger.add(log_path, level="DEBUG")
+        
+    def _get_last_month_path(self, date: str):
+        date = datetime.strptime(date, r"%Y-%m-%d")
+        last_month_date = date - timedelta(days=30)
+        
+        min_diff = None
+        closest_date = None
+        
+        for d in (Path(__file__).parents[2]/'data').glob(r"????-??-??"):
+            cur_date = datetime.strptime(d.name, r"%Y-%m-%d")
+            diff = abs((cur_date - last_month_date).days)
+            if min_diff is None or diff < min_diff:
+                min_diff = diff
+                closest_date = d
+                
+        if min_diff > 15:
+            return None
+        
+        if (closest_date / 'overall-rank.csv').exists():
+            return closest_date
+        return None
         
     def step(
         self,
@@ -1053,16 +1077,32 @@ class MergeAndRankingPipeline:
             'finetuning': 'Fine-tuning',
             'preference': 'Preference'
         }
+        
+        # TODO temp handle other source dataset
+        data_path = Path(__file__).parents[2] / 'data/other-source-datasets.jsonl'
+        if data_path.exists():
+            other_data = pd.read_json(data_path, lines=True)
+        
         for key in weights.keys():
             if key.startswith('num'):
                 if key.split("_")[-1] in ['pretraining', 'finetuning', 'preference']:
                     lifecycle = lifecycle_mapper.get(key.split("_")[-1])
                     res[key] = df[df["lifecycle"] == lifecycle].groupby(
                         'org').size().reindex(target_orgs, fill_value=0)
+                    
+                    # TODO temp handle other source dataset
+                    if data_path.exists():
+                        res[key] += other_data[other_data['lifecycle'] == lifecycle].groupby(
+                            'org').size().reindex(target_orgs, fill_value=0)
                 else:
                     modality = key.split("_")[-1].title()
                     res[key] = df[df['modality'] == modality].groupby(
                         'org').size().reindex(target_orgs, fill_value=0)
+                    
+                    # TODO temp handle other source dataset
+                    if data_path.exists():
+                        res[key] += other_data[other_data['modality'] == modality].groupby(
+                            'org').size().reindex(target_orgs, fill_value=0)
             elif key.startswith("downloads"):
                 if key.split("_")[-1] in ['pretraining', 'finetuning', 'preference']:
                     lifecycle = lifecycle_mapper.get(key.split("_")[-1])
@@ -1136,6 +1176,8 @@ class MergeAndRankingPipeline:
         infra_path = self.data_dir / 'infra-summary.csv'
         weights: dict[str, float | int] = config[1]
         df = pd.read_csv(infra_path, index_col='org')
+        if target_orgs[0] == 'all':
+            target_orgs = df.index.unique()
         df = df[list(weights.keys())]
         df = df[df.index.isin(target_orgs)]
         return df
@@ -1144,6 +1186,8 @@ class MergeAndRankingPipeline:
         eval_path = self.data_dir / 'eval-summary.csv'
         weights: dict[str, float | int] = config[1]
         df = pd.read_csv(eval_path, index_col='org')
+        if target_orgs[0] == 'all':
+            target_orgs = df.index.unique()
         df = df[list(weights.keys())]
         df = df[df.index.isin(target_orgs)]
         return df
@@ -1193,6 +1237,17 @@ class MergeAndRankingPipeline:
         infra_summary = self._summary_infra(kargs['infra_config'], target_orgs)
         eval_summary = self._summary_eval(kargs['eval_config'], target_orgs)
         
+        if self.data_dir_last_month:
+            data_summary_last_month = pd.read_csv(self.data_dir_last_month/'data-summary.csv',
+                                                  index_col='org')
+            model_summary_last_month = pd.read_csv(self.data_dir_last_month/'model-summary.csv',
+                                                   index_col='org')
+            data_summary_delta = data_summary - data_summary_last_month
+            model_summary_delta = model_summary - model_summary_last_month
+            
+            data_summary_delta.to_csv(self.data_dir / "data-summary-delta.csv")
+            model_summary_delta.to_csv(self.data_dir / "model-summary-delta.csv")
+        
         data_summary.to_csv(self.data_dir / "data-summary.csv")
         model_summary.to_csv(self.data_dir / "model-summary.csv")
 
@@ -1202,13 +1257,34 @@ class MergeAndRankingPipeline:
         infra_normalization = self._normalize_summary(infra_summary, kargs['infra_config'])
         eval_normalization = self._normalize_summary(eval_summary, kargs['eval_config'])
         
+        if self.data_dir_last_month:
+            data_rank_last_month = pd.read_csv(self.data_dir_last_month/'data-rank.csv',
+                                               index_col='org')
+            model_rank_last_month = pd.read_csv(self.data_dir_last_month/'model-rank.csv',
+                                                index_col='org')
+            infra_rank_last_month = pd.read_csv(self.data_dir_last_month/'infra-rank.csv',
+                                                index_col='org')
+            eval_rank_last_month = pd.read_csv(self.data_dir_last_month/'eval-rank.csv',
+                                               index_col='org')
+            data_normalization['delta rank'] = data_rank_last_month['rank'] - data_normalization['rank']
+            model_normalization['delta rank'] = model_rank_last_month['rank'] - model_normalization['rank']
+            infra_normalization['delta rank'] = infra_rank_last_month['rank'] - infra_normalization['rank']
+            eval_normalization['delta rank'] = eval_rank_last_month['rank'] - eval_normalization['rank']
+        
         data_normalization.to_csv(self.data_dir / 'data-rank.csv')
         model_normalization.to_csv(self.data_dir / 'model-rank.csv')
         infra_normalization.to_csv(self.data_dir / 'infra-rank.csv')
         eval_normalization.to_csv(self.data_dir / 'eval-rank.csv')
 
         logger.info("Calculate overall ranking based on sub-dimension rankings.")
-        overall_ranking = pd.DataFrame(index=target_orgs)
+        orgs = data_normalization.index.intersection(
+            model_normalization.index
+        ).intersection(
+            infra_normalization.index
+        ).intersection(
+            eval_normalization.index
+        )
+        overall_ranking = pd.DataFrame(index=orgs)
         overall_ranking.index.name = 'org'
         overall_ranking['data'] = 1 / np.log2(data_normalization['rank'] + 1)
         overall_ranking['model'] = 1 / np.log2(model_normalization['rank'] + 1)
@@ -1221,6 +1297,11 @@ class MergeAndRankingPipeline:
         }
         overall_ranking['score'] = overall_ranking.mul(overall_weights).sum(axis=1)
         overall_ranking['rank'] = overall_ranking['score'].rank(ascending=False, method='dense').astype(int)
+        
+        if self.data_dir_last_month:
+            overall_ranking_last_month = pd.read_csv(self.data_dir_last_month/'overall-rank.csv',
+                                                     index_col='org')
+            overall_ranking['delta rank'] = overall_ranking_last_month['rank'] - overall_ranking['rank']
         
         overall_ranking.to_csv(self.data_dir / "overall-rank.csv")
         return self
@@ -1239,15 +1320,38 @@ class AccumulateAndRankingPipeline:
             self.data_dir = Path(data_dir)
         else:
             self.data_dir = Path(__file__).parents[2] / f'data/{self.date}'
+        assert re.match(r"\d+-\d+-\d+", self.data_dir.name) 
         if log_path is None:
             log_path = Path(__file__).parents[2] / f"logs/accumulating-{self.now}/running.log"
         else:
             log_path = Path(log_path)
+        self.data_dir_last_month = self._get_last_month_path(self.data_dir.name)
         self.log_path = log_path
         self.log_path.parent.mkdir(exist_ok=True, parents=True)
         logger.remove()
         logger.add(sys.stderr, level="DEBUG")
         logger.add(log_path, level="DEBUG")
+        
+    def _get_last_month_path(self, date: str):
+        date = datetime.strptime(date, r"%Y-%m-%d")
+        last_month_date = date - timedelta(days=30)
+        
+        min_diff = None
+        closest_date = None
+        
+        for d in (Path(__file__).parents[2]/'data').glob(r"????-??-??"):
+            cur_date = datetime.strptime(d.name, r"%Y-%m-%d")
+            diff = abs((cur_date - last_month_date).days)
+            if min_diff is None or diff < min_diff:
+                min_diff = diff
+                closest_date = d
+                
+        if min_diff > 15:
+            return None
+        
+        if (closest_date / 'overall-accumulated-rank.csv').exists():
+            return closest_date
+        return closest_date
         
     def step(
         self,
@@ -1333,16 +1437,32 @@ class AccumulateAndRankingPipeline:
             'finetuning': 'Fine-tuning',
             'preference': 'Preference'
         }
+        
+        # TODO temp handle other source dataset
+        data_path = Path(__file__).parents[2] / 'data/other-source-datasets.jsonl'
+        if data_path.exists():
+            other_data = pd.read_json(data_path, lines=True)
+            
         for key in weights.keys():
             if key.startswith('num'):
                 if key.split("_")[-1] in ['pretraining', 'finetuning', 'preference']:
                     lifecycle = lifecycle_mapper.get(key.split("_")[-1])
                     res[key] = df[df["lifecycle"] == lifecycle].groupby(
                         'org').size().reindex(target_orgs, fill_value=0)
+                    
+                    # TODO temp handle other source dataset
+                    if data_path.exists():
+                        res[key] += other_data[other_data['lifecycle'] == lifecycle].groupby(
+                            'org').size().reindex(target_orgs, fill_value=0)
                 else:
                     modality = key.split("_")[-1].title()
                     res[key] = df[df['modality'] == modality].groupby(
                         'org').size().reindex(target_orgs, fill_value=0)
+                    
+                    # TODO temp handle other source dataset
+                    if data_path.exists():
+                        res[key] += other_data[other_data['modality'] == modality].groupby(
+                            'org').size().reindex(target_orgs, fill_value=0)
             elif key.startswith("downloads"):
                 if key.split("_")[-1] in ['pretraining', 'finetuning', 'preference']:
                     lifecycle = lifecycle_mapper.get(key.split("_")[-1])
@@ -1413,6 +1533,8 @@ class AccumulateAndRankingPipeline:
         infra_path = self.data_dir / 'infra-summary.csv'
         weights: dict[str, float | int] = config[1]
         df = pd.read_csv(infra_path, index_col='org')
+        if target_orgs[0] == 'all':
+            target_orgs = df.index.unique()
         df = df[list(weights.keys())]
         df = df[df.index.isin(target_orgs)]
         return df
@@ -1421,6 +1543,8 @@ class AccumulateAndRankingPipeline:
         eval_path = self.data_dir / 'eval-summary.csv'
         weights: dict[str, float | int] = config[1]
         df = pd.read_csv(eval_path, index_col='org')
+        if target_orgs[0] == 'all':
+            target_orgs = df.index.unique()
         df = df[list(weights.keys())]
         df = df[df.index.isin(target_orgs)]
         return df
@@ -1470,8 +1594,8 @@ class AccumulateAndRankingPipeline:
         infra_summary = self._summary_infra(kargs['infra_config'], target_orgs)
         eval_summary = self._summary_eval(kargs['eval_config'], target_orgs)
         
-        data_summary.to_csv("accumulated-data-summary.csv")
-        model_summary.to_csv("accumulated-model-summary.csv")
+        data_summary.to_csv("data-accumulated-summary.csv")
+        model_summary.to_csv("model-accumulated-summary.csv")
         
         logger.info("Normalize the summary table and calculate the rankings for datasets and models.")
         data_normalization = self._normalize_summary(data_summary, kargs['data_config'])
@@ -1479,11 +1603,28 @@ class AccumulateAndRankingPipeline:
         infra_normalization = self._normalize_summary(infra_summary, kargs['infra_config'])
         eval_normalization = self._normalize_summary(eval_summary, kargs['eval_config'])
         
-        data_normalization.to_csv('accumulated-data-rank.csv')
-        model_normalization.to_csv('accumulated-model-rank.csv')
+        if self.data_dir_last_month:
+            data_rank_last_month = pd.read_csv(
+                self.data_dir_last_month/'data-accumulated-rank.csv',
+                index_col='org')
+            model_rank_last_month = pd.read_csv(
+                self.data_dir_last_month/'model-accumulated-rank.csv',
+                index_col='org')
+            data_normalization['delta rank'] = data_rank_last_month['rank'] - data_normalization['rank']
+            model_normalization['delta rank'] = model_rank_last_month['rank'] - model_normalization['rank']
+            
+        data_normalization.to_csv('data-accumulated-rank.csv')
+        model_normalization.to_csv('model-accumulated-rank.csv')
 
         logger.info("Calculate overall ranking based on sub-dimension rankings.")
-        overall_ranking = pd.DataFrame(index=target_orgs)
+        orgs = data_normalization.index.intersection(
+            model_normalization.index
+        ).intersection(
+            infra_normalization.index
+        ).intersection(
+            eval_normalization.index
+        )
+        overall_ranking = pd.DataFrame(index=orgs)
         overall_ranking['data'] = 1 / np.log2(data_normalization['rank'] + 1)
         overall_ranking['model'] = 1 / np.log2(model_normalization['rank'] + 1)
         overall_ranking['infra'] = 1 / np.log2(infra_normalization['rank'] + 1)
@@ -1496,5 +1637,11 @@ class AccumulateAndRankingPipeline:
         overall_ranking['score'] = overall_ranking.mul(overall_weights).sum(axis=1)
         overall_ranking['rank'] = overall_ranking['score'].rank(ascending=False, method='dense').astype(int)
         
-        overall_ranking.to_csv("accumulated-rank.csv")
+        if self.data_dir_last_month:
+            overall_ranking_last_month = pd.read_csv(
+                self.data_dir_last_month/'overall-accumulated-rank.csv',
+                index_col='org')
+            overall_ranking['delta rank'] = overall_ranking_last_month['rank'] - overall_ranking['rank']
+        
+        overall_ranking.to_csv("overall-accumulated-rank.csv")
         return self
