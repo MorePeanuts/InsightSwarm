@@ -1322,15 +1322,16 @@ class AccumulateAndRankingPipeline:
         data_dir: str | None = None,
         log_path: str | None = None,
     ):
-        self.now = datetime.now().strftime(r"%Y-%m-%d_%H-%M-%S")
-        self.date = str(datetime.today().date())
+        now = datetime.now().strftime(r"%Y-%m-%d_%H-%M-%S")
         if data_dir:
             self.data_dir = Path(data_dir)
+            self.date = self.data_dir.name
         else:
+            self.date = str(datetime.today().date())
             self.data_dir = Path(__file__).parents[2] / f'data/{self.date}'
-        assert re.match(r"\d+-\d+-\d+", self.data_dir.name) 
+        assert bool(re.match(r'^\d{4}-\d{2}-\d{2}$', self.date))
         if log_path is None:
-            log_path = Path(__file__).parents[2] / f"logs/accumulating-{self.now}/running.log"
+            log_path = Path(__file__).parents[2] / f"logs/accumulating-{now}/running.log"
         else:
             log_path = Path(log_path)
         self.data_dir_last_month = self._get_last_month_path(self.data_dir.name)
