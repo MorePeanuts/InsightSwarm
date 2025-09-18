@@ -12,7 +12,7 @@ def main() -> None:
     parent_parser.add_argument("--config")
     
     mcp_parser = sub_parser.add_parser("mcp", parents=[parent_parser])
-    mcp_parser.add_argument("--start", choices=['oslm'])
+    mcp_parser.add_argument("--start", choices=['oslm-database'])
     mcp_parser.set_defaults(func=mcp_run)
     
     db_parser = sub_parser.add_parser("db", parents=[parent_parser])
@@ -28,7 +28,13 @@ def main() -> None:
     
     
 def mcp_run(args):
-    pass
+    if args.start:
+        match args.start:
+            case "oslm-database":
+                from .mcp_server.oslm_db_mcp import start
+                start()
+            case _:
+                raise NotImplementedError()
 
 
 def db_run(args):

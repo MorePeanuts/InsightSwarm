@@ -1231,9 +1231,11 @@ class MergeAndRankingPipeline:
         ]}
         target_orgs = kargs.get('target_orgs', ['all'])
         
-        # TODO Add embodied model? If not adding embodied model, then reset to multimodal.
+        # TODO Add embodied model and dataset? If not, then reset to multimodal.
         if kargs['model_config'][1].get('num_embodied') is None and kargs['model_config'][1].get('downloads_embodied') is None:
             merged_models['modality'].replace('Embodied', 'Multimodal')
+        if kargs['data_config'][1].get('num_embodied') is None and kargs['data_config'][1].get('downloads_embodied') is None:
+            merged_datasets['modality'].replace('Embodied', 'Multimodal')
 
         logger.info("Summary table of data from four dimensions.")
         infra_summary = self._summary_infra(kargs['infra_config'], target_orgs)
