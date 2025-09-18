@@ -1345,7 +1345,7 @@ class AccumulateAndRankingPipeline:
         min_diff = None
         closest_date = None
         
-        for d in (Path(__file__).parents[2]/'data').glob(r"????-??-??"):
+        for d in sorted((Path(__file__).parents[2]/'data').glob(r"????-??-??"))[1:]:
             cur_date = datetime.strptime(d.name, r"%Y-%m-%d")
             diff = abs((cur_date - last_month_date).days)
             if min_diff is None or diff < min_diff:
@@ -1363,7 +1363,7 @@ class AccumulateAndRankingPipeline:
         self,
         stage: Literal[
             'accumulate',
-            'rank'
+            'ranking'
         ],
         save: bool = True,
         **kargs,
@@ -1371,8 +1371,8 @@ class AccumulateAndRankingPipeline:
         match stage:
             case 'accumulate':
                 return self._accumulate(save, **kargs)
-            case 'rank':
-                return self._rank(save, **kargs)
+            case 'ranking':
+                return self._ranking(save, **kargs)
     
     def done(self):
         logger.success("AccumulateAndRankingPipeline done.")
@@ -1382,7 +1382,7 @@ class AccumulateAndRankingPipeline:
         base_path = self.data_dir.parent
         models_buffer = defaultdict(list)
         datasets_buffer = defaultdict(list)
-        for path in base_path.iterdir():
+        for path in sorted(base_path.glob("????-??-??"))[1:]:
             if datetime.strptime(path.name, r"%Y-%m-%d") > date:
                 continue
             with jsonlines.open(path/'merged-models-info.jsonl', 'r') as f:
@@ -1404,7 +1404,7 @@ class AccumulateAndRankingPipeline:
                 'community': max([item['community'] for item in lst]),
                 'descendants': max([item['descendants'] for item in lst]), 
             }
-            for lst in models_buffer
+            for lst in models_buffer.values()
         ]
         datasets_buffer = [
             {
@@ -1418,15 +1418,16 @@ class AccumulateAndRankingPipeline:
                 'community': max([item['community'] for item in lst]),
                 'dataset_usage': max([item['dataset_usage'] for item in lst])
             }
-            for lst in datasets_buffer
+            for lst in datasets_buffer.values()
         ]
         with jsonlines.open(self.data_dir/'accumulated-models-info.jsonl', 'w') as f:
             f.write_all(models_buffer)
-        with jsonlines.open(self.data_dir/'accumulated_datasets-info.jsonl', 'w') as f:
+        with jsonlines.open(self.data_dir/'accumulated-datasets-info.jsonl', 'w') as f:
             f.write_all(datasets_buffer)
             
         self._accumulated_models = models_buffer
         self._accumulated_datasets = datasets_buffer
+        return self
         
     def _summary_data(
         self, 
@@ -1516,8 +1517,11 @@ class AccumulateAndRankingPipeline:
             elif key == 'descendants':
                 res[key] = df.groupby('org')['descendants'].sum().reindex(
                     target_orgs, fill_value=0)
-            elif key in ['likes', 'issue']:
+            elif key == 'likes':
                 res[key] = df.groupby('org')[key].sum().reindex(
+                    target_orgs, fill_value=0)
+            elif key == 'issue':
+                res[key] = df.groupby('org')['community'].sum().reindex(
                     target_orgs, fill_value=0)
             elif key == 'num_adapted_chips':
                 # TODO chips model
@@ -1572,7 +1576,7 @@ class AccumulateAndRankingPipeline:
             raise RuntimeError(f'Unrecognized method: {config[0]}, accept `average` or `weight`')
         return df
 
-    def _rank(self, save, **kargs):
+    def _ranking(self, save, **kargs):
         logger.info("Calculate accumulated ranking.")
         
         if not hasattr(self, '_accumulated_models'):
@@ -1606,8 +1610,8 @@ class AccumulateAndRankingPipeline:
         data_summary = self._summary_data(accumulated_datasets, kargs['data_config'], target_orgs)
         model_summary = self._summary_model(accumulated_models, kargs['model_config'], target_orgs)
         
-        data_summary.to_csv("data-accumulated-summary.csv")
-        model_summary.to_csv("model-accumulated-summary.csv")
+        data_summary.to_csv(self.data_dir/"data-accumulated-summary.csv")
+        model_summary.to_csv(self.data_dir/"model-accumulated-summary.csv")
         
         logger.info("Normalize the summary table and calculate the rankings for datasets and models.")
         data_normalization = self._normalize_summary(data_summary, kargs['data_config'])
@@ -1625,8 +1629,8 @@ class AccumulateAndRankingPipeline:
             data_normalization['delta rank'] = data_rank_last_month['rank'] - data_normalization['rank']
             model_normalization['delta rank'] = model_rank_last_month['rank'] - model_normalization['rank']
             
-        data_normalization.to_csv('data-accumulated-rank.csv')
-        model_normalization.to_csv('model-accumulated-rank.csv')
+        data_normalization.to_csv(self.data_dir/'data-accumulated-rank.csv')
+        model_normalization.to_csv(self.data_dir/'model-accumulated-rank.csv')
 
         logger.info("Calculate overall ranking based on sub-dimension rankings.")
         orgs = data_normalization.index.intersection(
@@ -1655,5 +1659,5 @@ class AccumulateAndRankingPipeline:
                 index_col='org')
             overall_ranking['delta rank'] = overall_ranking_last_month['rank'] - overall_ranking['rank']
         
-        overall_ranking.to_csv("overall-accumulated-rank.csv")
+        overall_ranking.to_csv(self.data_dir/"overall-accumulated-rank.csv")
         return self

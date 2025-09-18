@@ -52,12 +52,17 @@ def init_config(args):
             config['MergeAndRankingPipeline']['data_dir'] = args.data_dir
         elif args.all:
             config['MergeAndRankingPipeline']['data_dir'] = 'all'
+    elif args.command == 'accumulate':
+        if args.data_dir:
+            config['MergeAndRankingPipeline']['data_dir'] = args.data_dir
+        elif args.all:
+            config['MergeAndRankingPipeline']['data_dir'] = 'all'
         
     return config
     
 
 def get_parser():
-    parser = argparse.ArgumentParser(prog="oslm-crawler", description="oslm-crawler", add_help=False)
+    parser = argparse.ArgumentParser(prog="oslm-crawler", description="oslm-crawler")
     sub_parsers = parser.add_subparsers(dest='command', help='Available commands')
     
     parent_parser = argparse.ArgumentParser(add_help=False)
@@ -77,7 +82,9 @@ def get_parser():
     gen_rank_parser.set_defaults(func=gen_rank)
     
     accumulate_parser = sub_parsers.add_parser("accumulate", parents=[parent_parser], help="Accumulate historical download data and generate rankings.")
-    accumulate_parser.add_argument("--data-dir", help="Data directory, default value is the current day")
+    group = accumulate_parser.add_mutually_exclusive_group()
+    group.add_argument("--all", action="store_true", help="Generate accumulated rankings for all data in the default path.")
+    group.add_argument("--data-dir", help="Data directory, default value is the current day")
     accumulate_parser.set_defaults(func=accumulate)
     
     return parser

@@ -30,20 +30,18 @@ option = st.selectbox(
 )
 table_type = st.selectbox(
     "Select table type",
-    ['monthly rank', 'accumulated rank', 'monthly metrics', 'accumulated metrics', 'delta metrics']
+    ['rank', 'metrics', 'delta']
 )
+accumulate = st.toggle("Accumulate")
 
+base_path = root_path / 'data' / option
 match table_type:
-    case 'monthly rank':
-        cur_path = root_path / 'data' / option / 'data-rank.csv'
-    case 'accumulated rank':
-        cur_path = root_path / 'data' / option / 'data-rank.csv'
-    case 'monthly metrics':
-        cur_path = root_path / 'data' / option / 'data-summary.csv'
-    case 'accumulated metrics':
-        cur_path = root_path / 'data' / option / 'data-summary.csv'
-    case 'delta metrics':
-        cur_path = root_path / 'data' / option / 'data-summary-delta.csv'
+    case 'rank':
+        cur_path = base_path / ('data-accumulated-rank.csv' if accumulate else 'data-rank.csv')
+    case 'metrics':
+        cur_path = base_path / ('data-accumulated-summary.csv' if accumulate else 'data-summary.csv')
+    case 'delta':
+        cur_path = base_path / 'data-summary-delta.csv'
 
 data = pd.read_csv(cur_path, index_col='org')
 data = set_multi_level_columns(data, mapping)

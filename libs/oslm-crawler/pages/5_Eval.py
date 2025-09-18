@@ -30,17 +30,13 @@ option = st.selectbox(
 )
 table_type = st.selectbox(
     "Select table type",
-    ['monthly rank', 'accumulated rank', 'monthly metrics', 'accumulated metrics']
+    ['rank', 'metrics']
 )
 
 match table_type:
-    case 'monthly rank':
+    case 'rank':
         cur_path = root_path / 'data' / option / 'eval-rank.csv'
-    case 'accumulated rank':
-        cur_path = root_path / 'data' / option / 'eval-rank.csv'
-    case 'monthly metrics':
-        cur_path = root_path / 'data' / option / 'eval-summary.csv'
-    case 'accumulated metrics':
+    case 'metrics':
         cur_path = root_path / 'data' / option / 'eval-summary.csv'
 
 data = pd.read_csv(cur_path, index_col='org')

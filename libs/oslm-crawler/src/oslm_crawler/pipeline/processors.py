@@ -517,19 +517,17 @@ class MSInfoProcessor(PipelineStep):
             dataset_key = f"{repo}/{dataset_name}"
             date_crawl = inp['date_crawl']
             last_month_downloads = self.last_month_downloads_of[date_crawl].get(dataset_key, None)
-            if last_month_downloads is None:
-                is_valid = False
+            
+            dataset_info = self.dataset_infos.get(dataset_key, None)
+            if dataset_info:
+                modality = dataset_info['modality']
+                lifecycle = dataset_info['lifecycle']
+                is_valid = dataset_info['is_valid']
             else:
-                dataset_info = self.dataset_infos.get(dataset_key, None)
-                if dataset_info:
-                    modality = dataset_info['modality']
-                    lifecycle = dataset_info['lifecycle']
-                    is_valid = dataset_info['is_valid']
-                else:
-                    if self.datasets_buffer_counter[dataset_key] <= self.max_retries:
-                        self.datasets_buffer.append(inp.copy())
-                        self.datasets_buffer_counter[dataset_key] += 1
-                    is_valid = False
+                if self.datasets_buffer_counter[dataset_key] <= self.max_retries:
+                    self.datasets_buffer.append(inp.copy())
+                    self.datasets_buffer_counter[dataset_key] += 1
+                is_valid = False
             
             if is_valid:
                 downloads = inp['total_downloads']
@@ -542,7 +540,10 @@ class MSInfoProcessor(PipelineStep):
                         logger.warning(f"Data error: {inp}, downloads corrected from {inp['total_downloads']} to {downloads}.")
                         inp['total_downloads'] = response.downloads
                         self.datasets_check_buffer.append(inp)
-                downloads_last_month = downloads - last_month_downloads
+                if last_month_downloads:
+                    downloads_last_month = downloads - last_month_downloads
+                else:
+                    downloads_last_month = 0
                 return PipelineData({
                     "org": org,
                     "repo": repo,
