@@ -1,104 +1,12 @@
 import json
 import sqlite3
+import traceback
 from pathlib import Path
 from mcp.server.fastmcp import FastMCP
 
 
 DB_FILE = Path(__file__).parents[3] / "data/oslm.db"
 mcp = FastMCP("oslm-database")
-
-def get_database_schema1() -> str:
-    """
-    获取数据库的模式（schema）信息，包括每个表的列名、含义、可用关键字段值以及数据的起止时间。
-    这应该是进行任何查询之前的第一步，用以了解数据的结构和内容。
-
-    Returns:
-        str: 一个Markdown格式的字符串，详细描述了数据库的模式。
-    """
-    schema_description = """
-# OSLM 数据库模式信息
-
-本数据库包含了从HuggingFace等平台爬取的开源模型和数据集的月度数据。
-
-## 数据时间范围
-- **模型 (models) 数据**: 从 {models_first_date} 到 {models_last_date}
-- **数据集 (datasets) 数据**: 从 {datasets_first_date} 到 {datasets_last_date}
-
-## 可用关键字段值
-- **所有机构 (org)**: {all_orgs}
-- **所有爬取月份 (date_crawl)**: {all_dates}
-
-## 表格详情
-
-### 1. `models` 表
-存储了每个月爬取的模型元数据。
-
-| 列名                 | 含义                                         |
-|----------------------|----------------------------------------------|
-| `org`                | 模型所属的机构/公司/组织 (例如: 'google')    |
-| `repo`               | 数据源平台的账户名 (例如: 阿里巴巴的'Qwen')   |
-| `model_name`         | 模型的名称 (例如: 'flan-t5-xxl')             |
-| `modality`           | 模型的模态 (例如: 'text-to-text', 'audio-to-text') |
-| `downloads_last_month`| 上一个月的下载量                              |
-| `likes`              | 点赞数量                                     |
-| `community`          | 社区得分/指标 (假设值)                       |
-| `descendants`        | 派生模型的数量 (假设值)                      |
-| `date_crawl`         | 数据爬取的月份 (格式: 'YYYY-MM')             |
-| `date_enter_db`      | 数据入库的日期                               |
-
-### 2. `datasets` 表
-存储了每个月爬取的数据集元数据。
-
-| 列名                 | 含义                                         |
-|----------------------|----------------------------------------------|
-| `org`                | 数据集所属的机构/公司/组织 (例如: 'squad') |
-| `repo`               | 数据源平台的账户名 (同上)                     |
-| `dataset_name`       | 数据集的名称 (例如: 'squad_v2')              |
-| `modality`           | 数据集的模态 (例如: 'question-answering')    |
-| `lifecycle`          | 数据集的生命周期状态 (例如: 'stable')        |
-| `downloads_last_month`| 上一个月的下载量                              |
-| `likes`              | 点赞数量                                     |
-| `community`          | 社区得分/指标 (假设值)                       |
-| `dataset_usage`      | 数据集被使用的次数 (假设值)                  |
-| `date_crawl`         | 数据爬取的月份 (格式: 'YYYY-MM')             |
-| `date_enter_db`      | 数据入库的日期                               |
-
-### 3. `status` 表
-记录了 `models` 和 `datasets` 表的数据爬取状态。
-"""
-    try:
-        with sqlite3.connect(DB_FILE) as conn:
-            cursor = conn.cursor()
-
-            # 1. 分别获取 models 和 datasets 的日期范围
-            cursor.execute("SELECT first_date_crawl, last_date_crawl FROM status WHERE table_name = 'models'")
-            models_dates = cursor.fetchone()
-            models_first_date, models_last_date = models_dates if models_dates else ("未知", "未知")
-
-            cursor.execute("SELECT first_date_crawl, last_date_crawl FROM status WHERE table_name = 'datasets'")
-            datasets_dates = cursor.fetchone()
-            datasets_first_date, datasets_last_date = datasets_dates if datasets_dates else ("未知", "未知")
-
-            # 2. 获取所有唯一的 org
-            cursor.execute("SELECT org FROM models UNION SELECT org FROM datasets")
-            orgs = sorted([row[0] for row in cursor.fetchall()])
-            all_orgs = ", ".join(f"`{org}`" for org in orgs) if orgs else "无"
-
-            # 3. 获取所有唯一的 date_crawl
-            cursor.execute("SELECT date_crawl FROM models UNION SELECT date_crawl FROM datasets ORDER BY date_crawl")
-            dates = [row[0] for row in cursor.fetchall()]
-            all_dates = ", ".join(f"`{d}`" for d in dates) if dates else "无"
-
-            return schema_description.format(
-                models_first_date=models_first_date,
-                models_last_date=models_last_date,
-                datasets_first_date=datasets_first_date,
-                datasets_last_date=datasets_last_date,
-                all_orgs=all_orgs,
-                all_dates=all_dates
-            )
-    except Exception as e:
-        return f"获取数据库模式信息时出错: {e}"
 
 
 @mcp.tool()
@@ -115,58 +23,113 @@ def get_database_schema() -> str:
 
 本数据库包含了从HuggingFace, ModelScope等平台爬取的开源模型和数据集的月度数据。
 
-## 数据时间范围
-- **首次爬取时间**: {first_date}
-- **最后一次爬取时间**: {last_date}
-
 ## 表格详情
 
 ### 1. `models` 表
-存储了每个月爬取的模型元数据。
+存储了每个月爬取的开源模型的相关数据, 具体列名和含义如下: 
 
 | 列名                 | 含义                                         |
 |----------------------|----------------------------------------------|
 | `org`                | 模型所属的机构/公司/组织                       |
 | `repo`               | 数据源平台账号                               |
 | `model_name`         | 模型的名称 (例如: 'flan-t5-xxl')             |
-| `modality`           | 模型的模态 (例如: 'text-to-text', 'audio-to-text') |
+| `modality`           | 模型的模态 (例如: 'Language', 'Multimodal') |
 | `downloads_last_month`| 上一个月的下载量                              |
 | `likes`              | 点赞数量                                     |
-| `community`          | 社区得分/指标 (假设值)                       |
-| `descendants`        | 派生模型的数量 (假设值)                      |
+| `community`          | 社区活跃度/讨论数量                          |
+| `descendants`        | 派生模型的数量                               |
 | `date_crawl`         | 数据爬取的月份 (格式: 'YYYY-MM-DD')             |
 | `date_enter_db`      | 数据入库的日期                               |
 
+- 所有机构 (org) 包括: {models_orgs}
+- 所有模态 (modality) 包括: {models_modality}
+- 爬取数据的月份 (date_crawl) 包括: {models_crawl_date}
+- 首次爬取数据的月份为: {models_first_date}, 最新爬取数据的月份为: {models_recent_date}
+
 ### 2. `datasets` 表
-存储了每个月爬取的数据集元数据。
+存储了每个月爬取的开源数据集的相关数据, 具体列名和含义如下:
 
 | 列名                 | 含义                                         |
 |----------------------|----------------------------------------------|
-| `org`                | 数据集所属的机构/公司/组织 (例如: 'squad') |
-| `repo`               | 数据源平台账号 (例如: 'hf' 表示HuggingFace)   |
+| `org`                | 数据集所属的机构/公司/组织 (例如: 'ai2') |
+| `repo`               | 数据源平台账号                              |
 | `dataset_name`       | 数据集的名称 (例如: 'squad_v2')              |
-| `modality`           | 数据集的模态 (例如: 'question-answering')    |
-| `lifecycle`          | 数据集的生命周期状态 (例如: 'stable')        |
+| `modality`           | 数据集的模态 (例如: 'Language', 'Multimodal') |
+| `lifecycle`          | 数据集用于大模型的生命周期 (例如: 'Pre-training') |
 | `downloads_last_month`| 上一个月的下载量                              |
 | `likes`              | 点赞数量                                     |
-| `community`          | 社区得分/指标 (假设值)                       |
-| `dataset_usage`      | 数据集被使用的次数 (假设值)                  |
+| `community`          | 社区活跃度/讨论数量                           |
+| `dataset_usage`      | 数据集被使用的次数                            |
 | `date_crawl`         | 数据爬取的月份 (格式: 'YYYY-MM-DD')             |
 | `date_enter_db`      | 数据入库的日期                               |
 
+- 所有机构 (org) 包括: {datasets_orgs}
+- 所有模态 (modality) 包括: {datasets_modality}
+- 所有生命周期 (lifecycle) 包括: {datasets_lifecycle}
+- 爬取数据的月份 (date_crawl) 包括: {datasets_crawl_date}
+- 首次爬取数据的月份为: {datasets_first_date}, 最新爬取数据的月份为: {datasets_recent_date}
+
 ### 3. `status` 表
-记录了 `models` 和 `datasets` 表的数据爬取状态。
+记录了 `models` 和 `datasets` 表的首次爬取数据的月份和最新爬取数据的月份。
 """
     try:
         with sqlite3.connect(DB_FILE) as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT MIN(first_date_crawl), MAX(last_date_crawl) FROM status")
-            result = cursor.fetchone()
-            first_date = result[0] if result else "未知"
-            last_date = result[1] if result else "未知"
-            return schema_description.format(first_date=first_date, last_date=last_date)
+            
+            cursor.execute("SELECT DISTINCT org FROM models")
+            models_orgs = [row[0] for row in cursor.fetchall()]
+            models_orgs = ", ".join(f'`{item}`' for item in models_orgs) if models_orgs else "null"
+            
+            cursor.execute("SELECT DISTINCT modality FROM models")
+            models_modality = [row[0] for row in cursor.fetchall()]
+            models_modality = ", ".join(f'`{item}`' for item in models_modality) if models_modality else "null"
+            
+            cursor.execute("SELECT DISTINCT date_crawl FROM models")
+            models_crawl_date = [row[0] for row in cursor.fetchall()]
+            models_crawl_date = ", ".join(f'`{item}`' for item in models_crawl_date) if models_crawl_date else "null"
+            
+            cursor.execute("SELECT first_date_crawl, last_date_crawl FROM status WHERE table_name = 'models'")
+            first_date, last_date = cursor.fetchone()
+            models_first_date = first_date if first_date else "null"
+            models_recent_date = last_date if last_date else "null"
+            
+            cursor.execute("SELECT DISTINCT org FROM datasets")
+            datasets_orgs = [row[0] for row in cursor.fetchall()]
+            datasets_orgs = ", ".join(f'`{item}`' for item in datasets_orgs) if datasets_orgs else "null"
+            
+            cursor.execute("SELECT DISTINCT modality FROM datasets")
+            datasets_modality = [row[0] for row in cursor.fetchall()]
+            datasets_modality = ", ".join(f'`{item}`' for item in datasets_modality) if datasets_modality else "null"
+            
+            cursor.execute("SELECT DISTINCT lifecycle FROM datasets")
+            datasets_lifecycle = [row[0] for row in cursor.fetchall()]
+            datasets_lifecycle = ", ".join(f'`{item}`' for item in datasets_lifecycle) if datasets_lifecycle else "null"
+            
+            cursor.execute("SELECT DISTINCT date_crawl FROM datasets")
+            datasets_crawl_date = [row[0] for row in cursor.fetchall()]
+            datasets_crawl_date = ", ".join(f'`{item}`' for item in datasets_crawl_date) if datasets_crawl_date else "null"
+            
+            cursor.execute("SELECT first_date_crawl, last_date_crawl FROM status WHERE table_name = 'datasets'")
+            first_date, last_date = cursor.fetchone()
+            datasets_first_date = first_date if first_date else "null"
+            datasets_recent_date = last_date if last_date else "null"
+
+            return schema_description.format(
+                models_orgs=models_orgs,
+                models_modality=models_modality,
+                models_crawl_date=models_crawl_date,
+                models_first_date=models_first_date,
+                models_recent_date=models_recent_date,
+                datasets_orgs=datasets_orgs,
+                datasets_modality=datasets_modality,
+                datasets_lifecycle=datasets_lifecycle,
+                datasets_crawl_date=datasets_crawl_date,
+                datasets_first_date=datasets_first_date,
+                datasets_recent_date=datasets_recent_date,
+            )
     except Exception as e:
-        return f"获取数据库模式信息时出错: {e}"
+        err = traceback.format_exc()
+        return f"Error getting database schema information: {e}.\nDetails traceback: {err}"
 
 
 @mcp.tool()
