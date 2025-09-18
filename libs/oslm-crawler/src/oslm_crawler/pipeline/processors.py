@@ -9,7 +9,7 @@ import jsonlines
 from loguru import logger
 from .base import PipelineStep, PipelineResult, PipelineData
 from ..ai.model_info_generator import ModelInfo, gen_model_info_huggingface, gen_model_info_modelscope
-from ..ai.dataset_info_generator import DatasetInfo, gen_dataset_info
+from ..ai.dataset_info_generator import DatasetInfo, gen_dataset_info_huggingface, gen_dataset_info_modelscope
 from ..ai.screenshot_checker import check_image_info, CheckRequest
 
 
@@ -265,7 +265,7 @@ class HFInfoProcessor(PipelineStep):
         
         if len(self.datasets_buffer) >= self.buffer_size:
             urls = [inp['link'] for inp in self.datasets_buffer]
-            dataset_infos = gen_dataset_info(urls)
+            dataset_infos = gen_dataset_info_huggingface(urls)
             dataset_infos = self._gen_new_info(dataset_infos)
             logger.info(f"Generate dataset informations:\n{json.dumps(dataset_infos, indent=2, ensure_ascii=False)}")
             self.dataset_infos.update(dataset_infos)
@@ -312,7 +312,7 @@ class HFInfoProcessor(PipelineStep):
         
         if len(self.datasets_buffer) > 0:
             urls = [inp['link'] for inp in self.datasets_buffer]
-            dataset_infos = gen_dataset_info(urls)
+            dataset_infos = gen_dataset_info_huggingface(urls)
             dataset_infos = self._gen_new_info(dataset_infos)
             logger.info(f"Generate dataset informations:\n{json.dumps(dataset_infos, indent=2, ensure_ascii=False)}")
             self.dataset_infos.update(dataset_infos)
@@ -642,7 +642,7 @@ class MSInfoProcessor(PipelineStep):
         
         if len(self.datasets_buffer) >= self.buffer_size:
             urls = [inp['link'] for inp in self.datasets_buffer]
-            dataset_infos = gen_dataset_info(urls)
+            dataset_infos = gen_dataset_info_modelscope(urls)
             dataset_infos = self._gen_new_info(dataset_infos)
             logger.info(f"Generate dataset informations:\n{json.dumps(dataset_infos, indent=2, ensure_ascii=False)}")
             self.dataset_infos.update(dataset_infos)
@@ -689,7 +689,7 @@ class MSInfoProcessor(PipelineStep):
         
         if len(self.datasets_buffer) > 0:
             urls = [inp['link'] for inp in self.datasets_buffer]
-            dataset_infos = gen_dataset_info(urls)
+            dataset_infos = gen_dataset_info_modelscope(urls)
             dataset_infos = self._gen_new_info(dataset_infos)
             logger.info(f"Generate dataset informations:\n{json.dumps(dataset_infos, indent=2, ensure_ascii=False)}")
             self.dataset_infos.update(dataset_infos)
@@ -879,7 +879,7 @@ class OpenDataLabInfoProcessor(PipelineStep):
             
         if len(self.datasets_buffer) >= self.buffer_size:
             urls = [inp['link'] for inp in self.datasets_buffer]
-            dataset_infos = gen_dataset_info(urls)
+            dataset_infos = gen_dataset_info_huggingface(urls)
             dataset_infos = self._gen_new_info(dataset_infos)
             logger.info(f"Generate dataset informations:\n{json.dumps(dataset_infos, indent=2, ensure_ascii=False)}")
             self.dataset_infos.update(dataset_infos)
@@ -903,7 +903,7 @@ class OpenDataLabInfoProcessor(PipelineStep):
     def flush(self, update_infos: bool = True) -> Optional[PipelineResult]:
         if len(self.datasets_buffer) > 0:
             urls = [inp['link'] for inp in self.datasets_buffer]
-            dataset_infos = gen_dataset_info(urls)
+            dataset_infos = gen_dataset_info_huggingface(urls)
             dataset_infos = self._gen_new_info(dataset_infos)
             logger.info(f"Generate dataset informations:\n{json.dumps(dataset_infos, indent=2, ensure_ascii=False)}")
             self.dataset_infos.update(dataset_infos)
@@ -1089,7 +1089,7 @@ class BAAIDataInfoProcessor(PipelineStep):
             
         if len(self.datasets_buffer) >= self.buffer_size:
             urls = [inp['link'] for inp in self.datasets_buffer]
-            dataset_infos = gen_dataset_info(urls)
+            dataset_infos = gen_dataset_info_huggingface(urls)
             dataset_infos = self._gen_new_info(dataset_infos)
             logger.info(f"Generate dataset informations:\n{json.dumps(dataset_infos, indent=2, ensure_ascii=False)}")
             self.dataset_infos.update(dataset_infos)
@@ -1112,7 +1112,7 @@ class BAAIDataInfoProcessor(PipelineStep):
     def flush(self, update_infos: bool = True) -> Optional[PipelineResult]:
         if len(self.datasets_buffer) > 0:
             urls = [inp['link'] for inp in self.datasets_buffer]
-            dataset_infos = gen_dataset_info(urls)
+            dataset_infos = gen_dataset_info_huggingface(urls)
             dataset_infos = self._gen_new_info(dataset_infos)
             logger.info(f"Generate dataset informations:\n{json.dumps(dataset_infos, indent=2, ensure_ascii=False)}")
             self.dataset_infos.update(dataset_infos)

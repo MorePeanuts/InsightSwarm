@@ -1,6 +1,6 @@
 org,num_language,num_speech,num_vision,num_multimodal,num_embodied,downloads_language,downloads_speech,downloads_vision,downloads_multimodal,downloads_embodied,dataset_usage,num_pretraining,num_finetuning,num_preference,downloads_pretraining,downloads_finetuning,downloads_preference,operators
 BAAI,117,4,9,13,1,66606,1598,2363,39204,16028,353,102,40,2,70663,54442,694,24
-ShanghaiAILab,48,4,116,43,2,11688,8,38296,33295,600,482,124,84,5,57836,24524,1527,0
+ShanghaiAILab,48,4,116,43,2,11452,8,38296,33295,600,482,124,84,5,57600,24524,1527,0
 Baidu,19,0,0,0,0,284,0,0,0,0,1,11,7,1,0,266,18,0
 Baichuan,0,0,1,0,0,0,0,43,0,0,0,0,1,0,0,43,0,0
 Zhipu,10,0,2,2,0,4934,0,703,1254,0,132,0,10,4,0,4593,2298,0

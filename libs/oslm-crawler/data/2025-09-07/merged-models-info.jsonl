@@ -669,7 +669,9 @@
 {"org": "Ali", "repo": "iic", "model_name": "mPLUG-Owl3-7B-241101", "modality": "Multimodal", "downloads_last_month": 730, "likes": 1, "community": 0, "descendants": 0, "date_crawl": "2025-09-16"}
 {"org": "Ali", "repo": "iic", "model_name": "cv_stable-diffusion-v2_image-inpainting_base", "modality": "Vision", "downloads_last_month": 325, "likes": 118, "community": 2, "descendants": 0, "date_crawl": "2025-09-16"}
 {"org": "Ali", "repo": "iic", "model_name": "PASD_v2_image_super_resolutions", "modality": "Vision", "downloads_last_month": 76, "likes": 24, "community": 7, "descendants": 0, "date_crawl": "2025-09-16"}
+{"org": "Ali", "repo": "iic", "model_name": "WebSailor-7B", "modality": "Language", "downloads_last_month": 73, "likes": 3, "community": 0, "descendants": 0, "date_crawl": "2025-09-16"}
 {"org": "Ali", "repo": "iic", "model_name": "ThinkSound", "modality": "Speech", "downloads_last_month": 151, "likes": 13, "community": 0, "descendants": 0, "date_crawl": "2025-09-16"}
+{"org": "Ali", "repo": "iic", "model_name": "WebSailor-3B", "modality": "Language", "downloads_last_month": 208, "likes": 77, "community": 2, "descendants": 5, "date_crawl": "2025-09-16"}
 {"org": "Ali", "repo": "iic", "model_name": "humanomniv2", "modality": "Vision", "downloads_last_month": 55, "likes": 3, "community": 1, "descendants": 0, "date_crawl": "2025-09-16"}
 {"org": "Ali", "repo": "iic", "model_name": "multi-modal_convnext-roberta-base_vldoc-embedding", "modality": "Multimodal", "downloads_last_month": 106, "likes": 85, "community": 9, "descendants": 0, "date_crawl": "2025-09-16"}
 {"org": "Ali", "repo": "iic", "model_name": "ChatPLUG-240M", "modality": "Language", "downloads_last_month": 121, "likes": 36, "community": 4, "descendants": 0, "date_crawl": "2025-09-16"}
@@ -944,8 +946,6 @@
 {"org": "Ali", "repo": "iic", "model_name": "cv_swin-b_image-instance-segmentation_coco", "modality": "Vision", "downloads_last_month": 293, "likes": 33, "community": 1, "descendants": 0, "date_crawl": "2025-09-16"}
 {"org": "Ali", "repo": "iic", "model_name": "cv_vitl16_segmentation_text-driven-seg", "modality": "Vision", "downloads_last_month": 90, "likes": 15, "community": 1, "descendants": 0, "date_crawl": "2025-09-16"}
 {"org": "Ali", "repo": "iic", "model_name": "cv_vitb16_segmentation_shop-seg", "modality": "Vision", "downloads_last_month": 608, "likes": 51, "community": 1, "descendants": 0, "date_crawl": "2025-09-16"}
-{"org": "Ali", "repo": "iic", "model_name": "WebSailor-7B", "modality": "Language", "downloads_last_month": 73, "likes": 3, "community": 0, "descendants": 0, "date_crawl": "2025-09-16"}
-{"org": "Ali", "repo": "iic", "model_name": "WebSailor-3B", "modality": "Language", "downloads_last_month": 208, "likes": 77, "community": 2, "descendants": 5, "date_crawl": "2025-09-16"}
 {"org": "BAAI", "repo": "BAAI", "model_name": "OpenSeek-Small-v1-SFT", "modality": "Language", "downloads_last_month": 15357, "likes": 3, "community": 0, "descendants": 0, "date_crawl": "2025-09-07"}
 {"org": "BAAI", "repo": "BAAI", "model_name": "RoboBrain2.0-32B", "modality": "Embodied", "downloads_last_month": 943, "likes": 35, "community": 0, "descendants": 2, "date_crawl": "2025-09-07"}
 {"org": "BAAI", "repo": "BAAI", "model_name": "RoboBrain", "modality": "Embodied", "downloads_last_month": 179, "likes": 24, "community": 1, "descendants": 0, "date_crawl": "2025-09-07"}

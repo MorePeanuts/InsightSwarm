@@ -1,8 +1,10 @@
 """
 Use the web access tool that comes with the grok-3-all model to determine the dataset modality through the repository link.
 """
+import json
 import os
 import yaml
+from openai import OpenAI
 from pathlib import Path
 from langchain.chat_models import init_chat_model
 from langchain_core.prompts import ChatPromptTemplate
@@ -93,7 +95,80 @@ chain = (
     | json_parser
 )
 
-def gen_dataset_info(urls: list[str]):
+
+client = OpenAI(
+    api_key=os.environ.get("MOONSHOT_API_KEY"),
+    base_url="https://api.moonshot.cn/v1",
+)
+
+
+def gen_dataset_info_modelscope(urls: list[str]) -> list[DatasetInfo]:
+    system_prompt = """\
+You are an expert in modern machine learning and dataset classification.
+
+Your task:
+- Use $web_search to lool at each given ModelScope dataset link.
+
+- For each dataset, determine if the link points to a valid dataset. A dataset is considered **valid** if its repository contains accessible data files and appears genuinely intended for model training or evaluation. It is **not valid** if the repository is empty, a placeholder, used only for testing, or otherwise lacks usable data.
+
+- If and only if the dataset is valid, identify its modality. Possible modalities are:
+    -   Language: Datasets consisting of text (e.g., books, articles, code, instruction-response pairs).
+    -   Speech: Datasets containing audio of spoken language.
+    -   Vision: Datasets of images or videos.
+    -   Multimodal: Datasets combining two or more modalities (e.g., images with text captions, video with audio).
+    -   Embodied: Datasets for robotics or embodied AI, often involving sequences of actions, observations, and rewards.
+
+- If and only if the dataset is valid, identify which stage in the large model lifecycle it is primarily used for. Possible stages are:
+    -   Pre-training: Very large, general-purpose datasets, often with raw or weakly labeled data, used to train foundation models from scratch (e.g., C4, The Pile).
+    -   Fine-tuning: Smaller, high-quality, task-specific datasets, often structured as instructions and responses, used to adapt a pre-trained model to a specific capability (e.g., Alpaca, Dolly).
+    -   Preference: Datasets used for alignment techniques like RLHF or DPO, typically containing prompts and multiple responses with human or AI-judged rankings/preferences (e.g., Anthropic HH-RLHF).
+    -   Evaluation: Benchmark datasets with ground-truth labels used to measure model performance on specific tasks (e.g., MMLU, Hellaswag, HumanEval).
+    
+Return your results in the following JSON format:
+
+{
+  "infos": [
+    {
+      "link": "DATASET_LINK",
+      "modality": "Language | Speech | Vision | Multimodal | Protein | Vector | 3D | Embodied | null",
+      "lifecycle": "Pre-training | Fine-tuning | Preference | Evaluation | null",
+      "is_valid": true | false | null
+    },
+    ...
+  ]
+}
+"""
+    
+    user_prompt = "Here are the dataset links:\n" + "\n".join(urls)
+    
+    completion = client.chat.completions.create(
+        model="kimi-k2-0905-preview",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ],
+        temperature=0,
+        response_format={"type": "json_object"},
+        tools=[
+            {
+                "type": "builtin_function",
+                "function": {"name": "$web_search"},
+            }
+        ]
+    )
+
+    content = completion.choices[0].message.content
+    data = json.loads(content)
+
+    try:
+        result = DatasetInfoList(**data)
+        return result.infos
+    except Exception as e:
+        print("Parsing error:", e)
+        return [DatasetInfo(link=url, modality=None, lifecycle=None, is_valid=None) for url in urls]
+
+
+def gen_dataset_info_huggingface(urls: list[str]):
     result = chain.invoke({"dataset_links": urls})
     if result['parsing_error'] is None:
         return result['parsed'].infos
@@ -127,5 +202,5 @@ if __name__ == "__main__":
         "https://modelscope.cn/datasets/Tongyi-DataEngine/SA1B-Dense-Caption",
         "https://modelscope.cn/datasets/Qwen/CC-OCR"
     ]
-    datasets = gen_dataset_info(ms_urls)
+    datasets = gen_dataset_info_huggingface(ms_urls)
     pprint(datasets)

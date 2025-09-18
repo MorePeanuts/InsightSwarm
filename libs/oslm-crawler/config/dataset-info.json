@@ -18493,5 +18493,310 @@
         "modality": "Language",
         "lifecycle": "Preference",
         "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Road-trip-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_First-person-Driving": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Song-Performance-Dataset": {
+        "modality": "Multimodal",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Flower-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Grassland-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_River-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Ocean-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Forest-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Sky-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Desert-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Rainforest-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Cat-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Bird-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Fishes-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Insect-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Living-room-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Dog-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Children-Classroom-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Flood-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Worker-Wearing-Detection-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Fire-Incident-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Gas-Station-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Speech-Dataset": {
+        "modality": "Speech",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Performing-Arts-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Indoor-Scene-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Valentines-Day-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Breaking-news-Dataset": {
+        "modality": "Multimodal",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Campus": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Dance-Performance-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Two-person-Interaction": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Gesture-Recognition": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Crowd": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Facial-Expression": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Fine-grained-Facial-Expression": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Fitness-Exercise": {
+        "modality": "Multimodal",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Childrens-Activities": {
+        "modality": "Multimodal",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Cooking": {
+        "modality": "Multimodal",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Outdoor-Sports": {
+        "modality": "Multimodal",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_Mountain-Dataset": {
+        "modality": "Vision",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "BAAI/BAAI-DataCube_DIY": {
+        "modality": "Multimodal",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "OpenBMB/DensingLaw-ScalingBench": {
+        "modality": "Language",
+        "lifecycle": "Evaluation",
+        "is_valid": true
+    },
+    "OpenBMB/RLPR-Evaluation": {
+        "modality": "Language",
+        "lifecycle": "Evaluation",
+        "is_valid": true
+    },
+    "OpenBMB/RLPR-Train-Dataset": {
+        "modality": "Language",
+        "lifecycle": "Preference",
+        "is_valid": true
+    },
+    "OpenBMB/Ultra-FineWeb": {
+        "modality": "Language",
+        "lifecycle": "Pre-training",
+        "is_valid": true
+    },
+    "OpenBMB/CAGUI": {
+        "modality": "Language",
+        "lifecycle": "Fine-tuning",
+        "is_valid": true
+    },
+    "OpenBMB/VisRAG-Ret-Train-In-domain-data": {
+        "modality": "Multimodal",
+        "lifecycle": "Fine-tuning",
+        "is_valid": true
+    },
+    "OpenBMB/VisRAG-Ret-Test-PlotQA": {
+        "modality": "Multimodal",
+        "lifecycle": "Evaluation",
+        "is_valid": true
+    },
+    "OpenBMB/VisRAG-Ret-Test-InfoVQA": {
+        "modality": "Multimodal",
+        "lifecycle": "Evaluation",
+        "is_valid": true
+    },
+    "OpenBMB/VisRAG-Ret-Test-MP-DocVQA": {
+        "modality": "Multimodal",
+        "lifecycle": "Evaluation",
+        "is_valid": true
+    },
+    "OpenBMB/VisRAG-Ret-Test-ArxivQA": {
+        "modality": "Multimodal",
+        "lifecycle": "Evaluation",
+        "is_valid": true
+    },
+    "OpenBMB/VisRAG-Ret-Test-ChartQA": {
+        "modality": "Multimodal",
+        "lifecycle": "Evaluation",
+        "is_valid": true
+    },
+    "OpenBMB/UltraInteract_sft": {
+        "modality": "Language",
+        "lifecycle": "Fine-tuning",
+        "is_valid": true
+    },
+    "OpenBMB/VisRAG-Ret-Test-SlideVQA": {
+        "modality": "Multimodal",
+        "lifecycle": "Evaluation",
+        "is_valid": true
+    },
+    "OpenBMB/UltraInteract_pair": {
+        "modality": "Language",
+        "lifecycle": "Preference",
+        "is_valid": true
+    },
+    "OpenBMB/UltraSafety": {
+        "modality": "Language",
+        "lifecycle": "Fine-tuning",
+        "is_valid": true
+    },
+    "OpenBMB/RLHF-V-Dataset": {
+        "modality": "Multimodal",
+        "lifecycle": "Preference",
+        "is_valid": true
+    },
+    "OpenBMB/WorkflowLLM": {
+        "modality": "Language",
+        "lifecycle": "Fine-tuning",
+        "is_valid": true
+    },
+    "OpenBMB/UltraFeedback": {
+        "modality": "Language",
+        "lifecycle": "Preference",
+        "is_valid": true
+    },
+    "OpenBMB/DCAD-2000": {
+        "modality": "Language",
+        "lifecycle": "Fine-tuning",
+        "is_valid": true
+    },
+    "OpenBMB/RLAIF-V-Dataset": {
+        "modality": "Multimodal",
+        "lifecycle": "Preference",
+        "is_valid": true
+    },
+    "OpenBMB/llava_zh": {
+        "modality": "Multimodal",
+        "lifecycle": "Fine-tuning",
+        "is_valid": true
     }
 }

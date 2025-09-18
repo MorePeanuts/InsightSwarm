@@ -1,10 +1,10 @@
 org,num_language,num_speech,num_vision,num_multimodal,num_embodied,downloads_language,downloads_speech,downloads_vision,downloads_multimodal,downloads_embodied,dataset_usage,num_pretraining,num_finetuning,num_preference,downloads_pretraining,downloads_finetuning,downloads_preference,operators
 BAAI,0,2,0,0,1,7044,330,1407,15256,3253,21,1,2,0,11041,15882,367,0
-ShanghaiAILab,9,3,22,6,0,-900,-3,7598,-863,132,8,17,22,1,7611,-1970,323,0
+ShanghaiAILab,3,0,0,2,1,-900,-3,7598,-863,132,8,3,2,1,7611,-1970,323,0
 Baidu,1,0,0,0,0,-7,0,0,0,0,0,0,1,0,0,16,-23,0
 Baichuan,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0
-Zhipu,0,0,0,0,0,3055,0,-125,-896,0,4,0,0,0,0,3260,-1226,0
-Ali,0,0,0,0,0,1351,-194,2484,74,0,1,0,0,0,-548,4263,0,0
+Zhipu,0,0,0,0,0,3055,0,-122,-896,0,4,0,0,0,0,3260,-1223,0
+Ali,1,0,0,0,0,1351,-194,2484,74,0,1,0,1,0,-548,4263,0,0
 Huawei,0,0,0,0,0,-347,0,0,0,0,0,0,0,0,-178,-169,0,0
 LMSYS,0,0,0,0,0,2391,0,0,0,0,10,0,0,0,0,1859,532,0
 Falcon,0,0,0,0,0,-10964,0,0,-443,0,37,0,0,0,-10964,-443,0,0
