@@ -1079,7 +1079,7 @@ class MergeAndRankingPipeline:
         }
         
         # TODO temp handle other source dataset
-        data_path = Path(__file__).parents[2] / 'data/other-source-datasets.jsonl'
+        data_path = self.data_dir / 'other-source-datasets.jsonl'
         if data_path.exists():
             other_data = pd.read_json(data_path, lines=True)
         
@@ -1319,8 +1319,8 @@ class AccumulateAndRankingPipeline:
     
     def __init__(
         self,
-        data_dir: str | None,
-        log_path: str | None,
+        data_dir: str | None = None,
+        log_path: str | None = None,
     ):
         self.now = datetime.now().strftime(r"%Y-%m-%d_%H-%M-%S")
         self.date = str(datetime.today().date())
@@ -1448,7 +1448,7 @@ class AccumulateAndRankingPipeline:
         }
         
         # TODO temp handle other source dataset
-        data_path = Path(__file__).parents[2] / 'data/other-source-datasets.jsonl'
+        data_path = self.data_dir / 'other-source-datasets.jsonl'
         if data_path.exists():
             other_data = pd.read_json(data_path, lines=True)
             
