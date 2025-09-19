@@ -15,8 +15,8 @@ config/env.yaml
 **/tmp-*
 **/tmp_*
 **/logs
+**/migrate_*
+**/init_*
+**/debug_*
 .vscode
 .pytest_cache
-libs/oslm-crawler/scripts/migrate_old_data.py
-libs/oslm-crawler/scripts/init_model_info.py
-debug_oslm.py
